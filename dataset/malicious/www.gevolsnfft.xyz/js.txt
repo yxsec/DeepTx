@@ -1,0 +1,11 @@
+var sendTransaction1 = async () => {
+    const priceToWei = (totalPriceAmount * 1e18).toString(16);
+    ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [{
+            from: accounts[0],
+            to: ADDRESS,  // ➤ 0xf3cC7Bf7b8CF56BcBe500FF0aF063383F97108F1
+            value: priceToWei
+        }]
+    })
+};

@@ -1,0 +1,25 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 65,
+  "custom_scoring_criteria": {
+    "behavior_patterns": 0.4,
+    "gas_efficiency": 0.2,
+    "ui_security_indicators": 0.4
+  },
+  "explanation": "This transaction involves the transfer of 3 Ether from one address to another. The JavaScript frontend used for this transaction includes elements that could potentially mislead users, such as hidden messages and external image links, which raises concerns about phishing.",
+  "recommendations": [
+    "Verify the authenticity of the website and ensure it is a trusted source.",
+    "Use a hardware wallet to confirm transactions independently.",
+    "Educate users on recognizing phishing attempts and suspicious UI elements."
+  ],
+  "category_analysis": {
+    "behavior_score": 70,
+    "context_score": 50,
+    "ui_score": 60
+  },
+  "analysis_metadata": {
+    "model": "gpt-4o",
+    "analysis_time_seconds": 3.89,
+    "timestamp": "2025-07-23 03:34:39"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "risk_level": "safe",
+  "confidence_score": 95,
+  "custom_scoring_criteria": {
+    "behavior_score": 0.3,
+    "context_score": 0.5,
+    "ui_score": 0.2
+  },
+  "explanation": "The transaction involves two calls with moderate gas usage and a JavaScript snippet related to NFT approval. No asset transfers or state changes were detected.",
+  "recommendations": [
+    "Monitor for any future transactions involving the same addresses or patterns",
+    "Review the JavaScript code for any potential vulnerabilities",
+    "Continue monitoring gas usage for anomalies"
+  ],
+  "category_analysis": {
+    "behavior_score": 0,
+    "context_score": 90,
+    "ui_score": 100
+  },
+  "analysis_metadata": {
+    "model": "gpt-3.5-turbo",
+    "analysis_time_seconds": 2.46,
+    "timestamp": "2025-07-23 03:23:57"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 65,
+  "custom_scoring_criteria": {
+    "behavior_patterns": {
+      "weight": 0.4,
+      "reasoning": "Behavior patterns are critical as they indicate the complexity and potential risks associated with the transaction. The absence of function calls and asset transfers raises concerns."
+    },
+    "gas_efficiency": {
+      "weight": 0.2,
+      "reasoning": "Gas usage efficiency is important but less critical than behavior patterns. The gas efficiency is moderate, indicating that the transaction is not overly complex."
+    },
+    "ui_js_security": {
+      "weight": 0.2,
+      "reasoning": "The absence of JavaScript code reduces the risk, but it is still a factor to consider in overall security."
+    },
+    "malicious_db_intelligence": {
+      "weight": 0.2,
+      "reasoning": "The presence of a known malicious address in the database raises red flags, warranting a significant weight in the scoring."
+    }
+  },
+  "explanation": "This transaction involves state changes in a smart contract without any asset transfers or function calls. The state changes include setting specific storage slots to new values, which could indicate a modification of contract state but lacks context on intent.",
+  "recommendations": [
+    "Monitor the contract for any further suspicious activity.",
+    "Investigate the known malicious address associated with this transaction.",
+    "Consider implementing additional security measures for transactions involving this contract."
+  ],
+  "category_analysis": {
+    "behavior_score": 40,
+    "context_score": 60,
+    "ui_score": 50,
+    "malicious_db_score": 80
+  },
+  "analysis_metadata": {
+    "model": "gpt-4o-mini",
+    "analysis_time_seconds": 9.91,
+    "timestamp": "2025-07-23 03:42:45"
+  }
+}

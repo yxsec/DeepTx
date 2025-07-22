@@ -1,0 +1,138 @@
+{
+  "transaction_info": {
+    "directory": "output/1/0x50babf7598d35cff2d24e554d5f173b18c509c24b1313166adf6f092e5d3c914",
+    "analysis_timestamp": "2025-07-23 03:10:51",
+    "models_tested": [
+      "gpt-4o-mini",
+      "gpt-3.5-turbo",
+      "gpt-4o"
+    ]
+  },
+  "model_results": {
+    "gpt-4o-mini": {
+      "status": "success",
+      "risk_level": "safe",
+      "confidence_score": 85,
+      "explanation": "This transaction involves multiple transfers of Ether and Wrapped Ether between addresses, with no signs of malicious code or behavior. The state changes are typical for asset transfers, and the gas usage is within normal limits.",
+      "custom_scoring_criteria": {
+        "behavior_patterns": {
+          "weight": 0.5,
+          "reasoning": "The behavior patterns show normal function calls and asset transfers without any suspicious activity, indicating a low risk."
+        },
+        "gas_efficiency": {
+          "weight": 0.3,
+          "reasoning": "Gas usage is moderate with a reasonable efficiency percentage, suggesting that the transaction is well-structured."
+        },
+        "ui_js_security": {
+          "weight": 0.2,
+          "reasoning": "No JavaScript code was present, which reduces the risk associated with potential UI vulnerabilities."
+        }
+      },
+      "recommendations": [
+        "Monitor the involved addresses for any future suspicious activity.",
+        "Ensure that the smart contracts involved are audited for security.",
+        "Maintain a watch on gas usage trends for potential optimization."
+      ],
+      "category_analysis": {
+        "behavior_score": 90,
+        "context_score": 75,
+        "ui_score": 80
+      },
+      "analysis_time": 12.72
+    },
+    "gpt-3.5-turbo": {
+      "status": "success",
+      "risk_level": "safe",
+      "confidence_score": 95,
+      "explanation": "The transaction involves multiple asset transfers of Ether and Wrapped Ether between different addresses. It also includes state changes in the contract 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.",
+      "custom_scoring_criteria": {
+        "behavior_patterns_weight": 0.6,
+        "gas_efficiency_weight": 0.3,
+        "ui_security_weight": 0.1,
+        "reasoning": {
+          "behavior_patterns": "Given the importance of analyzing behavior patterns in blockchain transactions, it carries the highest weight.",
+          "gas_efficiency": "Gas efficiency is crucial for cost optimization and network performance.",
+          "ui_security": "While UI security is important, in this context, it has the lowest weight due to the absence of JavaScript code."
+        }
+      },
+      "recommendations": [
+        "Verify the purpose and legitimacy of the asset transfers and state changes.",
+        "Review the security functions 'transfer' and 'transferFrom' for any vulnerabilities.",
+        "Monitor gas usage efficiency for potential optimization."
+      ],
+      "category_analysis": {
+        "behavior_score": 90,
+        "context_score": 85,
+        "ui_score": 0
+      },
+      "analysis_time": 3.8
+    },
+    "gpt-4o": {
+      "status": "success",
+      "risk_level": "safe",
+      "confidence_score": 85,
+      "explanation": "This transaction involves the transfer of Ether and Wrapped Ether between multiple addresses. The functions used are standard security functions for transferring assets, and there are no suspicious patterns detected in the code or asset flows.",
+      "custom_scoring_criteria": {
+        "behavior_patterns_weight": 0.5,
+        "gas_efficiency_weight": 0.3,
+        "ui_javascript_security_weight": 0.2,
+        "reasoning": "Behavior patterns are given the highest weight due to the importance of function call complexity and asset movements in determining transaction safety. Gas efficiency is moderately weighted as it reflects the transaction's resource usage, which can indicate potential inefficiencies or issues. UI/JavaScript security is given the lowest weight due to the absence of JavaScript code in this transaction."
+      },
+      "recommendations": [
+        "Monitor future transactions for any changes in behavior patterns.",
+        "Ensure that the involved addresses are verified and trusted.",
+        "Regularly update security tools to detect new threats."
+      ],
+      "category_analysis": {
+        "behavior_score": 90,
+        "context_score": 80,
+        "ui_score": 70
+      },
+      "analysis_time": 3.95
+    }
+  },
+  "consensus_analysis": {
+    "risk_level_consensus": "safe",
+    "average_confidence": 88.33,
+    "confidence_range": "85-95",
+    "models_agreed": true
+  },
+  "performance_metrics": {
+    "fastest_model": "gpt-3.5-turbo",
+    "slowest_model": "gpt-4o-mini",
+    "average_time": 6.82,
+    "total_analysis_time": 20.47
+  },
+  "consensus_result": {
+    "risk_level": "safe",
+    "confidence_score": 88,
+    "custom_scoring_criteria": {
+      "behavior_patterns_weight": 0.53,
+      "gas_efficiency_weight": 0.3,
+      "ui_security_weight": 0.17,
+      "reasoning": {
+        "behavior_patterns": "Behavior patterns are critical in assessing transaction safety, reflecting normal asset transfer activities without suspicious behavior.",
+        "gas_efficiency": "Gas efficiency is important for cost optimization and indicates the transaction's resource usage.",
+        "ui_security": "UI security is less of a concern in this context due to the absence of JavaScript code."
+      }
+    },
+    "explanation": "The transaction involves multiple transfers of Ether and Wrapped Ether between addresses, utilizing standard security functions with no signs of malicious activity. The behavior patterns are consistent with normal asset transfers, and gas usage is within acceptable limits. Overall, the transaction is well-structured and poses a low risk.",
+    "recommendations": [
+      "Continue monitoring for any unusual patterns in future transactions.",
+      "Maintain best practices for gas efficiency to optimize transaction costs.",
+      "Ensure regular audits of smart contracts to uphold security standards."
+    ],
+    "category_analysis": {
+      "behavior_score": 90,
+      "context_score": 80,
+      "ui_score": 50
+    },
+    "consensus_metadata": {
+      "consensus_reached": true,
+      "rounds_used": 0,
+      "method": "unanimous_agreement",
+      "primary_model": "gpt-4o-mini",
+      "timestamp": "2025-07-23 03:10:58"
+    }
+  }
+}

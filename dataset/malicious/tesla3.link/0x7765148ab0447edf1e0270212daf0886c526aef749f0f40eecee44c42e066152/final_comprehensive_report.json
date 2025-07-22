@@ -1,0 +1,34 @@
+{
+  "transaction_info": {
+    "tx_hash": "0x7765148ab0447edf1e0270212daf0886c526aef749f0f40eecee44c42e066152",
+    "transaction_type": "Smart Contract Interaction",
+    "analysis_timestamp": "2025-07-23 03:35:11"
+  },
+  "security_assessment": {
+    "risk_level": "suspicious",
+    "confidence_score": 72,
+    "consensus_method": "unanimous_agreement"
+  },
+  "transaction_analysis": {
+    "explanation": "The transaction is classified as suspicious due to the presence of potentially misleading UI elements that could indicate phishing attempts. While the transaction itself is straightforward, the analysis from multiple models highlights risks associated with the UI, warranting a cautious approach.",
+    "scoring_criteria": {
+      "behavior_patterns": {
+        "weight": 0.4,
+        "reasoning": "The transaction involves a simple asset transfer, but the potential for phishing due to misleading UI elements necessitates caution."
+      },
+      "gas_efficiency": {
+        "weight": 0.3,
+        "reasoning": "Gas usage is minimal, which is typical for straightforward transactions, but does not guarantee safety."
+      },
+      "ui_security_indicators": {
+        "weight": 0.3,
+        "reasoning": "The presence of hidden messages and external links in the JavaScript code raises significant concerns about potential phishing attempts."
+      }
+    }
+  },
+  "recommendations": [
+    "Verify the authenticity of the transaction through trusted channels.",
+    "Avoid interacting with any hidden messages or external links present in the UI.",
+    "Consider using additional security measures such as two-factor authentication."
+  ]
+}

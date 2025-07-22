@@ -1,0 +1,27 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 65,
+  "custom_scoring_criteria": {
+    "behavior_patterns": 0.3,
+    "gas_efficiency_and_usage_patterns": 0.2,
+    "ui_javascript_security_indicators": 0.1,
+    "database_threat_intelligence": 0.4
+  },
+  "explanation": "This transaction involves state changes in a contract without any asset transfers or complex function calls. However, one of the addresses involved is flagged as malicious in the security database, raising concerns about potential risks.",
+  "recommendations": [
+    "Investigate the flagged malicious address further to understand its involvement.",
+    "Monitor the contract for any unusual activity or further interactions with flagged addresses.",
+    "Consider implementing additional security measures to mitigate potential risks from known malicious entities."
+  ],
+  "category_analysis": {
+    "behavior_score": 50,
+    "context_score": 60,
+    "ui_score": 80,
+    "malicious_db_score": 40
+  },
+  "analysis_metadata": {
+    "model": "gpt-4o",
+    "analysis_time_seconds": 2.83,
+    "timestamp": "2025-07-23 03:42:51"
+  }
+}

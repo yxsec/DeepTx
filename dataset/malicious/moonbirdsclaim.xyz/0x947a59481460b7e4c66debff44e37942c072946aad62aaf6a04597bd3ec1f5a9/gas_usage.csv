@@ -1,0 +1,2 @@
+depth,from,to,call_type,function,gas_allocated,gas_used,gas_remaining,tx_gas_price,block_base_fee
+0,0xf39589df5fe2a2976f2c913bb0f34e1ada062a0c,0xfa41b64086ab7d09c9a2007943b262acda68a0d2,call,setApprovalForAll,47674,24592,23082,93992212578,92492212578

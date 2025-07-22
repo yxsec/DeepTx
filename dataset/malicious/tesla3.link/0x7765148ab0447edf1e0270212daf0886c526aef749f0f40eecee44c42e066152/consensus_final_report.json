@@ -1,0 +1,37 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 72,
+  "custom_scoring_criteria": {
+    "behavior_patterns": {
+      "weight": 0.4,
+      "reasoning": "The transaction involves a simple asset transfer, but the potential for phishing due to misleading UI elements necessitates caution."
+    },
+    "gas_efficiency": {
+      "weight": 0.3,
+      "reasoning": "Gas usage is minimal, which is typical for straightforward transactions, but does not guarantee safety."
+    },
+    "ui_security_indicators": {
+      "weight": 0.3,
+      "reasoning": "The presence of hidden messages and external links in the JavaScript code raises significant concerns about potential phishing attempts."
+    }
+  },
+  "explanation": "The transaction is classified as suspicious due to the presence of potentially misleading UI elements that could indicate phishing attempts. While the transaction itself is straightforward, the analysis from multiple models highlights risks associated with the UI, warranting a cautious approach.",
+  "recommendations": [
+    "Verify the authenticity of the transaction through trusted channels.",
+    "Avoid interacting with any hidden messages or external links present in the UI.",
+    "Consider using additional security measures such as two-factor authentication."
+  ],
+  "category_analysis": {
+    "behavior_score": 70,
+    "context_score": 66.67,
+    "ui_score": 53.33,
+    "malicious_db_score": 0
+  },
+  "consensus_metadata": {
+    "consensus_reached": true,
+    "rounds_used": 0,
+    "method": "unanimous_agreement",
+    "primary_model": "gpt-4o-mini",
+    "timestamp": "2025-07-23 03:35:11"
+  }
+}

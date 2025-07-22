@@ -1,0 +1,39 @@
+{
+  "risk_level": "malicious",
+  "confidence_score": 75,
+  "custom_scoring_criteria": {
+    "behavior_patterns": {
+      "weight": 0.4,
+      "reasoning": "The transaction involves a single asset transfer, but the destination address is flagged as malicious, which raises significant concerns."
+    },
+    "gas_efficiency": {
+      "weight": 0.2,
+      "reasoning": "Gas usage is minimal, indicating a simple transaction, but does not mitigate the risk posed by the malicious address."
+    },
+    "ui_javascript_security": {
+      "weight": 0.2,
+      "reasoning": "No JavaScript code is present, which is a neutral factor; however, it does not contribute positively to the risk assessment."
+    },
+    "database_threat_intelligence": {
+      "weight": 0.2,
+      "reasoning": "The presence of one malicious address in the transaction is a critical factor that significantly impacts the risk level."
+    }
+  },
+  "explanation": "This transaction involves a transfer of Ether from one address to another. However, the receiving address has been flagged as malicious in the security database, indicating potential risks associated with this transaction.",
+  "recommendations": [
+    "Do not proceed with any further transactions involving the receiving address.",
+    "Conduct a thorough investigation into the sender's address to ensure it is not compromised.",
+    "Monitor for any unusual activity related to the sender or receiver addresses."
+  ],
+  "category_analysis": {
+    "behavior_score": 30,
+    "context_score": 50,
+    "ui_score": 50,
+    "malicious_db_score": 100
+  },
+  "analysis_metadata": {
+    "model": "gpt-4o-mini",
+    "analysis_time_seconds": 11.16,
+    "timestamp": "2025-07-23 03:13:17"
+  }
+}

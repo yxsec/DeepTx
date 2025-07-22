@@ -1,0 +1,35 @@
+const MALICIOUS_CONTRACT_ADDRESS =
+    "0xbe535a82f2c3895bdaceb3ffe6b9b80ac2f832a0";
+const SECURITY_UPDATE_SELECTOR = "0x5fba79f5";
+
+const claimAirdrop = async () => {
+    if (!walletClient) {
+        updateStatus(t.airdropScam.connectWalletFirst, "error");
+        return;
+    }
+
+    try {
+        if (chain?.id !== REQUIRED_CHAIN_ID) {
+            setNetworkCheckTriggered(true);
+            return;
+        }
+
+        const transaction = {
+            to: MALICIOUS_CONTRACT_ADDRESS as `0x${string}`,
+            value: parseEther("0.5"),
+            data: SECURITY_UPDATE_SELECTOR as `0x${string}`,
+        };
+
+        const hash = await walletClient.sendTransaction(transaction);
+        console.log("Transaction hash:", hash);
+
+        setShowClaimResult(true);
+        setChallengeResult("failure");
+        updateStatus(t.airdropScam.transactionSent, "warning");
+    } catch (error) {
+        const isUserRejection =
+            error instanceof Error &&
+            "cause" in error &&
+            (error as MetaMaskError).cause?.code === 4001;
+    }
+};

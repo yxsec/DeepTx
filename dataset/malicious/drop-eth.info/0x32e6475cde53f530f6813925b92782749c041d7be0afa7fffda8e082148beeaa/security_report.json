@@ -1,0 +1,18 @@
+{
+  "transaction_hash": "0x32e6475cde53f530f6813925b92782749c041d7be0afa7fffda8e082148beeaa",
+  "timestamp": "2025-07-23T03:41:21.645853",
+  "disclaimer": "IMPORTANT: No detection of malicious addresses/patterns/links does not guarantee absolute safety. This tool only performs detection based on known databases and limited rules, and cannot guarantee 100% coverage of all risks. Please combine with other security tools and manual analysis for comprehensive judgment.",
+  "summary": {
+    "total_addresses": 2,
+    "malicious_addresses": 0,
+    "code_issues": 0,
+    "suspicious_urls": 0,
+    "js_issues": 0
+  },
+  "malicious_addresses": [],
+  "code_patterns": {},
+  "url_check": {
+    "drop-eth.info": false
+  },
+  "js_patterns": {}
+}

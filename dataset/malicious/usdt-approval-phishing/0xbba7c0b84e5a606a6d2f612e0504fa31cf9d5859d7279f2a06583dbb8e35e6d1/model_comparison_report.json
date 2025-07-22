@@ -1,0 +1,134 @@
+{
+  "transaction_info": {
+    "directory": "output/17000/0xbba7c0b84e5a606a6d2f612e0504fa31cf9d5859d7279f2a06583dbb8e35e6d1",
+    "analysis_timestamp": "2025-07-23 03:31:06",
+    "models_tested": [
+      "gpt-4o-mini",
+      "gpt-3.5-turbo",
+      "gpt-4o"
+    ]
+  },
+  "model_results": {
+    "gpt-4o-mini": {
+      "status": "success",
+      "risk_level": "safe",
+      "confidence_score": 85,
+      "explanation": "This transaction involves a transfer function and an approval function within a basic token contract. It does not involve any asset transfers or state changes, indicating a potential setup for future transactions rather than a completed action.",
+      "custom_scoring_criteria": {
+        "behavior_patterns": {
+          "weight": 0.5,
+          "reasoning": "The transaction has no suspicious function calls or asset movements, indicating a low risk."
+        },
+        "gas_efficiency": {
+          "weight": 0.3,
+          "reasoning": "Gas usage is efficient, with a high percentage of gas allocated versus used, suggesting well-optimized code."
+        },
+        "ui_js_security": {
+          "weight": 0.2,
+          "reasoning": "While JavaScript code is present, there are no immediate security concerns identified, but it requires monitoring."
+        }
+      },
+      "recommendations": [
+        "Monitor for future transactions involving this contract to ensure no malicious activity arises.",
+        "Conduct regular audits of the smart contract code to identify any potential vulnerabilities.",
+        "Implement additional security measures for the JavaScript code to prevent phishing attacks."
+      ],
+      "category_analysis": {
+        "behavior_score": 90,
+        "context_score": 85,
+        "ui_score": 80
+      },
+      "analysis_time": 4.27
+    },
+    "gpt-3.5-turbo": {
+      "status": "success",
+      "risk_level": "safe",
+      "confidence_score": 95,
+      "explanation": "The transaction involves two code functions related to token transfers and approvals. Gas usage is efficient with 97.91% utilization. The JavaScript analysis indicates the presence of UI elements for token approval.",
+      "custom_scoring_criteria": "Behavior: 0.4 (Call complexity, suspicious functions, asset movements), Gas: 0.4 (Efficiency and usage patterns), UI/JavaScript: 0.2 (Security indicators)",
+      "recommendations": [
+        "Monitor for any future state changes or asset transfers",
+        "Continue to analyze behavior patterns for any anomalies",
+        "Regularly review gas usage for optimization"
+      ],
+      "category_analysis": {
+        "behavior_score": 85,
+        "context_score": 95,
+        "ui_score": 90
+      },
+      "analysis_time": 2.63
+    },
+    "gpt-4o": {
+      "status": "success",
+      "risk_level": "suspicious",
+      "confidence_score": 65,
+      "explanation": "This transaction involves functions related to asset transfer and approval, with security measures like payload size checks. The JavaScript code suggests interaction with a USDT contract, potentially involving approval actions that could be exploited if not properly secured.",
+      "custom_scoring_criteria": {
+        "behavior_patterns_weight": 0.4,
+        "context_analysis_weight": 0.3,
+        "ui_analysis_weight": 0.3,
+        "reasoning": "Behavior patterns are weighted higher due to the presence of security functions and potential asset transfer implications. Context analysis is important for understanding gas efficiency, which can indicate transaction optimization or inefficiencies. UI analysis is crucial due to the presence of JavaScript code that could potentially be used for phishing or other malicious activities."
+      },
+      "recommendations": [
+        "Review the JavaScript code for potential phishing or malicious patterns.",
+        "Ensure the contract functions are secure and free from vulnerabilities like reentrancy.",
+        "Monitor the transaction for any unexpected asset movements or state changes."
+      ],
+      "category_analysis": {
+        "behavior_score": 60,
+        "context_score": 80,
+        "ui_score": 55
+      },
+      "analysis_time": 3.59
+    }
+  },
+  "consensus_analysis": {
+    "risk_level_consensus": "suspicious",
+    "average_confidence": 81.67,
+    "confidence_range": "65-95",
+    "models_agreed": false
+  },
+  "performance_metrics": {
+    "fastest_model": "gpt-3.5-turbo",
+    "slowest_model": "gpt-4o-mini",
+    "average_time": 3.5,
+    "total_analysis_time": 10.49
+  },
+  "consensus_result": {
+    "risk_level": "suspicious",
+    "confidence_score": 77,
+    "custom_scoring_criteria": {
+      "behavior_patterns": {
+        "weight": 0.4,
+        "reasoning": "The presence of approval functions raises concerns about potential future exploits."
+      },
+      "gas_efficiency": {
+        "weight": 0.3,
+        "reasoning": "Gas usage is efficient, but the complexity of interactions necessitates further scrutiny."
+      },
+      "ui_js_security": {
+        "weight": 0.3,
+        "reasoning": "JavaScript code's interaction with a USDT contract indicates potential vulnerabilities."
+      }
+    },
+    "explanation": "The transaction is deemed suspicious due to the potential vulnerabilities associated with approval functions and the JavaScript connection to a USDT contract. While there are no immediate asset transfers, the risks highlighted by all models suggest a cautious approach is warranted. Efficient gas usage is a positive aspect, but it does not fully mitigate the concerns raised.",
+    "recommendations": [
+      "Conduct a thorough review of the approval functions to identify potential vulnerabilities.",
+      "Implement additional security measures for the JavaScript code interacting with the USDT contract.",
+      "Monitor future transactions for any unusual behavior or patterns."
+    ],
+    "category_analysis": {
+      "behavior_score": 66.67,
+      "context_score": 72.5,
+      "ui_score": 61.67,
+      "malicious_db_score": 0
+    },
+    "consensus_metadata": {
+      "consensus_reached": true,
+      "rounds_used": 0,
+      "method": "unanimous_agreement",
+      "primary_model": "gpt-4o-mini",
+      "timestamp": "2025-07-23 03:31:53"
+    }
+  }
+}

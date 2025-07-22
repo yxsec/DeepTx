@@ -1,0 +1,133 @@
+{
+  "transaction_info": {
+    "directory": "output/17000/0x347adce60e44df19c9f254f0499904810731edb6b18643c43b6a8543a6bd0f1d",
+    "analysis_timestamp": "2025-07-23 03:17:22",
+    "models_tested": [
+      "gpt-4o-mini",
+      "gpt-3.5-turbo",
+      "gpt-4o"
+    ]
+  },
+  "model_results": {
+    "gpt-4o-mini": {
+      "status": "success",
+      "risk_level": "suspicious",
+      "confidence_score": 65,
+      "explanation": "This transaction appears to have no asset transfers or state changes, but it includes JavaScript code that references a potentially malicious contract. The gas usage is moderate, indicating some complexity, but the absence of direct malicious indicators raises concerns.",
+      "custom_scoring_criteria": {
+        "behavior_patterns": {
+          "weight": 0.4,
+          "reasoning": "Behavior patterns are crucial for identifying potential malicious intent, especially in the absence of asset transfers and state changes."
+        },
+        "gas_efficiency": {
+          "weight": 0.3,
+          "reasoning": "Gas efficiency can indicate the complexity of the transaction and potential inefficiencies that could be exploited."
+        },
+        "ui_js_security": {
+          "weight": 0.3,
+          "reasoning": "JavaScript analysis is important as it can reveal vulnerabilities or malicious code that could compromise user security."
+        }
+      },
+      "recommendations": [
+        "Conduct a deeper analysis of the JavaScript code for potential vulnerabilities.",
+        "Monitor the transaction hash for any future activity or related transactions.",
+        "Educate users about the risks of interacting with unknown contracts."
+      ],
+      "category_analysis": {
+        "behavior_score": 40,
+        "context_score": 70,
+        "ui_score": 60
+      },
+      "analysis_time": 4.89
+    },
+    "gpt-3.5-turbo": {
+      "status": "success",
+      "risk_level": "suspicious",
+      "confidence_score": 75,
+      "explanation": "The transaction involves a moderate gas usage with some JavaScript code present that references a malicious contract address. However, no clear evidence of malicious behavior is found.",
+      "custom_scoring_criteria": {
+        "behavior_patterns_weight": 0.4,
+        "gas_efficiency_weight": 0.3,
+        "ui_security_weight": 0.3,
+        "reasoning": {
+          "behavior_patterns_weight": "Given the lack of behavior analysis data, a moderate weight is assigned to this category.",
+          "gas_efficiency_weight": "Gas efficiency is crucial for cost optimization and security, hence a significant weight is assigned.",
+          "ui_security_weight": "UI and JavaScript security are important for preventing exploits, hence a balanced weight is assigned."
+        }
+      },
+      "recommendations": [
+        "Review the JavaScript code for any potential vulnerabilities or backdoors.",
+        "Monitor the behavior of the contract for any unexpected asset transfers or state changes.",
+        "Enhance gas efficiency by optimizing the code logic and reducing unnecessary computations."
+      ],
+      "category_analysis": {
+        "behavior_score": 60,
+        "context_score": 75,
+        "ui_score": 80
+      },
+      "analysis_time": 3.25
+    },
+    "gpt-4o": {
+      "status": "success",
+      "risk_level": "suspicious",
+      "confidence_score": 65,
+      "explanation": "This transaction appears to involve a smart contract interaction with a potentially malicious address, as indicated by the JavaScript code sample. The transaction uses gas efficiently but lacks detailed behavior analysis due to missing trace calls and asset transfers.",
+      "custom_scoring_criteria": {
+        "behavior_patterns_weight": 0.4,
+        "context_analysis_weight": 0.3,
+        "ui_analysis_weight": 0.3,
+        "reasoning": "Behavior patterns are weighted higher due to their direct impact on transaction security, including call complexity and asset movements. Context analysis is important for understanding gas efficiency, which can indicate potential inefficiencies or misuse. UI/JavaScript security indicators are crucial for detecting potential phishing or malicious scripts, hence a significant weight is assigned."
+      },
+      "recommendations": [
+        "Investigate the JavaScript code for potential phishing or malicious intent.",
+        "Verify the legitimacy of the contract address involved in the transaction.",
+        "Monitor for any unusual activity or state changes in related accounts."
+      ],
+      "category_analysis": {
+        "behavior_score": 50,
+        "context_score": 70,
+        "ui_score": 75
+      },
+      "analysis_time": 3.35
+    }
+  },
+  "consensus_analysis": {
+    "risk_level_consensus": "suspicious",
+    "average_confidence": 68.33,
+    "confidence_range": "65-75",
+    "models_agreed": true
+  },
+  "performance_metrics": {
+    "fastest_model": "gpt-3.5-turbo",
+    "slowest_model": "gpt-4o-mini",
+    "average_time": 3.83,
+    "total_analysis_time": 11.49
+  },
+  "consensus_result": {
+    "risk_level": "suspicious",
+    "confidence_score": 68,
+    "custom_scoring_criteria": {
+      "behavior_patterns_weight": 0.4,
+      "gas_efficiency_weight": 0.3,
+      "ui_security_weight": 0.3
+    },
+    "explanation": "The transaction is flagged as suspicious due to the presence of JavaScript code referencing a potentially malicious contract address. While there are no direct asset transfers or state changes, the moderate gas usage and the complexity of the transaction raise concerns. The lack of detailed behavior analysis further complicates the assessment, leading to a consensus on the suspicious nature of the transaction.",
+    "recommendations": [
+      "Conduct a thorough review of the JavaScript code for potential vulnerabilities.",
+      "Investigate the referenced contract address for known malicious activity.",
+      "Monitor the transaction for any unusual behavior or subsequent interactions."
+    ],
+    "category_analysis": {
+      "behavior_score": 50,
+      "context_score": 71.67,
+      "ui_score": 71.67
+    },
+    "consensus_metadata": {
+      "consensus_reached": true,
+      "rounds_used": 0,
+      "method": "unanimous_agreement",
+      "primary_model": "gpt-4o-mini",
+      "timestamp": "2025-07-23 03:17:27"
+    }
+  }
+}

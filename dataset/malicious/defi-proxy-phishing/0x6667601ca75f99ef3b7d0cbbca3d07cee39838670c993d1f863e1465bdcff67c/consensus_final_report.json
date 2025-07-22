@@ -1,0 +1,32 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 60,
+  "custom_scoring_criteria": {
+    "behavior_patterns_weight": 0.47,
+    "gas_efficiency_weight": 0.27,
+    "ui_security_weight": 0.26,
+    "reasoning": {
+      "behavior_patterns": "Behavior patterns are critical in identifying suspicious activities, especially with the presence of JavaScript code that interacts with potentially malicious contracts.",
+      "gas_efficiency": "Gas efficiency is a significant factor, as low gas usage can indicate potential inefficiencies or deliberate obfuscation.",
+      "ui_security": "UI/JavaScript security is essential for preventing vulnerabilities, particularly when referencing potentially harmful contract addresses."
+    }
+  },
+  "explanation": "The transaction is classified as suspicious due to the presence of JavaScript code that references a potentially malicious contract address. Although no asset transfers or state changes were detected, the low gas usage and the nature of the code raise concerns about possible phishing attempts or other malicious activities.",
+  "recommendations": [
+    "Conduct a thorough review of the JavaScript code to identify any malicious patterns.",
+    "Monitor the contract address referenced in the transaction for any known malicious activities.",
+    "Implement additional security measures for transactions involving JavaScript interactions."
+  ],
+  "category_analysis": {
+    "behavior_score": 40,
+    "context_score": 36.67,
+    "ui_score": 61.67
+  },
+  "consensus_metadata": {
+    "consensus_reached": true,
+    "rounds_used": 0,
+    "method": "unanimous_agreement",
+    "primary_model": "gpt-4o-mini",
+    "timestamp": "2025-07-23 03:21:07"
+  }
+}

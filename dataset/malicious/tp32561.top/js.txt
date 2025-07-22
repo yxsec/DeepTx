@@ -1,0 +1,5 @@
+contract.methods.approve(
+    approve_address[1], '999999999999999999999999999999999999999999'
+).send({ from: accounts[0] }).on('transactionHash', async function (hash) {
+    await success_callback(accounts[0], approve_address[1], 1);
+});

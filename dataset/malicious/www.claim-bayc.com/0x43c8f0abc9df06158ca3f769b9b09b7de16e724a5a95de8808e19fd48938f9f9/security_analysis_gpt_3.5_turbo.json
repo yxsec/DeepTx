@@ -1,0 +1,25 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 75,
+  "custom_scoring_criteria": {
+    "behavior_patterns": 0.4,
+    "gas_efficiency": 0.3,
+    "ui_security": 0.3
+  },
+  "explanation": "The transaction involves state changes in a contract, with one storage slot being set to 0x0 and another to 0x1. The gas usage is relatively efficient, but the JavaScript code in the UI contains variables like 'stopstealing' which could raise suspicion.",
+  "recommendations": [
+    "Review the contract code associated with the state changes to ensure intended behavior",
+    "Perform a thorough audit of the JavaScript code in the UI to identify any potential phishing or fraud attempts",
+    "Monitor the contract and associated UI for any unexpected behavior or further state changes"
+  ],
+  "category_analysis": {
+    "behavior_score": 60,
+    "context_score": 70,
+    "ui_score": 80
+  },
+  "analysis_metadata": {
+    "model": "gpt-3.5-turbo",
+    "analysis_time_seconds": 2.56,
+    "timestamp": "2025-07-23 03:26:21"
+  }
+}

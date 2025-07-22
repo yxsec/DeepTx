@@ -1,0 +1,27 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 68,
+  "custom_scoring_criteria": {
+    "behavior_patterns_weight": 0.4,
+    "gas_efficiency_weight": 0.3,
+    "ui_security_weight": 0.3
+  },
+  "explanation": "The transaction is flagged as suspicious due to the presence of JavaScript code referencing a potentially malicious contract address. While there are no direct asset transfers or state changes, the moderate gas usage and the complexity of the transaction raise concerns. The lack of detailed behavior analysis further complicates the assessment, leading to a consensus on the suspicious nature of the transaction.",
+  "recommendations": [
+    "Conduct a thorough review of the JavaScript code for potential vulnerabilities.",
+    "Investigate the referenced contract address for known malicious activity.",
+    "Monitor the transaction for any unusual behavior or subsequent interactions."
+  ],
+  "category_analysis": {
+    "behavior_score": 50,
+    "context_score": 71.67,
+    "ui_score": 71.67
+  },
+  "consensus_metadata": {
+    "consensus_reached": true,
+    "rounds_used": 0,
+    "method": "unanimous_agreement",
+    "primary_model": "gpt-4o-mini",
+    "timestamp": "2025-07-23 03:17:27"
+  }
+}

@@ -1,0 +1,2 @@
+depth,from,to,call_type,function,gas_allocated,gas_used,gas_remaining,tx_gas_price,block_base_fee
+0,0x991ace6173de564b06e0586bf331e148aad6f824,0x495f947276749ce646f68ac8c248420045cb7b5e,call,safeTransferFrom,63179,34582,28597,27044765987,26044765987

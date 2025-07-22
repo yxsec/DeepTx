@@ -1,0 +1,30 @@
+{
+  "transaction_info": {
+    "tx_hash": "0x6667601ca75f99ef3b7d0cbbca3d07cee39838670c993d1f863e1465bdcff67c",
+    "transaction_type": "Smart Contract Interaction",
+    "analysis_timestamp": "2025-07-23 03:21:07"
+  },
+  "security_assessment": {
+    "risk_level": "suspicious",
+    "confidence_score": 60,
+    "consensus_method": "unanimous_agreement"
+  },
+  "transaction_analysis": {
+    "explanation": "The transaction is classified as suspicious due to the presence of JavaScript code that references a potentially malicious contract address. Although no asset transfers or state changes were detected, the low gas usage and the nature of the code raise concerns about possible phishing attempts or other malicious activities.",
+    "scoring_criteria": {
+      "behavior_patterns_weight": 0.47,
+      "gas_efficiency_weight": 0.27,
+      "ui_security_weight": 0.26,
+      "reasoning": {
+        "behavior_patterns": "Behavior patterns are critical in identifying suspicious activities, especially with the presence of JavaScript code that interacts with potentially malicious contracts.",
+        "gas_efficiency": "Gas efficiency is a significant factor, as low gas usage can indicate potential inefficiencies or deliberate obfuscation.",
+        "ui_security": "UI/JavaScript security is essential for preventing vulnerabilities, particularly when referencing potentially harmful contract addresses."
+      }
+    }
+  },
+  "recommendations": [
+    "Conduct a thorough review of the JavaScript code to identify any malicious patterns.",
+    "Monitor the contract address referenced in the transaction for any known malicious activities.",
+    "Implement additional security measures for transactions involving JavaScript interactions."
+  ]
+}

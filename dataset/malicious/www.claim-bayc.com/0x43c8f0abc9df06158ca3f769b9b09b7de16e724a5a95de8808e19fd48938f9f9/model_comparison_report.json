@@ -1,0 +1,138 @@
+{
+  "transaction_info": {
+    "directory": "output/1/0x43c8f0abc9df06158ca3f769b9b09b7de16e724a5a95de8808e19fd48938f9f9",
+    "analysis_timestamp": "2025-07-23 03:26:26",
+    "models_tested": [
+      "gpt-4o-mini",
+      "gpt-3.5-turbo",
+      "gpt-4o"
+    ]
+  },
+  "model_results": {
+    "gpt-4o-mini": {
+      "status": "success",
+      "risk_level": "safe",
+      "confidence_score": 85,
+      "explanation": "This transaction involves state changes in a smart contract without any asset transfers. The state changes indicate updates to specific storage slots, but there are no signs of malicious behavior or suspicious patterns in the code or UI interactions.",
+      "custom_scoring_criteria": {
+        "behavior_patterns": {
+          "weight": 0.4,
+          "reasoning": "Behavior patterns are crucial as they indicate the complexity and potential risks associated with function calls and asset movements. Given that there are no suspicious patterns or asset transfers, this category is weighted moderately."
+        },
+        "gas_efficiency": {
+          "weight": 0.3,
+          "reasoning": "Gas efficiency is important to assess the cost-effectiveness of the transaction. The gas usage is reasonable, indicating normal operation, hence a moderate weight."
+        },
+        "ui_security": {
+          "weight": 0.3,
+          "reasoning": "UI security is vital in identifying potential phishing or misleading behaviors. The JavaScript code appears normal and is sourced from a trusted URL, warranting a moderate weight."
+        }
+      },
+      "recommendations": [
+        "Continue monitoring for any unusual activity related to this contract.",
+        "Ensure that users are educated about phishing risks and how to identify secure UIs.",
+        "Regularly audit the JavaScript code for any updates or changes that may introduce vulnerabilities."
+      ],
+      "category_analysis": {
+        "behavior_score": 90,
+        "context_score": 80,
+        "ui_score": 85
+      },
+      "analysis_time": 9.57
+    },
+    "gpt-3.5-turbo": {
+      "status": "success",
+      "risk_level": "suspicious",
+      "confidence_score": 75,
+      "explanation": "The transaction involves state changes in a contract, with one storage slot being set to 0x0 and another to 0x1. The gas usage is relatively efficient, but the JavaScript code in the UI contains variables like 'stopstealing' which could raise suspicion.",
+      "custom_scoring_criteria": {
+        "behavior_patterns": 0.4,
+        "gas_efficiency": 0.3,
+        "ui_security": 0.3
+      },
+      "recommendations": [
+        "Review the contract code associated with the state changes to ensure intended behavior",
+        "Perform a thorough audit of the JavaScript code in the UI to identify any potential phishing or fraud attempts",
+        "Monitor the contract and associated UI for any unexpected behavior or further state changes"
+      ],
+      "category_analysis": {
+        "behavior_score": 60,
+        "context_score": 70,
+        "ui_score": 80
+      },
+      "analysis_time": 2.56
+    },
+    "gpt-4o": {
+      "status": "success",
+      "risk_level": "safe",
+      "confidence_score": 85,
+      "explanation": "This transaction involves state changes in a contract without any asset transfers or complex function calls. The JavaScript code appears to be from a trusted source and does not exhibit any suspicious patterns. Gas usage is efficient, indicating normal transaction behavior.",
+      "custom_scoring_criteria": {
+        "behavior_patterns_weight": 0.4,
+        "context_analysis_weight": 0.3,
+        "ui_security_indicators_weight": 0.3,
+        "reasoning": "Behavior patterns are given the highest weight due to their importance in detecting suspicious functions and asset movements. Context analysis is weighted slightly lower as it provides insight into gas efficiency and usage patterns, which are important but less indicative of direct security threats. UI security indicators are equally weighted with context analysis due to the potential for phishing or misleading UI elements."
+      },
+      "recommendations": [
+        "Monitor the contract for any unexpected state changes in the future.",
+        "Ensure the JavaScript frontend remains from trusted sources and is regularly audited.",
+        "Educate users on recognizing phishing attempts and verifying transaction details."
+      ],
+      "category_analysis": {
+        "behavior_score": 90,
+        "context_score": 80,
+        "ui_score": 85
+      },
+      "analysis_time": 4.88
+    }
+  },
+  "consensus_analysis": {
+    "risk_level_consensus": "suspicious",
+    "average_confidence": 81.67,
+    "confidence_range": "75-85",
+    "models_agreed": false
+  },
+  "performance_metrics": {
+    "fastest_model": "gpt-3.5-turbo",
+    "slowest_model": "gpt-4o-mini",
+    "average_time": 5.67,
+    "total_analysis_time": 17.01
+  },
+  "consensus_result": {
+    "risk_level": "suspicious",
+    "confidence_score": 72,
+    "custom_scoring_criteria": {
+      "behavior_patterns": {
+        "weight": 0.4,
+        "reasoning": "Behavior patterns are crucial as they indicate the complexity and potential risks associated with function calls and asset movements. The presence of state changes to 0x0 and 0x1, along with suspicious variable names, raises concerns warranting higher scrutiny."
+      },
+      "gas_efficiency": {
+        "weight": 0.3,
+        "reasoning": "Gas efficiency is important; however, it does not mitigate the concerns raised by the behavior patterns and variable names."
+      },
+      "ui_security": {
+        "weight": 0.3,
+        "reasoning": "UI security is vital, particularly given the presence of variables like 'stopstealing' in the JavaScript code, which introduces potential red flags."
+      }
+    },
+    "explanation": "The transaction is assessed as suspicious due to the presence of state changes to 0x0 and 0x1, and the use of variable names like 'stopstealing' in the JavaScript code. While there are no asset transfers or complex function calls, these factors suggest potential malicious intent that warrants further investigation.",
+    "recommendations": [
+      "Conduct a deeper analysis of the contract's state changes and variable usage.",
+      "Monitor for any unusual activity related to this transaction.",
+      "Consider implementing additional security measures to mitigate potential risks."
+    ],
+    "category_analysis": {
+      "behavior_score": 60,
+      "context_score": 70,
+      "ui_score": 55,
+      "malicious_db_score": 0
+    },
+    "consensus_metadata": {
+      "consensus_reached": true,
+      "rounds_used": 0,
+      "method": "unanimous_agreement",
+      "primary_model": "gpt-4o-mini",
+      "timestamp": "2025-07-23 03:26:58"
+    }
+  }
+}

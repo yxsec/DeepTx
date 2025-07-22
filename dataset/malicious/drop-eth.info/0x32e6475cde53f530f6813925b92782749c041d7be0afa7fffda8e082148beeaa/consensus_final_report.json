@@ -1,0 +1,29 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 68,
+  "custom_scoring_criteria": {
+    "behavior_patterns_weight": 0.37,
+    "gas_usage_weight": 0.17,
+    "ui_security_weight": 0.37,
+    "database_threat_intelligence_weight": 0.09
+  },
+  "explanation": "The transaction involves a transfer of 10 ETH between two addresses. Multiple analyses indicate the presence of JavaScript code in the UI that raises concerns about potential phishing behavior and misleading transaction records. While no malicious addresses were detected, the overall context and UI security indicators suggest a heightened risk.",
+  "recommendations": [
+    "Verify the legitimacy of the UI used for the transaction.",
+    "Consider using a different interface or wallet that is known to be secure.",
+    "Monitor the receiving address for any suspicious activity following the transaction."
+  ],
+  "category_analysis": {
+    "behavior_score": 66,
+    "context_score": 60,
+    "ui_score": 66,
+    "malicious_db_score": 90
+  },
+  "consensus_metadata": {
+    "consensus_reached": true,
+    "rounds_used": 0,
+    "method": "unanimous_agreement",
+    "primary_model": "gpt-4o-mini",
+    "timestamp": "2025-07-23 03:41:51"
+  }
+}

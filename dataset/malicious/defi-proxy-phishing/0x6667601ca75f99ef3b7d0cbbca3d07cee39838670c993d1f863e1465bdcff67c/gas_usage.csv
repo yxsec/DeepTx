@@ -1,0 +1,2 @@
+depth,from,to,call_type,function,gas_allocated,gas_used,gas_remaining,tx_gas_price,block_base_fee
+0,0x023de0334c481f5665b5530fe9261da02be9004d,0xbe535f5bb2bd9d132c9ed6e6bf6ef1f89832a0f1,call,setOwner,78772,0,78772,1000012,12

@@ -1,0 +1,38 @@
+{
+  "transaction_info": {
+    "tx_hash": "0xcf1478144efdc740704215ec8f5e8ffbc370a284852b6af39cd1265c185a2cf5",
+    "transaction_type": "Smart Contract Interaction",
+    "analysis_timestamp": "2025-07-23 03:13:51"
+  },
+  "security_assessment": {
+    "risk_level": "malicious",
+    "confidence_score": 80,
+    "consensus_method": "unanimous_agreement"
+  },
+  "transaction_analysis": {
+    "explanation": "The transaction involves a transfer of Ether to an address that is flagged as malicious in the security database. All models agree on the malicious nature of the receiving address, leading to a consensus risk level of 'malicious' with a confidence score of 80%. The simplicity of the transaction does not mitigate the inherent risks associated with sending funds to a flagged address.",
+    "scoring_criteria": {
+      "behavior_patterns": {
+        "weight": 0.4,
+        "reasoning": "The transaction involves a transfer to a flagged malicious address, which is a significant red flag."
+      },
+      "gas_efficiency": {
+        "weight": 0.2,
+        "reasoning": "Gas usage is minimal, indicating a simple transaction, but does not mitigate the risk posed by the malicious address."
+      },
+      "ui_security": {
+        "weight": 0.2,
+        "reasoning": "No JavaScript code is present, which is neutral; however, it does not contribute positively to the risk assessment."
+      },
+      "database_threat_intelligence": {
+        "weight": 0.2,
+        "reasoning": "The presence of a malicious address in the transaction is a critical factor that significantly impacts the risk level."
+      }
+    }
+  },
+  "recommendations": [
+    "Do not proceed with the transaction to the flagged address.",
+    "Investigate the receiving address further to understand its malicious activities.",
+    "Consider implementing additional security measures for future transactions."
+  ]
+}

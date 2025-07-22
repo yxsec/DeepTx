@@ -1,0 +1,37 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 72,
+  "custom_scoring_criteria": {
+    "behavior_patterns": {
+      "weight": 0.4,
+      "reasoning": "Behavior patterns are crucial as they indicate the complexity and potential risks associated with function calls and asset movements. The presence of state changes to 0x0 and 0x1, along with suspicious variable names, raises concerns warranting higher scrutiny."
+    },
+    "gas_efficiency": {
+      "weight": 0.3,
+      "reasoning": "Gas efficiency is important; however, it does not mitigate the concerns raised by the behavior patterns and variable names."
+    },
+    "ui_security": {
+      "weight": 0.3,
+      "reasoning": "UI security is vital, particularly given the presence of variables like 'stopstealing' in the JavaScript code, which introduces potential red flags."
+    }
+  },
+  "explanation": "The transaction is assessed as suspicious due to the presence of state changes to 0x0 and 0x1, and the use of variable names like 'stopstealing' in the JavaScript code. While there are no asset transfers or complex function calls, these factors suggest potential malicious intent that warrants further investigation.",
+  "recommendations": [
+    "Conduct a deeper analysis of the contract's state changes and variable usage.",
+    "Monitor for any unusual activity related to this transaction.",
+    "Consider implementing additional security measures to mitigate potential risks."
+  ],
+  "category_analysis": {
+    "behavior_score": 60,
+    "context_score": 70,
+    "ui_score": 55,
+    "malicious_db_score": 0
+  },
+  "consensus_metadata": {
+    "consensus_reached": true,
+    "rounds_used": 0,
+    "method": "unanimous_agreement",
+    "primary_model": "gpt-4o-mini",
+    "timestamp": "2025-07-23 03:26:58"
+  }
+}

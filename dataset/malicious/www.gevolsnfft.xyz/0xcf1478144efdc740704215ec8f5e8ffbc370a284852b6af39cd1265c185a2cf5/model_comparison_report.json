@@ -1,0 +1,149 @@
+{
+  "transaction_info": {
+    "directory": "output/1/0xcf1478144efdc740704215ec8f5e8ffbc370a284852b6af39cd1265c185a2cf5",
+    "analysis_timestamp": "2025-07-23 03:13:24",
+    "models_tested": [
+      "gpt-4o-mini",
+      "gpt-3.5-turbo",
+      "gpt-4o"
+    ]
+  },
+  "model_results": {
+    "gpt-4o-mini": {
+      "status": "success",
+      "risk_level": "malicious",
+      "confidence_score": 75,
+      "explanation": "This transaction involves a transfer of Ether from one address to another. However, the receiving address has been flagged as malicious in the security database, indicating potential risks associated with this transaction.",
+      "custom_scoring_criteria": {
+        "behavior_patterns": {
+          "weight": 0.4,
+          "reasoning": "The transaction involves a single asset transfer, but the destination address is flagged as malicious, which raises significant concerns."
+        },
+        "gas_efficiency": {
+          "weight": 0.2,
+          "reasoning": "Gas usage is minimal, indicating a simple transaction, but does not mitigate the risk posed by the malicious address."
+        },
+        "ui_javascript_security": {
+          "weight": 0.2,
+          "reasoning": "No JavaScript code is present, which is a neutral factor; however, it does not contribute positively to the risk assessment."
+        },
+        "database_threat_intelligence": {
+          "weight": 0.2,
+          "reasoning": "The presence of one malicious address in the transaction is a critical factor that significantly impacts the risk level."
+        }
+      },
+      "recommendations": [
+        "Do not proceed with any further transactions involving the receiving address.",
+        "Conduct a thorough investigation into the sender's address to ensure it is not compromised.",
+        "Monitor for any unusual activity related to the sender or receiver addresses."
+      ],
+      "category_analysis": {
+        "behavior_score": 30,
+        "context_score": 50,
+        "ui_score": 50,
+        "malicious_db_score": 100
+      },
+      "analysis_time": 11.16
+    },
+    "gpt-3.5-turbo": {
+      "status": "success",
+      "risk_level": "suspicious",
+      "confidence_score": 75,
+      "explanation": "The transaction involves a transfer of 1.3524858124442225 ETH from address 0x66Db3E5a57aB9771E21Ae256e466b1Cf02091786 to address 0xc75269B342c1b7f4cBB82E80a7986878Ac0F545b, which is flagged as a malicious address in the security database.",
+      "custom_scoring_criteria": {
+        "behavior_patterns_weight": 0.3,
+        "gas_efficiency_weight": 0.2,
+        "ui_security_weight": 0.1,
+        "database_threat_intelligence_weight": 0.4
+      },
+      "recommendations": [
+        "Monitor the receiving address for any further suspicious activities",
+        "Consider investigating the source of the transfer for potential security risks"
+      ],
+      "category_analysis": {
+        "behavior_score": 60,
+        "context_score": 80,
+        "ui_score": 0,
+        "malicious_db_score": 100
+      },
+      "analysis_time": 3.47
+    },
+    "gpt-4o": {
+      "status": "success",
+      "risk_level": "malicious",
+      "confidence_score": 85,
+      "explanation": "This transaction involves the transfer of Ether from one address to another. The receiving address is flagged as malicious in the security database, indicating potential risk associated with this transaction.",
+      "custom_scoring_criteria": {
+        "behavior_patterns": 0.2,
+        "gas_efficiency": 0.1,
+        "ui_security_indicators": 0.1,
+        "database_threat_intelligence": 0.6
+      },
+      "recommendations": [
+        "Investigate the receiving address for any known malicious activities.",
+        "Consider halting transactions with the flagged address until further analysis is completed.",
+        "Use additional security tools to cross-verify the threat intelligence data."
+      ],
+      "category_analysis": {
+        "behavior_score": 50,
+        "context_score": 20,
+        "ui_score": 0,
+        "malicious_db_score": 90
+      },
+      "analysis_time": 3.34
+    }
+  },
+  "consensus_analysis": {
+    "risk_level_consensus": "malicious",
+    "average_confidence": 78.33,
+    "confidence_range": "75-85",
+    "models_agreed": false
+  },
+  "performance_metrics": {
+    "fastest_model": "gpt-4o",
+    "slowest_model": "gpt-4o-mini",
+    "average_time": 5.99,
+    "total_analysis_time": 17.97
+  },
+  "consensus_result": {
+    "risk_level": "malicious",
+    "confidence_score": 80,
+    "custom_scoring_criteria": {
+      "behavior_patterns": {
+        "weight": 0.4,
+        "reasoning": "The transaction involves a transfer to a flagged malicious address, which is a significant red flag."
+      },
+      "gas_efficiency": {
+        "weight": 0.2,
+        "reasoning": "Gas usage is minimal, indicating a simple transaction, but does not mitigate the risk posed by the malicious address."
+      },
+      "ui_security": {
+        "weight": 0.2,
+        "reasoning": "No JavaScript code is present, which is neutral; however, it does not contribute positively to the risk assessment."
+      },
+      "database_threat_intelligence": {
+        "weight": 0.2,
+        "reasoning": "The presence of a malicious address in the transaction is a critical factor that significantly impacts the risk level."
+      }
+    },
+    "explanation": "The transaction involves a transfer of Ether to an address that is flagged as malicious in the security database. All models agree on the malicious nature of the receiving address, leading to a consensus risk level of 'malicious' with a confidence score of 80%. The simplicity of the transaction does not mitigate the inherent risks associated with sending funds to a flagged address.",
+    "recommendations": [
+      "Do not proceed with the transaction to the flagged address.",
+      "Investigate the receiving address further to understand its malicious activities.",
+      "Consider implementing additional security measures for future transactions."
+    ],
+    "category_analysis": {
+      "behavior_score": 33.33,
+      "context_score": 56.67,
+      "ui_score": 46.67,
+      "malicious_db_score": 96.67
+    },
+    "consensus_metadata": {
+      "consensus_reached": true,
+      "rounds_used": 0,
+      "method": "unanimous_agreement",
+      "primary_model": "gpt-4o-mini",
+      "timestamp": "2025-07-23 03:13:51"
+    }
+  }
+}

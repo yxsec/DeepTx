@@ -1,0 +1,26 @@
+{
+  "transaction_info": {
+    "tx_hash": "0x32e6475cde53f530f6813925b92782749c041d7be0afa7fffda8e082148beeaa",
+    "transaction_type": "Smart Contract Interaction",
+    "analysis_timestamp": "2025-07-23 03:41:51"
+  },
+  "security_assessment": {
+    "risk_level": "suspicious",
+    "confidence_score": 68,
+    "consensus_method": "unanimous_agreement"
+  },
+  "transaction_analysis": {
+    "explanation": "The transaction involves a transfer of 10 ETH between two addresses. Multiple analyses indicate the presence of JavaScript code in the UI that raises concerns about potential phishing behavior and misleading transaction records. While no malicious addresses were detected, the overall context and UI security indicators suggest a heightened risk.",
+    "scoring_criteria": {
+      "behavior_patterns_weight": 0.37,
+      "gas_usage_weight": 0.17,
+      "ui_security_weight": 0.37,
+      "database_threat_intelligence_weight": 0.09
+    }
+  },
+  "recommendations": [
+    "Verify the legitimacy of the UI used for the transaction.",
+    "Consider using a different interface or wallet that is known to be secure.",
+    "Monitor the receiving address for any suspicious activity following the transaction."
+  ]
+}

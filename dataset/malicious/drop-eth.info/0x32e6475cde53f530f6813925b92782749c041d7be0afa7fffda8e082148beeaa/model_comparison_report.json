@@ -1,0 +1,144 @@
+{
+  "transaction_info": {
+    "directory": "output/1/0x32e6475cde53f530f6813925b92782749c041d7be0afa7fffda8e082148beeaa",
+    "analysis_timestamp": "2025-07-23 03:41:46",
+    "models_tested": [
+      "gpt-4o-mini",
+      "gpt-3.5-turbo",
+      "gpt-4o"
+    ]
+  },
+  "model_results": {
+    "gpt-4o-mini": {
+      "status": "success",
+      "risk_level": "suspicious",
+      "confidence_score": 65,
+      "explanation": "This transaction involves a transfer of 10 ETH from one address to another. The UI used to initiate this transaction has been flagged for potential phishing behavior, as it contains JavaScript code that could mislead users.",
+      "custom_scoring_criteria": {
+        "behavior_patterns": {
+          "weight": 0.4,
+          "reasoning": "The transaction involves a single asset transfer, which is relatively straightforward, but the lack of call complexity raises concerns about potential phishing."
+        },
+        "gas_efficiency": {
+          "weight": 0.2,
+          "reasoning": "Gas usage is not applicable here as there are no state changes or complex calls, but it indicates a simple transaction."
+        },
+        "ui_security": {
+          "weight": 0.3,
+          "reasoning": "The presence of JavaScript code with potential for misleading behavior raises red flags, especially given the sample code indicating possible fake transaction generation."
+        },
+        "malicious_db": {
+          "weight": 0.1,
+          "reasoning": "No malicious addresses or patterns were detected, but this does not guarantee safety."
+        }
+      },
+      "recommendations": [
+        "Verify the legitimacy of the UI before proceeding with any transactions.",
+        "Consider using a hardware wallet or a trusted wallet application to mitigate phishing risks.",
+        "Monitor the receiving address for any unusual activity following the transaction."
+      ],
+      "category_analysis": {
+        "behavior_score": 60,
+        "context_score": 50,
+        "ui_score": 70,
+        "malicious_db_score": 100
+      },
+      "analysis_time": 12.1
+    },
+    "gpt-3.5-turbo": {
+      "status": "success",
+      "risk_level": "suspicious",
+      "confidence_score": 75,
+      "explanation": "The transaction involves transferring 10 ETH from address 0xc4364DbdC988F990F2cA710cE484e8ECe5903605 to address 0x429ce0f6927954Fea3392Eaa76dBfFE2E3d428C2.",
+      "custom_scoring_criteria": {
+        "behavior_patterns_weight": 0.3,
+        "gas_usage_weight": 0.2,
+        "ui_security_weight": 0.3,
+        "database_threat_intelligence_weight": 0.2,
+        "reasoning": {
+          "behavior_patterns": "Given moderate weight as asset transfer is present but no state changes or complex behavior detected.",
+          "gas_usage": "Given lower weight as gas usage is minimal and no abnormal gas patterns observed.",
+          "ui_security": "Given significant weight due to the presence of JavaScript code in the UI analysis.",
+          "database_threat_intelligence": "Given moderate weight as the database check did not flag any malicious addresses or patterns."
+        }
+      },
+      "recommendations": [
+        "Review the JavaScript code in the UI analysis for any potential phishing or fraud attempts.",
+        "Monitor the behavior of the contract and associated addresses for any unexpected changes.",
+        "Continue to monitor the gas usage and efficiency of transactions for anomalies."
+      ],
+      "category_analysis": {
+        "behavior_score": 60,
+        "context_score": 80,
+        "ui_score": 70,
+        "malicious_db_score": 90
+      },
+      "analysis_time": 4.61
+    },
+    "gpt-4o": {
+      "status": "success",
+      "risk_level": "suspicious",
+      "confidence_score": 65,
+      "explanation": "This transaction involves the transfer of 10 ETH from one address to another. The JavaScript code associated with the UI contains functions that could potentially generate misleading transaction records, indicating a risk of phishing or user deception.",
+      "custom_scoring_criteria": {
+        "behavior_patterns": 0.3,
+        "gas_efficiency": 0.1,
+        "ui_security_indicators": 0.4,
+        "database_threat_intelligence": 0.2
+      },
+      "recommendations": [
+        "Verify the authenticity of the UI and ensure it is from a trusted source.",
+        "Review the JavaScript code for any additional suspicious patterns.",
+        "Consider using additional security tools to cross-check for potential phishing attempts."
+      ],
+      "category_analysis": {
+        "behavior_score": 70,
+        "context_score": 50,
+        "ui_score": 60,
+        "malicious_db_score": 80
+      },
+      "analysis_time": 7.98
+    }
+  },
+  "consensus_analysis": {
+    "risk_level_consensus": "suspicious",
+    "average_confidence": 68.33,
+    "confidence_range": "65-75",
+    "models_agreed": true
+  },
+  "performance_metrics": {
+    "fastest_model": "gpt-3.5-turbo",
+    "slowest_model": "gpt-4o-mini",
+    "average_time": 8.23,
+    "total_analysis_time": 24.69
+  },
+  "consensus_result": {
+    "risk_level": "suspicious",
+    "confidence_score": 68,
+    "custom_scoring_criteria": {
+      "behavior_patterns_weight": 0.37,
+      "gas_usage_weight": 0.17,
+      "ui_security_weight": 0.37,
+      "database_threat_intelligence_weight": 0.09
+    },
+    "explanation": "The transaction involves a transfer of 10 ETH between two addresses. Multiple analyses indicate the presence of JavaScript code in the UI that raises concerns about potential phishing behavior and misleading transaction records. While no malicious addresses were detected, the overall context and UI security indicators suggest a heightened risk.",
+    "recommendations": [
+      "Verify the legitimacy of the UI used for the transaction.",
+      "Consider using a different interface or wallet that is known to be secure.",
+      "Monitor the receiving address for any suspicious activity following the transaction."
+    ],
+    "category_analysis": {
+      "behavior_score": 66,
+      "context_score": 60,
+      "ui_score": 66,
+      "malicious_db_score": 90
+    },
+    "consensus_metadata": {
+      "consensus_reached": true,
+      "rounds_used": 0,
+      "method": "unanimous_agreement",
+      "primary_model": "gpt-4o-mini",
+      "timestamp": "2025-07-23 03:41:51"
+    }
+  }
+}

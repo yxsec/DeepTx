@@ -1,0 +1,34 @@
+{
+  "transaction_info": {
+    "tx_hash": "0xb5a789bb1d39e96143899711a8bcfceedcad4fd5e0dc8ea6023517d24063715e",
+    "transaction_type": "Smart Contract Interaction",
+    "analysis_timestamp": "2025-07-23 03:32:22"
+  },
+  "security_assessment": {
+    "risk_level": "suspicious",
+    "confidence_score": 80,
+    "consensus_method": "unanimous_agreement"
+  },
+  "transaction_analysis": {
+    "explanation": "All models agree that the transaction is suspicious due to the approval of a large amount of tokens, which could lead to unintended consequences or misuse. While the JavaScript code is from a trusted source, the context of the transaction raises concerns about whether the approval aligns with the user's intent. Therefore, a cautious approach is warranted.",
+    "scoring_criteria": {
+      "behavior_patterns": {
+        "weight": 0.4,
+        "reasoning": "The approval of a large amount of tokens raises concerns about potential misuse, despite the absence of suspicious behavior patterns."
+      },
+      "gas_efficiency": {
+        "weight": 0.3,
+        "reasoning": "Gas efficiency is important, but it should not overshadow the risks associated with large token approvals."
+      },
+      "ui_security_indicators": {
+        "weight": 0.3,
+        "reasoning": "UI security is crucial, especially in the context of phishing attacks. The JavaScript code is from a trusted source, but the interaction with large token approvals warrants further scrutiny."
+      }
+    }
+  },
+  "recommendations": [
+    "Verify the intent behind the large token approval with the user.",
+    "Consider implementing additional checks or alerts for large token approvals.",
+    "Monitor the transaction for any unusual activity post-approval."
+  ]
+}

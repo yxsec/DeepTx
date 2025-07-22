@@ -1,0 +1,75 @@
+{
+  "trace_address": [],
+  "action": {
+    "from": "0x991ace6173de564b06e0586bf331e148aad6f824",
+    "to": "0x495f947276749ce646f68ac8c248420045cb7b5e",
+    "value": "0x0",
+    "gas": "0xf6cb",
+    "input": "0xf242432a000000000000000000000000991ace6173de564b06e0586bf331e148aad6f824000000000000000000000000096f226b05777751047d1caa8e06f350fa7c4677ffc35383402bba3be980776674e5dec23bc8194e000000000002670000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000000",
+    "callType": "call",
+    "resolvedFunction": {
+      "name": "safeTransferFrom",
+      "signature": "safeTransferFrom(address,address,uint256,uint256,bytes)",
+      "inputs": [
+        "address",
+        "address",
+        "uint256",
+        "uint256",
+        "bytes"
+      ]
+    },
+    "decodedInputs": [
+      "0x991aCE6173dE564b06e0586bf331E148AAd6f824",
+      "0x096F226b05777751047D1caA8e06f350fa7c4677",
+      "115684887949822486100324119534484847414509961110850478490944922579162382729217",
+      "1",
+      []
+    ]
+  },
+  "result": {
+    "gasUsed": "0x8716",
+    "output": "0x",
+    "decodedOutputs": []
+  },
+  "error": null,
+  "subtraces": [],
+  "logs": [
+    {
+      "address": "0x495f947276749ce646f68ac8c248420045cb7b5e",
+      "topics": [
+        "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+        "0x000000000000000000000000991ace6173de564b06e0586bf331e148aad6f824",
+        "0x000000000000000000000000991ace6173de564b06e0586bf331e148aad6f824",
+        "0x000000000000000000000000096f226b05777751047d1caa8e06f350fa7c4677"
+      ],
+      "data": "0xffc35383402bba3be980776674e5dec23bc8194e0000000000026700000000010000000000000000000000000000000000000000000000000000000000000001",
+      "resolvedEvent": {
+        "name": "TransferSingle",
+        "signature": "TransferSingle(address,address,address,uint256,uint256)",
+        "inputs": [
+          "address",
+          "address",
+          "address",
+          "uint256",
+          "uint256"
+        ]
+      },
+      "blockHash": "0x8c775cc479126643084dbff77dac6ca378553629ba186d235bea56f410010611",
+      "blockNumber": 14731689,
+      "transactionHash": "0x43c8f0abc9df06158ca3f769b9b09b7de16e724a5a95de8808e19fd48938f9f9",
+      "transactionIndex": 315,
+      "logIndex": 630,
+      "removed": false
+    }
+  ],
+  "diff": [
+    {
+      "key": "0x989b8be82e16d46e2075e6a37ebd53981b5cec0606da5bfde0b288deacf9a3d4",
+      "val": "0x0"
+    },
+    {
+      "key": "0x52a837da80f1a48fcc3462cbbc614529b506ae02ac7cf43c705b53126e8d97dd",
+      "val": "0x1"
+    }
+  ]
+}

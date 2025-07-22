@@ -1,0 +1,21 @@
+{
+  "risk_level": "safe",
+  "confidence_score": 95,
+  "custom_scoring_criteria": "Behavior: 0.4 (Call complexity, suspicious functions, asset movements), Gas: 0.4 (Efficiency and usage patterns), UI/JavaScript: 0.2 (Security indicators)",
+  "explanation": "The transaction involves two code functions related to token transfers and approvals. Gas usage is efficient with 97.91% utilization. The JavaScript analysis indicates the presence of UI elements for token approval.",
+  "recommendations": [
+    "Monitor for any future state changes or asset transfers",
+    "Continue to analyze behavior patterns for any anomalies",
+    "Regularly review gas usage for optimization"
+  ],
+  "category_analysis": {
+    "behavior_score": 85,
+    "context_score": 95,
+    "ui_score": 90
+  },
+  "analysis_metadata": {
+    "model": "gpt-3.5-turbo",
+    "analysis_time_seconds": 2.63,
+    "timestamp": "2025-07-23 03:31:03"
+  }
+}

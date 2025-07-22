@@ -1,0 +1,26 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 75,
+  "custom_scoring_criteria": {
+    "behavior_patterns_weight": 0.3,
+    "gas_efficiency_weight": 0.2,
+    "ui_security_weight": 0.1,
+    "database_threat_intelligence_weight": 0.4
+  },
+  "explanation": "The transaction involves a transfer of 1.3524858124442225 ETH from address 0x66Db3E5a57aB9771E21Ae256e466b1Cf02091786 to address 0xc75269B342c1b7f4cBB82E80a7986878Ac0F545b, which is flagged as a malicious address in the security database.",
+  "recommendations": [
+    "Monitor the receiving address for any further suspicious activities",
+    "Consider investigating the source of the transfer for potential security risks"
+  ],
+  "category_analysis": {
+    "behavior_score": 60,
+    "context_score": 80,
+    "ui_score": 0,
+    "malicious_db_score": 100
+  },
+  "analysis_metadata": {
+    "model": "gpt-3.5-turbo",
+    "analysis_time_seconds": 3.47,
+    "timestamp": "2025-07-23 03:13:21"
+  }
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "type": "function",
+    "name": "SecurityUpdate",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "withdraw",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "payable"
+  }
+]

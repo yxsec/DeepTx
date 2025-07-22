@@ -1,0 +1,39 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 65,
+  "custom_scoring_criteria": {
+    "behavior_patterns": {
+      "weight": 0.4,
+      "reasoning": "The transaction involves a single asset transfer, which is relatively straightforward, but the lack of call complexity raises concerns about potential phishing."
+    },
+    "gas_efficiency": {
+      "weight": 0.2,
+      "reasoning": "Gas usage is not applicable here as there are no state changes or complex calls, but it indicates a simple transaction."
+    },
+    "ui_security": {
+      "weight": 0.3,
+      "reasoning": "The presence of JavaScript code with potential for misleading behavior raises red flags, especially given the sample code indicating possible fake transaction generation."
+    },
+    "malicious_db": {
+      "weight": 0.1,
+      "reasoning": "No malicious addresses or patterns were detected, but this does not guarantee safety."
+    }
+  },
+  "explanation": "This transaction involves a transfer of 10 ETH from one address to another. The UI used to initiate this transaction has been flagged for potential phishing behavior, as it contains JavaScript code that could mislead users.",
+  "recommendations": [
+    "Verify the legitimacy of the UI before proceeding with any transactions.",
+    "Consider using a hardware wallet or a trusted wallet application to mitigate phishing risks.",
+    "Monitor the receiving address for any unusual activity following the transaction."
+  ],
+  "category_analysis": {
+    "behavior_score": 60,
+    "context_score": 50,
+    "ui_score": 70,
+    "malicious_db_score": 100
+  },
+  "analysis_metadata": {
+    "model": "gpt-4o-mini",
+    "analysis_time_seconds": 12.1,
+    "timestamp": "2025-07-23 03:41:33"
+  }
+}

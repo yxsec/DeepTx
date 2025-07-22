@@ -1,0 +1,30 @@
+{
+  "trace_address": [],
+  "action": {
+    "from": "0x023de0334c481f5665b5530fe9261da02be9004d",
+    "to": "0xbe535f5bb2bd9d132c9ed6e6bf6ef1f89832a0f1",
+    "value": "0x0",
+    "gas": "0x133b4",
+    "input": "0x13af40350000000000000000000000000000000000000000000000000000000000031337",
+    "callType": "call",
+    "resolvedFunction": {
+      "name": "setOwner",
+      "signature": "setOwner(address)",
+      "inputs": [
+        "address"
+      ]
+    },
+    "decodedInputs": [
+      "0x0000000000000000000000000000000000031337"
+    ]
+  },
+  "result": {
+    "gasUsed": "0x0",
+    "output": "0x",
+    "decodedOutputs": []
+  },
+  "error": null,
+  "subtraces": [],
+  "logs": [],
+  "diff": []
+}

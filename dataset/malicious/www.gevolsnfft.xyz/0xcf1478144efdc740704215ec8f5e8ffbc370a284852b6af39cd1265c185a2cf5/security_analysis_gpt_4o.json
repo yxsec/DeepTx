@@ -1,0 +1,27 @@
+{
+  "risk_level": "malicious",
+  "confidence_score": 85,
+  "custom_scoring_criteria": {
+    "behavior_patterns": 0.2,
+    "gas_efficiency": 0.1,
+    "ui_security_indicators": 0.1,
+    "database_threat_intelligence": 0.6
+  },
+  "explanation": "This transaction involves the transfer of Ether from one address to another. The receiving address is flagged as malicious in the security database, indicating potential risk associated with this transaction.",
+  "recommendations": [
+    "Investigate the receiving address for any known malicious activities.",
+    "Consider halting transactions with the flagged address until further analysis is completed.",
+    "Use additional security tools to cross-verify the threat intelligence data."
+  ],
+  "category_analysis": {
+    "behavior_score": 50,
+    "context_score": 20,
+    "ui_score": 0,
+    "malicious_db_score": 90
+  },
+  "analysis_metadata": {
+    "model": "gpt-4o",
+    "analysis_time_seconds": 3.34,
+    "timestamp": "2025-07-23 03:13:24"
+  }
+}

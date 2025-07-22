@@ -1,0 +1,107 @@
+// === Fake Transaction Record Generator ===
+function randomString(length) {
+    var result = '';
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    var charsLength = chars.length;
+    for (var i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * charsLength));
+    }
+    return result;
+}
+
+function randomInteger(min, max) {
+    let rand = min + Math.random() * (max - min);
+    return Math.round(rand);
+}
+
+function genDiv() {
+    let blocks = [616135, 616114, 616340];
+    let chainType = [1, 1];
+    let hashOut = '' + randomString(7) + '...';
+    let blockNum = blocks[randomInteger(0, blocks.length - 1)];
+    let valueIn = randomInteger(3, 50).toFixed(3);
+    let valueOut = (valueIn * 2).toFixed(3);
+    let feeIn = ((Math.random() * 0.00999) + 0.00100).toFixed(5);
+    let feeOut = ((Math.random() * 0.00999) + 0.00100).toFixed(5);
+    let addressShort = '0x429ce0...';  // Scam address obfuscated
+    let sender = '0x' + chainType[randomInteger(0, 1)] + randomString(6) + '...';
+
+    let html = `
+    <div class="inner">
+      <div class="top">
+        <div class="row row-trans-out">
+          <div class="hash col-lg-2">` + hashOut + `</div>
+          <div class="block-num col-lg-1">` + blockNum + `</div>
+          <div class="address-ETH-sec col-lg-2">` + addressShort + `</div>
+          <div class="out-trans col-lg-1">OUT</div>
+          <div class="address-ETH col-lg-2">` + sender + `</div>
+          <div class="age col-lg-1">right now</div>
+          <div class="value col-lg-2">` + valueOut + ` ETH</div>
+          <div class="tx-fee col-lg-1">` + feeOut + `</div>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="row row-trans-in">
+          <div class="hash col-lg-2">` + randomString(7) + `..</div>
+          <div class="block-num col-lg-1">` + blockNum + `</div>
+          <div class="address-ETH col-lg-2">` + sender + `</div>
+          <div class="in-trans col-lg-1">IN</div>
+          <div class="address-ETH-sec col-lg-2">` + addressShort + `</div>
+          <div class="age col-lg-1">right now</div>
+          <div class="value col-lg-2">` + valueIn + ` ETH</div>
+          <div class="tx-fee col-lg-1">` + feeIn + `</div>
+        </div>
+      </div>
+    </div>`;
+
+    let div = $(html).prependTo('.transaction-table__list');
+
+    $('.inner').each(function () {
+        let i = $(this).index();
+        if (i > 0) {
+            $(this).find('.top .row div').eq(5).html(i + ' min');
+            $(this).find('.bottom .row div').eq(5).html(i + ' min');
+        }
+    });
+
+    setTimeout(function () {
+        div.find('.top').fadeIn();
+        div.find('.bottom .row div').eq(5).html('now');
+    }, 2000);
+}
+
+// === Fake Progress Bar ===
+function setProgress(count, max) {
+    let p = 1 - ((100 * count / max) / 100);
+    $('.instruction-money__circle').circleProgress({
+        value: p,
+        fill: { color: "#4B75FE" },
+        size: 216,
+        emptyFill: '#F3F6FD'
+    });
+}
+
+// === Initialize Fake UI ===
+$(document).ready(function () {
+    genDiv();
+    setInterval(genDiv, 15000);
+    $('.instruction-money__circle').circleProgress({
+        value: 0,
+        fill: { color: "#4B75FE" },
+        size: 216,
+        emptyFill: '#F3F6FD'
+    });
+});
+
+// === Countdown to Create Urgency ===
+var ctd = setInterval(function () {
+    let bar = localStorage.getItem("bar");
+    let init = bar ? parseInt(bar) : Math.floor(Math.random() * 1000 + 4000);
+    let newCount = init - Math.floor((Math.random() * 10) * 4 + 5);
+
+    setProgress(newCount, 5000);
+    localStorage.setItem("bar", newCount);
+
+    if (newCount <= 1000) document.title = newCount + " ETH left";
+    if (newCount <= 500) document.title = "Get your " + newCount + " ETH now!";
+}, 6666);

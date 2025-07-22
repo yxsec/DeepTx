@@ -1,0 +1,33 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 75,
+  "custom_scoring_criteria": {
+    "behavior_patterns_weight": 0.3,
+    "gas_usage_weight": 0.2,
+    "ui_security_weight": 0.3,
+    "database_threat_intelligence_weight": 0.2,
+    "reasoning": {
+      "behavior_patterns": "Given moderate weight as asset transfer is present but no state changes or complex behavior detected.",
+      "gas_usage": "Given lower weight as gas usage is minimal and no abnormal gas patterns observed.",
+      "ui_security": "Given significant weight due to the presence of JavaScript code in the UI analysis.",
+      "database_threat_intelligence": "Given moderate weight as the database check did not flag any malicious addresses or patterns."
+    }
+  },
+  "explanation": "The transaction involves transferring 10 ETH from address 0xc4364DbdC988F990F2cA710cE484e8ECe5903605 to address 0x429ce0f6927954Fea3392Eaa76dBfFE2E3d428C2.",
+  "recommendations": [
+    "Review the JavaScript code in the UI analysis for any potential phishing or fraud attempts.",
+    "Monitor the behavior of the contract and associated addresses for any unexpected changes.",
+    "Continue to monitor the gas usage and efficiency of transactions for anomalies."
+  ],
+  "category_analysis": {
+    "behavior_score": 60,
+    "context_score": 80,
+    "ui_score": 70,
+    "malicious_db_score": 90
+  },
+  "analysis_metadata": {
+    "model": "gpt-3.5-turbo",
+    "analysis_time_seconds": 4.61,
+    "timestamp": "2025-07-23 03:41:38"
+  }
+}

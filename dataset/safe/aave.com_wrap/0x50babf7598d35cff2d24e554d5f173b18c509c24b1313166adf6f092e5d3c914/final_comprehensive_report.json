@@ -1,0 +1,30 @@
+{
+  "transaction_info": {
+    "tx_hash": "0x50babf7598d35cff2d24e554d5f173b18c509c24b1313166adf6f092e5d3c914",
+    "transaction_type": "Smart Contract Interaction",
+    "analysis_timestamp": "2025-07-23 03:10:58"
+  },
+  "security_assessment": {
+    "risk_level": "safe",
+    "confidence_score": 88,
+    "consensus_method": "unanimous_agreement"
+  },
+  "transaction_analysis": {
+    "explanation": "The transaction involves multiple transfers of Ether and Wrapped Ether between addresses, utilizing standard security functions with no signs of malicious activity. The behavior patterns are consistent with normal asset transfers, and gas usage is within acceptable limits. Overall, the transaction is well-structured and poses a low risk.",
+    "scoring_criteria": {
+      "behavior_patterns_weight": 0.53,
+      "gas_efficiency_weight": 0.3,
+      "ui_security_weight": 0.17,
+      "reasoning": {
+        "behavior_patterns": "Behavior patterns are critical in assessing transaction safety, reflecting normal asset transfer activities without suspicious behavior.",
+        "gas_efficiency": "Gas efficiency is important for cost optimization and indicates the transaction's resource usage.",
+        "ui_security": "UI security is less of a concern in this context due to the absence of JavaScript code."
+      }
+    }
+  },
+  "recommendations": [
+    "Continue monitoring for any unusual patterns in future transactions.",
+    "Maintain best practices for gas efficiency to optimize transaction costs.",
+    "Ensure regular audits of smart contracts to uphold security standards."
+  ]
+}

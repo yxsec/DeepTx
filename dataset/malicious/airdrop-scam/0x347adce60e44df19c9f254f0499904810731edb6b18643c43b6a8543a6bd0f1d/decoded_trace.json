@@ -1,0 +1,53 @@
+{
+  "trace_address": [],
+  "action": {
+    "from": "0x4cda576c868c76680bb9dbc3d20d8e17c76afe40",
+    "to": "0xbe535a82f2c3895bdaceb3ffe6b9b80ac2f832a0",
+    "value": "0x6f05b59d3b20000",
+    "gas": "0x3762",
+    "input": "0x5fba79f5",
+    "callType": "call",
+    "resolvedFunction": {
+      "name": "SecurityUpdate",
+      "signature": "SecurityUpdate()",
+      "inputs": [
+        ""
+      ]
+    },
+    "decodedInputs": []
+  },
+  "result": {
+    "gasUsed": "0x2da0",
+    "output": "0x",
+    "decodedOutputs": []
+  },
+  "error": null,
+  "subtraces": [
+    {
+      "trace_address": [
+        0
+      ],
+      "action": {
+        "from": "0xbe535a82f2c3895bdaceb3ffe6b9b80ac2f832a0",
+        "to": "0x4276bf06aebd8a1f3d89a1fd5bf84bfa1b7d03ce",
+        "value": "0x6f05b59d3b20000",
+        "gas": "0x8fc",
+        "input": "0x",
+        "callType": "call",
+        "resolvedFunction": null,
+        "decodedInputs": []
+      },
+      "result": {
+        "gasUsed": "0x0",
+        "output": "0x",
+        "decodedOutputs": []
+      },
+      "error": null,
+      "subtraces": [],
+      "logs": [],
+      "diff": []
+    }
+  ],
+  "logs": [],
+  "diff": []
+}

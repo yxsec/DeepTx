@@ -1,0 +1,26 @@
+{
+  "risk_level": "safe",
+  "confidence_score": 95,
+  "custom_scoring_criteria": {
+    "behavior_patterns_weight": 0.4,
+    "gas_usage_weight": 0.3,
+    "ui_security_weight": 0.3,
+    "reasoning": "Given the lack of suspicious behavior in the transaction and the high credibility of the UI, more weight is allocated to behavior patterns as the primary indicator of risk."
+  },
+  "explanation": "The transaction involves a transfer of 3 ETH from address 0x4DE4862C24A5b1827892EDe7251806A3A138c25a to address 0xFC06BFF6785075b3bB49B226B8c10B6b98025C80.",
+  "recommendations": [
+    "Continue monitoring for any future transactions for consistency and security",
+    "Regularly review and update the UI code to ensure ongoing security",
+    "Educate users on safe practices when interacting with blockchain transactions"
+  ],
+  "category_analysis": {
+    "behavior_score": 90,
+    "context_score": 95,
+    "ui_score": 100
+  },
+  "analysis_metadata": {
+    "model": "gpt-3.5-turbo",
+    "analysis_time_seconds": 3.36,
+    "timestamp": "2025-07-23 03:34:35"
+  }
+}

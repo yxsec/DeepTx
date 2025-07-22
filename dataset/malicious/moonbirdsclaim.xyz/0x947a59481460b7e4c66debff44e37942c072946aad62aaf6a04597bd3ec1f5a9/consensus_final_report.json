@@ -1,0 +1,41 @@
+{
+  "risk_level": "safe",
+  "confidence_score": 88,
+  "custom_scoring_criteria": {
+    "behavior_patterns": {
+      "weight": 0.35,
+      "reasoning": "Behavior patterns are essential for identifying suspicious activities. The consistent absence of complex calls or asset movements indicates low risk."
+    },
+    "gas_efficiency": {
+      "weight": 0.2,
+      "reasoning": "Gas usage is within normal limits, suggesting no unusual activity or inefficiencies."
+    },
+    "ui_security_indicators": {
+      "weight": 0.3,
+      "reasoning": "The JavaScript code appears normal, and there are no signs of phishing or malicious intent, indicating a secure UI."
+    },
+    "database_threat_intelligence": {
+      "weight": 0.15,
+      "reasoning": "No malicious addresses or patterns were detected, providing additional assurance of safety."
+    }
+  },
+  "explanation": "The transaction involves a state change in a smart contract related to asset approval management. All models indicate that the UI interaction is legitimate, with no signs of phishing or malicious behavior. Gas usage is efficient, and the JavaScript code handling user interactions appears secure.",
+  "recommendations": [
+    "Continue monitoring for any unusual behavior patterns.",
+    "Maintain regular audits of smart contract interactions.",
+    "Ensure ongoing updates to threat intelligence databases."
+  ],
+  "category_analysis": {
+    "behavior_score": 86.67,
+    "context_score": 80,
+    "ui_score": 88.33,
+    "malicious_db_score": 95
+  },
+  "consensus_metadata": {
+    "consensus_reached": true,
+    "rounds_used": 0,
+    "method": "unanimous_agreement",
+    "primary_model": "gpt-4o-mini",
+    "timestamp": "2025-07-23 03:48:09"
+  }
+}

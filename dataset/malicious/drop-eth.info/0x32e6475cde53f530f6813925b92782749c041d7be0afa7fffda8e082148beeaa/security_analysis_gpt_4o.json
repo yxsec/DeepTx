@@ -1,0 +1,27 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 65,
+  "custom_scoring_criteria": {
+    "behavior_patterns": 0.3,
+    "gas_efficiency": 0.1,
+    "ui_security_indicators": 0.4,
+    "database_threat_intelligence": 0.2
+  },
+  "explanation": "This transaction involves the transfer of 10 ETH from one address to another. The JavaScript code associated with the UI contains functions that could potentially generate misleading transaction records, indicating a risk of phishing or user deception.",
+  "recommendations": [
+    "Verify the authenticity of the UI and ensure it is from a trusted source.",
+    "Review the JavaScript code for any additional suspicious patterns.",
+    "Consider using additional security tools to cross-check for potential phishing attempts."
+  ],
+  "category_analysis": {
+    "behavior_score": 70,
+    "context_score": 50,
+    "ui_score": 60,
+    "malicious_db_score": 80
+  },
+  "analysis_metadata": {
+    "model": "gpt-4o",
+    "analysis_time_seconds": 7.98,
+    "timestamp": "2025-07-23 03:41:46"
+  }
+}

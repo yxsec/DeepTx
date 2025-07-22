@@ -1,0 +1,62 @@
+{
+  "trace_address": [],
+  "action": {
+    "from": "0xf39589df5fe2a2976f2c913bb0f34e1ada062a0c",
+    "to": "0xfa41b64086ab7d09c9a2007943b262acda68a0d2",
+    "value": "0x0",
+    "gas": "0xba3a",
+    "input": "0xa22cb465000000000000000000000000072316cc278c9ee36640576685c36d2015a308cd0000000000000000000000000000000000000000000000000000000000000001",
+    "callType": "call",
+    "resolvedFunction": {
+      "name": "setApprovalForAll",
+      "signature": "setApprovalForAll(address,bool)",
+      "inputs": [
+        "address",
+        "bool"
+      ]
+    },
+    "decodedInputs": [
+      "0x072316cC278c9Ee36640576685C36d2015A308Cd",
+      true
+    ]
+  },
+  "result": {
+    "gasUsed": "0x6010",
+    "output": "0x",
+    "decodedOutputs": []
+  },
+  "error": null,
+  "subtraces": [],
+  "logs": [
+    {
+      "address": "0xfa41b64086ab7d09c9a2007943b262acda68a0d2",
+      "topics": [
+        "0x17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31",
+        "0x000000000000000000000000f39589df5fe2a2976f2c913bb0f34e1ada062a0c",
+        "0x000000000000000000000000072316cc278c9ee36640576685c36d2015a308cd"
+      ],
+      "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "resolvedEvent": {
+        "name": "ApprovalForAll",
+        "signature": "ApprovalForAll(address,address,bool)",
+        "inputs": [
+          "address",
+          "address",
+          "bool"
+        ]
+      },
+      "blockHash": "0x7ac0e99dd83a086ddf7a76f0055ceaab68b6a2447a52709c5a37f509b4ec5280",
+      "blockNumber": 14768119,
+      "transactionHash": "0x947a59481460b7e4c66debff44e37942c072946aad62aaf6a04597bd3ec1f5a9",
+      "transactionIndex": 25,
+      "logIndex": 51,
+      "removed": false
+    }
+  ],
+  "diff": [
+    {
+      "key": "0x2efacacd1ccac591358a571a1f6bf657431f910da69d072a7dc959481148f2ec",
+      "val": "0x1"
+    }
+  ]
+}

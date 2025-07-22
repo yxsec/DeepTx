@@ -1,0 +1,211 @@
+COMPREHENSIVE SECURITY ANALYSIS PROMPT TEMPLATE
+==============================================
+
+<comprehensive_security_analysis>
+You are a blockchain security expert. Analyze this transaction using 4 categories and provide a comprehensive security assessment.
+
+<transaction_context>
+{
+  "transaction_hash": "0xff8e9226091d513fc936ecc670030eba03f34dbe60cd012122bd18be44248d32",
+  "trace_calls_total": 13525,
+  "trace_calls_analyzed": 15,
+  "code_functions_found": 8,
+  "asset_transfers": 4,
+  "state_changes": 12,
+  "gas_records": 249,
+  "ui_analysis_available": true
+}
+</transaction_context>
+
+<1_behavior_analysis>
+Call Chain Analysis:
+[
+  {
+    "type": "call",
+    "from": "0x...",
+    "to": "0x...",
+    "value": "0",
+    "method": "transfer"
+  }
+]
+
+Code Analysis:
+[
+  {
+    "code": "function transfer(address to, uint256 amount) { ... }",
+    "signature": "function transfer(address to, uint256 amount)",
+    "type": "security_function"
+  }
+]
+
+Asset Flows:
+[
+  {
+    "token": "USDC",
+    "from": "0x...",
+    "to": "0x...",
+    "amount": 1000
+  }
+]
+
+State Changes:
+[
+  {
+    "contract": "0x...",
+    "slot": "0x...",
+    "old_value": "0x...",
+    "new_value": "0x..."
+  }
+]
+</1_behavior_analysis>
+
+<2_context_analysis>
+Gas Usage Analysis:
+{
+  "total_gas_used": 150000,
+  "total_gas_allocated": 200000,
+  "gas_efficiency_percent": 75.0,
+  "total_calls": 249,
+  "average_gas_per_call": 602.41
+}
+</2_context_analysis>
+
+<3_ui_analysis>
+JavaScript Analysis:
+{
+  "js_code_present": true,
+  "js_code_length": 1500,
+  "js_sample": "function handleTransaction() { ... }"
+}
+</3_ui_analysis>
+
+<4_malicious_database_report>
+Security Database Check:
+{
+  "malicious_addresses": [],
+  "suspicious_patterns": [],
+  "risk_score": 0,
+  "threat_indicators": []
+}
+</4_malicious_database_report>
+
+<custom_scoring_criteria>
+Create your own scoring criteria with custom weights that sum to 1.0 based on the actual data available:
+
+1. Behavior patterns (call complexity, suspicious functions, asset movements)
+2. Gas efficiency and usage patterns
+3. UI/JavaScript security indicators
+4. Database threat intelligence (only if meaningful data exists)
+
+Consider factors like:
+- Function call patterns and complexity
+- Asset transfer amounts and destinations
+- Gas usage efficiency
+- JavaScript code security
+- Known malicious addresses or patterns (if database has data)
+- State change implications
+
+Note: If database threat intelligence has no meaningful data, exclude it from scoring (weight = 0) and redistribute weights among the other 3 categories.
+</custom_scoring_criteria>
+
+<output_format>
+Provide a JSON response with exactly these fields:
+{
+  "risk_level": "safe|suspicious|malicious",
+  "confidence_score": 0-100,
+  "custom_scoring_criteria": "Your detailed scoring criteria with custom weights that sum to 1.0. Include weight for each category and reasoning for weight distribution.",
+  "explanation": "Explain what this transaction does in 2-3 sentences",
+  "recommendations": ["Action item 1", "Action item 2", "Action item 3"],
+  "category_analysis": {
+    "behavior_score": 0-100,
+    "context_score": 0-100,
+    "ui_score": 0-100,
+    "malicious_db_score": 0-100 (only if database has meaningful data)
+  }
+}
+
+Risk level definitions:
+- "safe": No security concerns detected across all categories
+- "suspicious": Some concerning patterns but not clearly malicious
+- "malicious": Clear evidence of malicious behavior in one or more categories
+</output_format>
+</comprehensive_security_analysis>
+
+================================
+PROMPT DESIGN PRINCIPLES
+================================
+
+1. USER-FRIENDLY OUTPUT:
+   - Simple risk levels: safe/suspicious/malicious
+   - Clear confidence scoring (0-100)
+   - Transaction explanation in plain language
+   - Actionable recommendations
+
+2. SMART TOKEN MANAGEMENT:
+   - Trace: Up to 6000 tokens (~24KB)
+   - Code: Up to 3000 tokens (~12KB)
+   - Assets: Up to 1000 tokens (~4KB)
+   - Total limit: 8000 tokens (~32KB)
+
+3. CONTENT PRIORITIZATION:
+   - Focus on security-relevant patterns
+   - Include key transaction calls
+   - Extract critical code functions
+   - Preserve asset flow information
+
+4. VALIDATION REQUIREMENTS:
+   - Required fields: risk_level, confidence_score, scoring_criteria, explanation, recommendations
+   - Risk level validation: must be "safe", "suspicious", or "malicious"
+   - Confidence score validation: must be 0-100
+   - Retry logic for invalid responses
+
+5. EMBEDDING STRATEGY:
+   - Multiple content types: trace, code, assets, database checks
+   - Smart token limits prevent API errors
+   - Preserves maximum information within constraints
+   - Generates 3-4 embedding vectors for rich representation
+
+================================
+EXAMPLE OUTPUT
+================================
+
+{
+  "risk_level": "safe",
+  "confidence_score": 85,
+  "custom_scoring_criteria": "Behavior patterns (50%): Standard token transfer, no suspicious calls. Gas efficiency (35%): Normal gas usage for transfer. UI security (15%): No UI interaction. Database check: Excluded (no meaningful data). Weights redistributed among 3 categories.",
+  "explanation": "This transaction performs a standard USDC token transfer between two addresses. The transaction calls the transfer function on the USDC contract and includes proper authorization checks.",
+  "recommendations": [
+    "Verify the recipient address is correct",
+    "Monitor for any unexpected follow-up transactions",
+    "Consider using a hardware wallet for large transfers"
+  ],
+  "category_analysis": {
+    "behavior_score": 85,
+    "context_score": 90,
+    "ui_score": 95
+  }
+}
+
+================================
+USAGE INSTRUCTIONS
+================================
+
+1. Replace <transaction_info> with actual transaction context
+2. Replace <key_findings> with actual analysis statistics
+3. Replace <analysis_data> with actual trace, code, and asset data
+4. Send to GPT-4o-mini or similar model
+5. Validate response format and retry if needed
+6. Extract security_assessment for user display
+
+================================
+TECHNICAL NOTES
+================================
+
+- Token estimation: 1 token ≈ 4 characters
+- Embedding model: text-embedding-ada-002
+- Max tokens per request: 8000
+- Retry attempts: 3
+- Temperature: 0.1 (for consistent output)
+- Max response tokens: 2000
+
+This prompt template ensures consistent, user-friendly security analysis while managing token limits effectively. 

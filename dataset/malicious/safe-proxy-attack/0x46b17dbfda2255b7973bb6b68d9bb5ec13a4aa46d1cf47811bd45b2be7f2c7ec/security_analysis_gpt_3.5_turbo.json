@@ -1,0 +1,25 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 75,
+  "custom_scoring_criteria": {
+    "behavior_score": 0.4,
+    "context_score": 0.4,
+    "ui_score": 0.2
+  },
+  "explanation": "The transaction involves a moderate amount of gas usage with a single call and includes JavaScript code for a button that may trigger an attack. No asset transfers or state changes were detected.",
+  "recommendations": [
+    "Review the JavaScript code for any potential vulnerabilities or malicious intent",
+    "Monitor the gas usage patterns for any anomalies or unexpected behavior",
+    "Perform a thorough analysis of the call chain and code functions to identify any suspicious activities"
+  ],
+  "category_analysis": {
+    "behavior_score": 60,
+    "context_score": 60,
+    "ui_score": 30
+  },
+  "analysis_metadata": {
+    "model": "gpt-3.5-turbo",
+    "analysis_time_seconds": 2.61,
+    "timestamp": "2025-07-23 03:26:39"
+  }
+}

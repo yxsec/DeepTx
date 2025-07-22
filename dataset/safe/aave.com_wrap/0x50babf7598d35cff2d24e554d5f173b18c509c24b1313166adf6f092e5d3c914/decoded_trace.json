@@ -1,0 +1,899 @@
+{
+  "trace_address": [],
+  "action": {
+    "from": "0x66466428990e0f42a4c54f64bee0db6bf2336de5",
+    "to": "0xd322a49006fc828f9b5b37ab215f99b4e5cab19c",
+    "value": "0x11e3ab8395c6e80000",
+    "gas": "0x2dae9",
+    "input": "0x474cf53d00000000000000000000000087870bca3f3fd6335c3f4ce8392d69350b4fa4e200000000000000000000000066466428990e0f42a4c54f64bee0db6bf2336de50000000000000000000000000000000000000000000000000000000000000040",
+    "callType": "call",
+    "resolvedFunction": {
+      "name": "depositETH",
+      "signature": "depositETH(address,address,uint16)",
+      "inputs": [
+        "address",
+        "address",
+        "uint16"
+      ]
+    },
+    "decodedInputs": [
+      "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+      "0x66466428990E0F42A4C54f64bee0Db6BF2336DE5",
+      "64"
+    ]
+  },
+  "result": {
+    "gasUsed": "0x23f31",
+    "output": "0x",
+    "decodedOutputs": []
+  },
+  "error": null,
+  "subtraces": [
+    {
+      "trace_address": [
+        0
+      ],
+      "action": {
+        "from": "0xd322a49006fc828f9b5b37ab215f99b4e5cab19c",
+        "to": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "value": "0x11e3ab8395c6e80000",
+        "gas": "0x2a948",
+        "input": "0xd0e30db0",
+        "callType": "call",
+        "resolvedFunction": {
+          "name": "deposit",
+          "signature": "deposit()",
+          "inputs": [
+            ""
+          ]
+        },
+        "decodedInputs": []
+      },
+      "result": {
+        "gasUsed": "0x5da6",
+        "output": "0x",
+        "decodedOutputs": []
+      },
+      "error": null,
+      "subtraces": [],
+      "logs": [
+        {
+          "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "topics": [
+            "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+            "0x000000000000000000000000d322a49006fc828f9b5b37ab215f99b4e5cab19c"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000011e3ab8395c6e80000",
+          "resolvedEvent": {
+            "name": "Deposit",
+            "signature": "Deposit(address,uint256)",
+            "inputs": [
+              "address",
+              "uint256"
+            ]
+          },
+          "blockHash": "0x8de7137205ac180c6601f5b098030e8cb60879cc9d2536b950d834deaf243adc",
+          "blockNumber": 22968947,
+          "transactionHash": "0x50babf7598d35cff2d24e554d5f173b18c509c24b1313166adf6f092e5d3c914",
+          "transactionIndex": 152,
+          "logIndex": 520,
+          "removed": false
+        }
+      ],
+      "diff": [
+        {
+          "key": "0x92b852c98c36b839a4f063e14fb9b25fefe67c135a9207e6f0b14498915ed75",
+          "val": "0x11e3ab8395c6e80000"
+        }
+      ]
+    },
+    {
+      "trace_address": [
+        1
+      ],
+      "action": {
+        "from": "0xd322a49006fc828f9b5b37ab215f99b4e5cab19c",
+        "to": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+        "value": "0x0",
+        "gas": "0x241b9",
+        "input": "0xe8eda9df000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2000000000000000000000000000000000000000000000011e3ab8395c6e8000000000000000000000000000066466428990e0f42a4c54f64bee0db6bf2336de50000000000000000000000000000000000000000000000000000000000000040",
+        "callType": "call",
+        "resolvedFunction": {
+          "name": "deposit",
+          "signature": "deposit(address,uint256,address,uint16)",
+          "inputs": [
+            "address",
+            "uint256",
+            "address",
+            "uint16"
+          ]
+        },
+        "decodedInputs": [
+          "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+          "330000000000000000000",
+          "0x66466428990E0F42A4C54f64bee0Db6BF2336DE5",
+          "64"
+        ]
+      },
+      "result": {
+        "gasUsed": "0x1aefe",
+        "output": "0x",
+        "decodedOutputs": []
+      },
+      "error": null,
+      "subtraces": [
+        {
+          "trace_address": [
+            1,
+            0
+          ],
+          "action": {
+            "from": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+            "to": "0x947f0054faed3481ff4e76ca35f12fbe36cc665b",
+            "value": "0x0",
+            "gas": "0x2255f",
+            "input": "0xe8eda9df000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2000000000000000000000000000000000000000000000011e3ab8395c6e8000000000000000000000000000066466428990e0f42a4c54f64bee0db6bf2336de50000000000000000000000000000000000000000000000000000000000000040",
+            "callType": "delegatecall",
+            "resolvedFunction": {
+              "name": "deposit",
+              "signature": "deposit(address,uint256,address,uint16)",
+              "inputs": [
+                "address",
+                "uint256",
+                "address",
+                "uint16"
+              ]
+            },
+            "decodedInputs": [
+              "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+              "330000000000000000000",
+              "0x66466428990E0F42A4C54f64bee0Db6BF2336DE5",
+              "64"
+            ]
+          },
+          "result": {
+            "gasUsed": "0x19b36",
+            "output": "0x",
+            "decodedOutputs": []
+          },
+          "error": null,
+          "subtraces": [
+            {
+              "trace_address": [
+                1,
+                0,
+                0
+              ],
+              "action": {
+                "from": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+                "to": "0x1ef34b91afc368174f579067d1db94325cdc7946",
+                "value": "0x0",
+                "gas": "0x20d3c",
+                "input": "0x1913f161000000000000000000000000000000000000000000000000000000000000003400000000000000000000000000000000000000000000000000000000000000369f8068fbc8d290aa39764ac13474b037b1d01d4e88363b43a917982ed2f485e7000000000000000000000000d322a49006fc828f9b5b37ab215f99b4e5cab19c000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc20000000000000000000000009ec6f08190dea04a54f8afc53db96134e5e3fdfb000000000000000000000000000000000000000000000011e3ab8395c6e8000000000000000000000000000066466428990e0f42a4c54f64bee0db6bf2336de50000000000000000000000000000000000000000000000000000000000000040",
+                "callType": "delegatecall",
+                "resolvedFunction": {
+                  "name": "Unresolved_1913f161",
+                  "signature": "Unresolved_1913f161(uint8, uint8, bytes32, address, address, address, uint72, address, uint8)",
+                  "inputs": [
+                    "uint8",
+                    "uint8",
+                    "bytes32",
+                    "address",
+                    "address",
+                    "address",
+                    "uint72",
+                    "address",
+                    "uint8"
+                  ]
+                },
+                "decodedInputs": [
+                  "52",
+                  "54",
+                  [
+                    159,
+                    128,
+                    104,
+                    251,
+                    200,
+                    210,
+                    144,
+                    170,
+                    57,
+                    118,
+                    74,
+                    193,
+                    52,
+                    116,
+                    176,
+                    55,
+                    177,
+                    208,
+                    29,
+                    78,
+                    136,
+                    54,
+                    59,
+                    67,
+                    169,
+                    23,
+                    152,
+                    46,
+                    210,
+                    244,
+                    133,
+                    231
+                  ],
+                  "0xD322A49006FC828F9B5B37Ab215F99B4E5caB19C",
+                  "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+                  "0x9ec6F08190DeA04A54f8Afc53Db96134e5E3FdFB",
+                  "330000000000000000000",
+                  "0x66466428990E0F42A4C54f64bee0Db6BF2336DE5",
+                  "64"
+                ]
+              },
+              "result": {
+                "gasUsed": "0x18b39",
+                "output": "0x",
+                "decodedOutputs": []
+              },
+              "error": null,
+              "subtraces": [
+                {
+                  "trace_address": [
+                    1,
+                    0,
+                    0,
+                    0
+                  ],
+                  "action": {
+                    "from": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+                    "to": "0xea51d7853eefb32b6ee06b1c12e6dcca88be0ffe",
+                    "value": "0x0",
+                    "gas": "0x1c264",
+                    "input": "0xb1bf962d",
+                    "callType": "staticcall",
+                    "resolvedFunction": {
+                      "name": "scaledTotalSupply",
+                      "signature": "scaledTotalSupply()",
+                      "inputs": [
+                        ""
+                      ]
+                    },
+                    "decodedInputs": []
+                  },
+                  "result": {
+                    "gasUsed": "0x1d40",
+                    "output": "0x00000000000000000000000000000000000000000001c22a0a84a8e601a1fdc9",
+                    "decodedOutputs": [
+                      "2125840438458779275754953"
+                    ]
+                  },
+                  "error": null,
+                  "subtraces": [
+                    {
+                      "trace_address": [
+                        1,
+                        0,
+                        0,
+                        0,
+                        0
+                      ],
+                      "action": {
+                        "from": "0xea51d7853eefb32b6ee06b1c12e6dcca88be0ffe",
+                        "to": "0xb58ed8ec66e43de3fecd27e351485e7efe006f38",
+                        "value": "0x0",
+                        "gas": "0x1a819",
+                        "input": "0xb1bf962d",
+                        "callType": "delegatecall",
+                        "resolvedFunction": {
+                          "name": "scaledTotalSupply",
+                          "signature": "scaledTotalSupply()",
+                          "inputs": [
+                            ""
+                          ]
+                        },
+                        "decodedInputs": []
+                      },
+                      "result": {
+                        "gasUsed": "0x987",
+                        "output": "0x00000000000000000000000000000000000000000001c22a0a84a8e601a1fdc9",
+                        "decodedOutputs": [
+                          "2125840438458779275754953"
+                        ]
+                      },
+                      "error": null,
+                      "subtraces": [],
+                      "logs": [],
+                      "diff": []
+                    }
+                  ],
+                  "logs": [],
+                  "diff": []
+                },
+                {
+                  "trace_address": [
+                    1,
+                    0,
+                    0,
+                    1
+                  ],
+                  "action": {
+                    "from": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+                    "to": "0x4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8",
+                    "value": "0x0",
+                    "gas": "0x18e8a",
+                    "input": "0xb1bf962d",
+                    "callType": "staticcall",
+                    "resolvedFunction": {
+                      "name": "scaledTotalSupply",
+                      "signature": "scaledTotalSupply()",
+                      "inputs": [
+                        ""
+                      ]
+                    },
+                    "decodedInputs": []
+                  },
+                  "result": {
+                    "gasUsed": "0x1cfe",
+                    "output": "0x00000000000000000000000000000000000000000001e2680158f60470537b33",
+                    "decodedOutputs": [
+                      "2278099203224725699656499"
+                    ]
+                  },
+                  "error": null,
+                  "subtraces": [
+                    {
+                      "trace_address": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0
+                      ],
+                      "action": {
+                        "from": "0x4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8",
+                        "to": "0x97f5b96c7dac8547251330b63760951a4fab448d",
+                        "value": "0x0",
+                        "gas": "0x1750f",
+                        "input": "0xb1bf962d",
+                        "callType": "delegatecall",
+                        "resolvedFunction": {
+                          "name": "scaledTotalSupply",
+                          "signature": "scaledTotalSupply()",
+                          "inputs": [
+                            ""
+                          ]
+                        },
+                        "decodedInputs": []
+                      },
+                      "result": {
+                        "gasUsed": "0x945",
+                        "output": "0x00000000000000000000000000000000000000000001e2680158f60470537b33",
+                        "decodedOutputs": [
+                          "2278099203224725699656499"
+                        ]
+                      },
+                      "error": null,
+                      "subtraces": [],
+                      "logs": [],
+                      "diff": []
+                    }
+                  ],
+                  "logs": [],
+                  "diff": []
+                },
+                {
+                  "trace_address": [
+                    1,
+                    0,
+                    0,
+                    2
+                  ],
+                  "action": {
+                    "from": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+                    "to": "0x9ec6f08190dea04a54f8afc53db96134e5e3fdfb",
+                    "value": "0x0",
+                    "gas": "0x1622c",
+                    "input": "0xb90db31b00000000000000000000000000000000000000000000000000007130241f9be0000000000000000000000000000000000000000000000011e3ab8395c6e80000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001e48ad781b8872255fb8a00000000000000000000000000000000000000000000000000000000000005dc000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc200000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000015a13758f0ea92f0d2f5",
+                    "callType": "staticcall",
+                    "resolvedFunction": {
+                      "name": "calculateInterestRates",
+                      "signature": "calculateInterestRates((uint256,uint256,uint256,uint256,uint256,address,bool,uint256))",
+                      "inputs": [
+                        "(uint256",
+                        "uint256",
+                        "uint256",
+                        "uint256",
+                        "uint256",
+                        "address",
+                        "bool",
+                        "uint256)"
+                      ]
+                    },
+                    "decodedInputs": [
+                      {
+                        "component0": "124451578420192",
+                        "component1": "330000000000000000000",
+                        "component2": "0",
+                        "component3": "2288186557286960887888778",
+                        "component4": "1500",
+                        "component5": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+                        "component6": true,
+                        "component7": "102143610138490102141685"
+                      }
+                    ]
+                  },
+                  "result": {
+                    "gasUsed": "0x1755",
+                    "output": "0x0000000000000000000000000000000000000000005f0c8b1c3bce38f6536ebb00000000000000000000000000000000000000000074d4866ba154dbe9a42fff",
+                    "decodedOutputs": [
+                      "114907187393056853701390011",
+                      "141239016388944562934263807"
+                    ]
+                  },
+                  "error": null,
+                  "subtraces": [],
+                  "logs": [],
+                  "diff": []
+                },
+                {
+                  "trace_address": [
+                    1,
+                    0,
+                    0,
+                    3
+                  ],
+                  "action": {
+                    "from": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+                    "to": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                    "value": "0x0",
+                    "gas": "0x11999",
+                    "input": "0x23b872dd000000000000000000000000d322a49006fc828f9b5b37ab215f99b4e5cab19c0000000000000000000000004d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8000000000000000000000000000000000000000000000011e3ab8395c6e80000",
+                    "callType": "call",
+                    "resolvedFunction": {
+                      "name": "transferFrom",
+                      "signature": "transferFrom(address,address,uint256)",
+                      "inputs": [
+                        "address",
+                        "address",
+                        "uint256"
+                      ]
+                    },
+                    "decodedInputs": [
+                      "0xD322A49006FC828F9B5B37Ab215F99B4E5caB19C",
+                      "0x4d5F47FA6A74757f35C14fD3a6Ef8E3C9BC514E8",
+                      "330000000000000000000"
+                    ]
+                  },
+                  "result": {
+                    "gasUsed": "0x27f1",
+                    "output": "0x0000000000000000000000000000000000000000000000000000000000000001",
+                    "decodedOutputs": [
+                      "1"
+                    ]
+                  },
+                  "error": null,
+                  "subtraces": [],
+                  "logs": [
+                    {
+                      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                      "topics": [
+                        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                        "0x000000000000000000000000d322a49006fc828f9b5b37ab215f99b4e5cab19c",
+                        "0x0000000000000000000000004d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8"
+                      ],
+                      "data": "0x000000000000000000000000000000000000000000000011e3ab8395c6e80000",
+                      "resolvedEvent": {
+                        "name": "Transfer",
+                        "signature": "Transfer(address,address,uint256)",
+                        "inputs": [
+                          "address",
+                          "address",
+                          "uint256"
+                        ]
+                      },
+                      "blockHash": "0x8de7137205ac180c6601f5b098030e8cb60879cc9d2536b950d834deaf243adc",
+                      "blockNumber": 22968947,
+                      "transactionHash": "0x50babf7598d35cff2d24e554d5f173b18c509c24b1313166adf6f092e5d3c914",
+                      "transactionIndex": 152,
+                      "logIndex": 522,
+                      "removed": false
+                    }
+                  ],
+                  "diff": [
+                    {
+                      "key": "0x92b852c98c36b839a4f063e14fb9b25fefe67c135a9207e6f0b14498915ed75",
+                      "val": "0x0"
+                    },
+                    {
+                      "key": "0xb064600732a82908427d092d333e607598a6238a59aeb45e1288cb0bac7161cf",
+                      "val": "0x15b31b1b61f7afdb516c"
+                    }
+                  ]
+                },
+                {
+                  "trace_address": [
+                    1,
+                    0,
+                    0,
+                    4
+                  ],
+                  "action": {
+                    "from": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+                    "to": "0x4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8",
+                    "value": "0x0",
+                    "gas": "0xf05f",
+                    "input": "0xb3f1c93d000000000000000000000000d322a49006fc828f9b5b37ab215f99b4e5cab19c00000000000000000000000066466428990e0f42a4c54f64bee0db6bf2336de5000000000000000000000000000000000000000000000011e3ab8395c6e8000000000000000000000000000000000000000000000363e74566ad2ad352da7ba5",
+                    "callType": "call",
+                    "resolvedFunction": {
+                      "name": "mint",
+                      "signature": "mint(address,address,uint256,uint256)",
+                      "inputs": [
+                        "address",
+                        "address",
+                        "uint256",
+                        "uint256"
+                      ]
+                    },
+                    "decodedInputs": [
+                      "0xD322A49006FC828F9B5B37Ab215F99B4E5caB19C",
+                      "0x66466428990E0F42A4C54f64bee0Db6BF2336DE5",
+                      "330000000000000000000",
+                      "1049230832487384318429789093"
+                    ]
+                  },
+                  "result": {
+                    "gasUsed": "0x66ff",
+                    "output": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                    "decodedOutputs": [
+                      [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                      ]
+                    ]
+                  },
+                  "error": null,
+                  "subtraces": [
+                    {
+                      "trace_address": [
+                        1,
+                        0,
+                        0,
+                        4,
+                        0
+                      ],
+                      "action": {
+                        "from": "0x4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8",
+                        "to": "0x97f5b96c7dac8547251330b63760951a4fab448d",
+                        "value": "0x0",
+                        "gas": "0xea98",
+                        "input": "0xb3f1c93d000000000000000000000000d322a49006fc828f9b5b37ab215f99b4e5cab19c00000000000000000000000066466428990e0f42a4c54f64bee0db6bf2336de5000000000000000000000000000000000000000000000011e3ab8395c6e8000000000000000000000000000000000000000000000363e74566ad2ad352da7ba5",
+                        "callType": "delegatecall",
+                        "resolvedFunction": {
+                          "name": "mint",
+                          "signature": "mint(address,address,uint256,uint256)",
+                          "inputs": [
+                            "address",
+                            "address",
+                            "uint256",
+                            "uint256"
+                          ]
+                        },
+                        "decodedInputs": [
+                          "0xD322A49006FC828F9B5B37Ab215F99B4E5caB19C",
+                          "0x66466428990E0F42A4C54f64bee0Db6BF2336DE5",
+                          "330000000000000000000",
+                          "1049230832487384318429789093"
+                        ]
+                      },
+                      "result": {
+                        "gasUsed": "0x64c8",
+                        "output": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                        "decodedOutputs": [
+                          [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0
+                          ]
+                        ]
+                      },
+                      "error": null,
+                      "subtraces": [
+                        {
+                          "trace_address": [
+                            1,
+                            0,
+                            0,
+                            4,
+                            0,
+                            0
+                          ],
+                          "action": {
+                            "from": "0x4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8",
+                            "to": "0x8164cc65827dcfe994ab23944cbc90e0aa80bfcb",
+                            "value": "0x0",
+                            "gas": "0xb2d7",
+                            "input": "0x31873e2e00000000000000000000000066466428990e0f42a4c54f64bee0db6bf2336de500000000000000000000000000000000000000000001e2680158f60470537b330000000000000000000000000000000000000000000000d4503cbf492e629302",
+                            "callType": "call",
+                            "resolvedFunction": {
+                              "name": "handleAction",
+                              "signature": "handleAction(address,uint256,uint256)",
+                              "inputs": [
+                                "address",
+                                "uint256",
+                                "uint256"
+                              ]
+                            },
+                            "decodedInputs": [
+                              "0x66466428990E0F42A4C54f64bee0Db6BF2336DE5",
+                              "2278099203224725699656499",
+                              "3916491449969093546754"
+                            ]
+                          },
+                          "result": {
+                            "gasUsed": "0x1e15",
+                            "output": "0x",
+                            "decodedOutputs": []
+                          },
+                          "error": null,
+                          "subtraces": [
+                            {
+                              "trace_address": [
+                                1,
+                                0,
+                                0,
+                                4,
+                                0,
+                                0,
+                                0
+                              ],
+                              "action": {
+                                "from": "0x8164cc65827dcfe994ab23944cbc90e0aa80bfcb",
+                                "to": "0xe7b67f44ea304dd7f6d215b13686637ff64cd2b2",
+                                "value": "0x0",
+                                "gas": "0x9cde",
+                                "input": "0x31873e2e00000000000000000000000066466428990e0f42a4c54f64bee0db6bf2336de500000000000000000000000000000000000000000001e2680158f60470537b330000000000000000000000000000000000000000000000d4503cbf492e629302",
+                                "callType": "delegatecall",
+                                "resolvedFunction": {
+                                  "name": "handleAction",
+                                  "signature": "handleAction(address,uint256,uint256)",
+                                  "inputs": [
+                                    "address",
+                                    "uint256",
+                                    "uint256"
+                                  ]
+                                },
+                                "decodedInputs": [
+                                  "0x66466428990E0F42A4C54f64bee0Db6BF2336DE5",
+                                  "2278099203224725699656499",
+                                  "3916491449969093546754"
+                                ]
+                              },
+                              "result": {
+                                "gasUsed": "0xa73",
+                                "output": "0x",
+                                "decodedOutputs": []
+                              },
+                              "error": null,
+                              "subtraces": [],
+                              "logs": [],
+                              "diff": []
+                            }
+                          ],
+                          "logs": [],
+                          "diff": []
+                        }
+                      ],
+                      "logs": [
+                        {
+                          "address": "0x4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8",
+                          "topics": [
+                            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                            "0x0000000000000000000000000000000000000000000000000000000000000000",
+                            "0x00000000000000000000000066466428990e0f42a4c54f64bee0db6bf2336de5"
+                          ],
+                          "data": "0x000000000000000000000000000000000000000000000012caa7bb146c3bbfc2",
+                          "resolvedEvent": {
+                            "name": "Transfer",
+                            "signature": "Transfer(address,address,uint256)",
+                            "inputs": [
+                              "address",
+                              "address",
+                              "uint256"
+                            ]
+                          },
+                          "blockHash": "0x8de7137205ac180c6601f5b098030e8cb60879cc9d2536b950d834deaf243adc",
+                          "blockNumber": 22968947,
+                          "transactionHash": "0x50babf7598d35cff2d24e554d5f173b18c509c24b1313166adf6f092e5d3c914",
+                          "transactionIndex": 152,
+                          "logIndex": 523,
+                          "removed": false
+                        },
+                        {
+                          "address": "0x4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8",
+                          "topics": [
+                            "0x458f5fa412d0f69b08dd84872b0215675cc67bc1d5b6fd93300a1c3878b86196",
+                            "0x000000000000000000000000d322a49006fc828f9b5b37ab215f99b4e5cab19c",
+                            "0x00000000000000000000000066466428990e0f42a4c54f64bee0db6bf2336de5"
+                          ],
+                          "data": "0x000000000000000000000000000000000000000000000012caa7bb146c3bbfc2000000000000000000000000000000000000000000000000e6fc377ea553bfc200000000000000000000000000000000000000000363e74566ad2ad352da7ba5",
+                          "resolvedEvent": {
+                            "name": "Mint",
+                            "signature": "Mint(address,address,uint256,uint256,uint256)",
+                            "inputs": [
+                              "address",
+                              "address",
+                              "uint256",
+                              "uint256",
+                              "uint256"
+                            ]
+                          },
+                          "blockHash": "0x8de7137205ac180c6601f5b098030e8cb60879cc9d2536b950d834deaf243adc",
+                          "blockNumber": 22968947,
+                          "transactionHash": "0x50babf7598d35cff2d24e554d5f173b18c509c24b1313166adf6f092e5d3c914",
+                          "transactionIndex": 152,
+                          "logIndex": 524,
+                          "removed": false
+                        }
+                      ],
+                      "diff": [
+                        {
+                          "key": "0x9902690fea744a5a4f115f6c4c27dbee1a4d0ae13c17b235ee96823092bf4593",
+                          "val": "0x363e74566ad2ad352da7ba500000000000000d4503cbf492e629302"
+                        },
+                        {
+                          "key": "0x36",
+                          "val": "0x1e2790e22a5bfac270ed8"
+                        },
+                        {
+                          "key": "0x9902690fea744a5a4f115f6c4c27dbee1a4d0ae13c17b235ee96823092bf4593",
+                          "val": "0x363e74566ad2ad352da7ba500000000000000e55d066f046a3626a7"
+                        }
+                      ]
+                    }
+                  ],
+                  "logs": [],
+                  "diff": []
+                }
+              ],
+              "logs": [
+                {
+                  "address": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+                  "topics": [
+                    "0x804c9b842b2748a22bb64b345453a3de7ca54a6ca45ce00d415894979e22897a",
+                    "0x000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+                  ],
+                  "data": "0x0000000000000000000000000000000000000000005f0c8b1c3bce38f6536ebb000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000074d4866ba154dbe9a42fff00000000000000000000000000000000000000000363e74566ad2ad352da7ba50000000000000000000000000000000000000000037a59c892c85916079860db",
+                  "resolvedEvent": {
+                    "name": "ReserveDataUpdated",
+                    "signature": "ReserveDataUpdated(address,uint256,uint256,uint256,uint256,uint256)",
+                    "inputs": [
+                      "address",
+                      "uint256",
+                      "uint256",
+                      "uint256",
+                      "uint256",
+                      "uint256"
+                    ]
+                  },
+                  "blockHash": "0x8de7137205ac180c6601f5b098030e8cb60879cc9d2536b950d834deaf243adc",
+                  "blockNumber": 22968947,
+                  "transactionHash": "0x50babf7598d35cff2d24e554d5f173b18c509c24b1313166adf6f092e5d3c914",
+                  "transactionIndex": 152,
+                  "logIndex": 521,
+                  "removed": false
+                },
+                {
+                  "address": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+                  "topics": [
+                    "0x2b627736bca15cd5381dcf80b0bf11fd197d01a037c52b927a881a10fb73ba61",
+                    "0x000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                    "0x00000000000000000000000066466428990e0f42a4c54f64bee0db6bf2336de5",
+                    "0x0000000000000000000000000000000000000000000000000000000000000040"
+                  ],
+                  "data": "0x000000000000000000000000d322a49006fc828f9b5b37ab215f99b4e5cab19c000000000000000000000000000000000000000000000011e3ab8395c6e80000",
+                  "resolvedEvent": {
+                    "name": "Supply",
+                    "signature": "Supply(address,address,address,uint256,uint16)",
+                    "inputs": [
+                      "address",
+                      "address",
+                      "address",
+                      "uint256",
+                      "uint16"
+                    ]
+                  },
+                  "blockHash": "0x8de7137205ac180c6601f5b098030e8cb60879cc9d2536b950d834deaf243adc",
+                  "blockNumber": 22968947,
+                  "transactionHash": "0x50babf7598d35cff2d24e554d5f173b18c509c24b1313166adf6f092e5d3c914",
+                  "transactionIndex": 152,
+                  "logIndex": 525,
+                  "removed": false
+                }
+              ],
+              "diff": [
+                {
+                  "key": "0xf81d8d79f42adb4c73cc3aa0c78e25d3343882d0313c0b80ece3d3a103ef1ec0",
+                  "val": "0x5f0c8b1c3bce38f6536ebb000000000363e74566ad2ad352da7ba5"
+                },
+                {
+                  "key": "0xf81d8d79f42adb4c73cc3aa0c78e25d3343882d0313c0b80ece3d3a103ef1ec1",
+                  "val": "0x74d4866ba154dbe9a42fff00000000037a59c892c85916079860db"
+                },
+                {
+                  "key": "0xf81d8d79f42adb4c73cc3aa0c78e25d3343882d0313c0b80ece3d3a103ef1ec7",
+                  "val": "0x15b31b04748059d8d2f500000000000000040ad732c564793c2c"
+                }
+              ]
+            }
+          ],
+          "logs": [],
+          "diff": []
+        }
+      ],
+      "logs": [],
+      "diff": []
+    }
+  ],
+  "logs": [],
+  "diff": []
+}

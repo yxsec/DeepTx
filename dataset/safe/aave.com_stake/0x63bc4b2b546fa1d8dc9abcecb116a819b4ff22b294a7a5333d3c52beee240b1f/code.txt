@@ -1,0 +1,409 @@
+
+// Function Unresolved_1913f161 not found in 1ef34b91afc368174f579067d1db94325cdc7946
+
+// Function mint not found in 4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8
+
+// Function scaledTotalSupply not found in 4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8
+
+// Function handleAction not found in 8164cc65827dcfe994ab23944cbc90e0aa80bfcb
+
+// Function deposit not found in 87870bca3f3fd6335c3f4ce8392d69350b4fa4e2
+
+// Function deposit not found in 947f0054faed3481ff4e76ca35f12fbe36cc665b
+
+// Function mint not found in 97f5b96c7dac8547251330b63760951a4fab448d
+
+// Function from 97f5b96c7dac8547251330b63760951a4fab448d - scaledTotalSupply in lib_aave-v3-origin-private_src_contracts_protocol_tokenization_base_ScaledBalanceTokenBase.sol
+function scaledTotalSupply() public view virtual override returns (uint256) {
+    return super.totalSupply();
+  }
+
+  /// @inheritdoc IScaledBalanceToken
+  function getPreviousIndex(address user) external view virtual override returns (uint256) {
+    return _userState[user].additionalData;
+  }
+
+  /**
+   * @notice Implements the basic logic to mint a scaled balance token.
+   * @param caller The address performing the mint
+   * @param onBehalfOf The address of the user that will receive the scaled tokens
+   * @param amount The amount of tokens getting minted
+   * @param index The next liquidity index of the reserve
+   * @return `true` if the the previous balance of the user was 0
+   */
+  function _mintScaled(
+    address caller,
+    address onBehalfOf,
+    uint256 amount,
+    uint256 index
+  ) internal returns (bool) {
+    uint256 amountScaled = amount.rayDiv(index);
+    require(amountScaled != 0, Errors.InvalidMintAmount());
+
+    uint256 scaledBalance = super.balanceOf(onBehalfOf);
+    uint256 balanceIncrease = scaledBalance.rayMul(index) -
+      scaledBalance.rayMul(_userState[onBehalfOf].additionalData);
+
+    _userState[onBehalfOf].additionalData = index.toUint128();
+
+    _mint(onBehalfOf, amountScaled.toUint120());
+
+    uint256 amountToMint = amount + balanceIncrease;
+    emit Transfer(address(0), onBehalfOf, amountToMint);
+    emit Mint(caller, onBehalfOf, amountToMint, balanceIncrease, index);
+
+    return (scaledBalance == 0);
+  }
+
+  /**
+   * @notice Implements the basic logic to burn a scaled balance token.
+   * @dev In some instances, a burn transaction will emit a mint event
+   * if the amount to burn is less than the interest that the user accrued
+   * @param user The user which debt is burnt
+   * @param target The address that will receive the underlying, if any
+   * @param amount The amount getting burned
+   * @param index The variable debt index of the reserve
+   * @return `true` if the the new balance of the user is 0
+   */
+  function _burnScaled(
+    address user,
+    address target,
+    uint256 amount,
+    uint256 index
+  ) internal returns (bool) {
+    uint256 amountScaled = amount.rayDiv(index);
+    require(amountScaled != 0, Errors.InvalidBurnAmount());
+
+    uint256 scaledBalance = super.balanceOf(user);
+    uint256 balanceIncrease = scaledBalance.rayMul(index) -
+      scaledBalance.rayMul(_userState[user].additionalData);
+
+    _userState[user].additionalData = index.toUint128();
+
+    _burn(user, amountScaled.toUint120());
+
+    if (balanceIncrease > amount) {
+      uint256 amountToMint = balanceIncrease - amount;
+      emit Transfer(address(0), user, amountToMint);
+      emit Mint(user, user, amountToMint, balanceIncrease, index);
+    } else {
+      uint256 amountToBurn = amount - balanceIncrease;
+      emit Transfer(user, address(0), amountToBurn);
+      emit Burn(user, target, amountToBurn, balanceIncrease, index);
+    }
+    return scaledBalance - amountScaled == 0;
+  }
+}
+
+// Function calculateInterestRates not found in 9ec6f08190dea04a54f8afc53db96134e5e3fdfb
+
+// Function from b58ed8ec66e43de3fecd27e351485e7efe006f38 - scaledTotalSupply in lib_aave-v3-origin-private_src_contracts_protocol_tokenization_base_ScaledBalanceTokenBase.sol
+function scaledTotalSupply() public view virtual override returns (uint256) {
+    return super.totalSupply();
+  }
+
+  /// @inheritdoc IScaledBalanceToken
+  function getPreviousIndex(address user) external view virtual override returns (uint256) {
+    return _userState[user].additionalData;
+  }
+
+  /**
+   * @notice Implements the basic logic to mint a scaled balance token.
+   * @param caller The address performing the mint
+   * @param onBehalfOf The address of the user that will receive the scaled tokens
+   * @param amount The amount of tokens getting minted
+   * @param index The next liquidity index of the reserve
+   * @return `true` if the the previous balance of the user was 0
+   */
+  function _mintScaled(
+    address caller,
+    address onBehalfOf,
+    uint256 amount,
+    uint256 index
+  ) internal returns (bool) {
+    uint256 amountScaled = amount.rayDiv(index);
+    require(amountScaled != 0, Errors.InvalidMintAmount());
+
+    uint256 scaledBalance = super.balanceOf(onBehalfOf);
+    uint256 balanceIncrease = scaledBalance.rayMul(index) -
+      scaledBalance.rayMul(_userState[onBehalfOf].additionalData);
+
+    _userState[onBehalfOf].additionalData = index.toUint128();
+
+    _mint(onBehalfOf, amountScaled.toUint120());
+
+    uint256 amountToMint = amount + balanceIncrease;
+    emit Transfer(address(0), onBehalfOf, amountToMint);
+    emit Mint(caller, onBehalfOf, amountToMint, balanceIncrease, index);
+
+    return (scaledBalance == 0);
+  }
+
+  /**
+   * @notice Implements the basic logic to burn a scaled balance token.
+   * @dev In some instances, a burn transaction will emit a mint event
+   * if the amount to burn is less than the interest that the user accrued
+   * @param user The user which debt is burnt
+   * @param target The address that will receive the underlying, if any
+   * @param amount The amount getting burned
+   * @param index The variable debt index of the reserve
+   * @return `true` if the the new balance of the user is 0
+   */
+  function _burnScaled(
+    address user,
+    address target,
+    uint256 amount,
+    uint256 index
+  ) internal returns (bool) {
+    uint256 amountScaled = amount.rayDiv(index);
+    require(amountScaled != 0, Errors.InvalidBurnAmount());
+
+    uint256 scaledBalance = super.balanceOf(user);
+    uint256 balanceIncrease = scaledBalance.rayMul(index) -
+      scaledBalance.rayMul(_userState[user].additionalData);
+
+    _userState[user].additionalData = index.toUint128();
+
+    _burn(user, amountScaled.toUint120());
+
+    if (balanceIncrease > amount) {
+      uint256 amountToMint = balanceIncrease - amount;
+      emit Transfer(address(0), user, amountToMint);
+      emit Mint(user, user, amountToMint, balanceIncrease, index);
+    } else {
+      uint256 amountToBurn = amount - balanceIncrease;
+      emit Transfer(user, address(0), amountToBurn);
+      emit Burn(user, target, amountToBurn, balanceIncrease, index);
+    }
+    return scaledBalance - amountScaled == 0;
+  }
+}
+
+// Function from c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 - deposit in c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.sol
+function deposit() public payable {
+        balanceOf[msg.sender] += msg.value;
+        Deposit(msg.sender, msg.value);
+    }
+    function withdraw(uint wad) public {
+        require(balanceOf[msg.sender] >= wad);
+        balanceOf[msg.sender] -= wad;
+        msg.sender.transfer(wad);
+        Withdrawal(msg.sender, wad);
+    }
+
+    function totalSupply() public view returns (uint) {
+        return this.balance;
+    }
+
+    function approve(address guy, uint wad) public returns (bool) {
+        allowance[msg.sender][guy] = wad;
+        Approval(msg.sender, guy, wad);
+        return true;
+    }
+
+    function transfer(address dst, uint wad) public returns (bool) {
+        return transferFrom(msg.sender, dst, wad);
+    }
+
+    function transferFrom(address src, address dst, uint wad)
+        public
+        returns (bool)
+    {
+        require(balanceOf[src] >= wad);
+
+        if (src != msg.sender && allowance[src][msg.sender] != uint(-1)) {
+            require(allowance[src][msg.sender] >= wad);
+            allowance[src][msg.sender] -= wad;
+        }
+
+        balanceOf[src] -= wad;
+        balanceOf[dst] += wad;
+
+        Transfer(src, dst, wad);
+
+        return true;
+    }
+}
+
+// Function from c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 - transferFrom in c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.sol
+function transferFrom(address src, address dst, uint wad)
+        public
+        returns (bool)
+    {
+        require(balanceOf[src] >= wad);
+
+        if (src != msg.sender && allowance[src][msg.sender] != uint(-1)) {
+            require(allowance[src][msg.sender] >= wad);
+            allowance[src][msg.sender] -= wad;
+        }
+
+        balanceOf[src] -= wad;
+        balanceOf[dst] += wad;
+
+        Transfer(src, dst, wad);
+
+        return true;
+    }
+}
+
+// Function from d01607c3c5ecaba394d8be377a08590149325722 - depositETH in lib_aave-v3-origin_src_contracts_helpers_WrappedTokenGatewayV3.sol
+function depositETH(address, address onBehalfOf, uint16 referralCode) external payable override {
+    WETH.deposit{value: msg.value}();
+    POOL.deposit(address(WETH), msg.value, onBehalfOf, referralCode);
+  }
+
+  /**
+   * @dev withdraws the WETH _reserves of msg.sender.
+   * @param amount amount of aWETH to withdraw and receive native ETH
+   * @param to address of the user who will receive native ETH
+   */
+  function withdrawETH(address, uint256 amount, address to) external override {
+    IAToken aWETH = IAToken(POOL.getReserveAToken(address(WETH)));
+    uint256 userBalance = aWETH.balanceOf(msg.sender);
+    uint256 amountToWithdraw = amount;
+
+    // if amount is equal to uint(-1), the user wants to redeem everything
+    if (amount == type(uint256).max) {
+      amountToWithdraw = userBalance;
+    }
+    aWETH.transferFrom(msg.sender, address(this), amountToWithdraw);
+    POOL.withdraw(address(WETH), amountToWithdraw, address(this));
+    WETH.withdraw(amountToWithdraw);
+    _safeTransferETH(to, amountToWithdraw);
+  }
+
+  /**
+   * @dev repays a borrow on the WETH reserve, for the specified amount (or for the whole amount, if uint256(-1) is specified).
+   * @param amount the amount to repay, or uint256(-1) if the user wants to repay everything
+   * @param onBehalfOf the address for which msg.sender is repaying
+   */
+  function repayETH(address, uint256 amount, address onBehalfOf) external payable override {
+    uint256 paybackAmount = IERC20(POOL.getReserveVariableDebtToken(address(WETH))).balanceOf(
+      onBehalfOf
+    );
+
+    if (amount < paybackAmount) {
+      paybackAmount = amount;
+    }
+    require(msg.value >= paybackAmount, 'msg.value is less than repayment amount');
+    WETH.deposit{value: paybackAmount}();
+    POOL.repay(
+      address(WETH),
+      paybackAmount,
+      uint256(DataTypes.InterestRateMode.VARIABLE),
+      onBehalfOf
+    );
+
+    // refund remaining dust eth
+    if (msg.value > paybackAmount) _safeTransferETH(msg.sender, msg.value - paybackAmount);
+  }
+
+  /**
+   * @dev borrow WETH, unwraps to ETH and send both the ETH and DebtTokens to msg.sender, via `approveDelegation` and onBehalf argument in `Pool.borrow`.
+   * @param amount the amount of ETH to borrow
+   * @param referralCode integrators are assigned a referral code and can potentially receive rewards
+   */
+  function borrowETH(address, uint256 amount, uint16 referralCode) external override {
+    POOL.borrow(
+      address(WETH),
+      amount,
+      uint256(DataTypes.InterestRateMode.VARIABLE),
+      referralCode,
+      msg.sender
+    );
+    WETH.withdraw(amount);
+    _safeTransferETH(msg.sender, amount);
+  }
+
+  /**
+   * @dev withdraws the WETH _reserves of msg.sender.
+   * @param amount amount of aWETH to withdraw and receive native ETH
+   * @param to address of the user who will receive native ETH
+   * @param deadline validity deadline of permit and so depositWithPermit signature
+   * @param permitV V parameter of ERC712 permit sig
+   * @param permitR R parameter of ERC712 permit sig
+   * @param permitS S parameter of ERC712 permit sig
+   */
+  function withdrawETHWithPermit(
+    address,
+    uint256 amount,
+    address to,
+    uint256 deadline,
+    uint8 permitV,
+    bytes32 permitR,
+    bytes32 permitS
+  ) external override {
+    IAToken aWETH = IAToken(POOL.getReserveAToken(address(WETH)));
+    uint256 userBalance = aWETH.balanceOf(msg.sender);
+    uint256 amountToWithdraw = amount;
+
+    // if amount is equal to type(uint256).max, the user wants to redeem everything
+    if (amount == type(uint256).max) {
+      amountToWithdraw = userBalance;
+    }
+    // permit `amount` rather than `amountToWithdraw` to make it easier for front-ends and integrators
+    try
+      aWETH.permit(msg.sender, address(this), amount, deadline, permitV, permitR, permitS)
+    {} catch {}
+    aWETH.transferFrom(msg.sender, address(this), amountToWithdraw);
+    POOL.withdraw(address(WETH), amountToWithdraw, address(this));
+    WETH.withdraw(amountToWithdraw);
+    _safeTransferETH(to, amountToWithdraw);
+  }
+
+  /**
+   * @dev transfer ETH to an address, revert if it fails.
+   * @param to recipient of the transfer
+   * @param value the amount to send
+   */
+  function _safeTransferETH(address to, uint256 value) internal {
+    (bool success, ) = to.call{value: value}(new bytes(0));
+    require(success, 'ETH_TRANSFER_FAILED');
+  }
+
+  /**
+   * @dev transfer ERC20 from the utility contract, for ERC20 recovery in case of stuck tokens due
+   * direct transfers to the contract address.
+   * @param token token to transfer
+   * @param to recipient of the transfer
+   * @param amount amount to send
+   */
+  function emergencyTokenTransfer(address token, address to, uint256 amount) external onlyOwner {
+    IERC20(token).safeTransfer(to, amount);
+  }
+
+  /**
+   * @dev transfer native Ether from the utility contract, for native Ether recovery in case of stuck Ether
+   * due to selfdestructs or ether transfers to the pre-computed contract address before deployment.
+   * @param to recipient of the transfer
+   * @param amount amount to send
+   */
+  function emergencyEtherTransfer(address to, uint256 amount) external onlyOwner {
+    _safeTransferETH(to, amount);
+  }
+
+  /**
+   * @dev Get WETH address used by WrappedTokenGatewayV3
+   */
+  function getWETHAddress() external view returns (address) {
+    return address(WETH);
+  }
+
+  /**
+   * @dev Only WETH contract is allowed to transfer ETH here. Prevent other addresses to send Ether to this contract.
+   */
+  receive() external payable {
+    require(msg.sender == address(WETH), 'Receive not allowed');
+  }
+
+  /**
+   * @dev Revert fallback calls
+   */
+  fallback() external payable {
+    revert('Fallback not allowed');
+  }
+}
+
+// Function handleAction not found in e7b67f44ea304dd7f6d215b13686637ff64cd2b2
+
+// Function scaledTotalSupply not found in ea51d7853eefb32b6ee06b1c12e6dcca88be0ffe

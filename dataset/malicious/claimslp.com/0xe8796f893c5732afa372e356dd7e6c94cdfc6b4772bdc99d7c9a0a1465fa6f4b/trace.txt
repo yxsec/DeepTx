@@ -1,0 +1,13 @@
+  [80847] heimdall::inspect(0xe8796f893c5732afa372e356dd7e6c94cdfc6b4772bdc99d7c9a0a1465fa6f4b)
+    ├─ [57207] 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48::permit(address: 0x38e0D87Bf722C595876b6aEa5317C25e48e82F0a, address: 0x10FD497E61b1Aa7055ecE54B3f06Eeec511CAA47, uint: 115792089237316195423570985008687907853269984665640564039457584007913129639935, uint: 1988064000, uint: 28, bytes32: 0xf317e9c38b108f8947addbda2a1e144707fb451d3e664ce97544a12a5d9d430c, bytes32: 0x4042f544efb5120780facca1f24264f2e962ef35220d3d3304d14133fd7879f7) [call] [value: 0 ether]
+    │   ├─ [49152] ::permit(address: 0x38e0D87Bf722C595876b6aEa5317C25e48e82F0a, address: 0x10FD497E61b1Aa7055ecE54B3f06Eeec511CAA47, uint: 115792089237316195423570985008687907853269984665640564039457584007913129639935, uint: 1988064000, uint: 28, bytes32: 0xf317e9c38b108f8947addbda2a1e144707fb451d3e664ce97544a12a5d9d430c, bytes32: 0x4042f544efb5120780facca1f24264f2e962ef35220d3d3304d14133fd7879f7) [delegatecall] [value: 0 ether]
+    │   │   ├─ emit Approval(address, address, uint256) [log index: 245]
+    │   │   │       topic 0: 0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925
+    │   │   │       topic 1: 0x00000000000000000000000038e0d87bf722c595876b6aea5317c25e48e82f0a
+    │   │   │       topic 2: 0x00000000000000000000000010fd497e61b1aa7055ece54b3f06eeec511caa47
+    │   │   │          data: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    │   │   ├─ store '0000000000000000000000000000000000000000000000000000000000000003' in slot '9250cd902ea4c83bfa346662a403c6324e24b8e7e594c5d096335387a53acce7'
+    │   │   ├─ store 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' in slot '2d8a29ef6bafbd457be5f0aead97a02a657ba19495a8d9b54ad221efec32de34'
+    │   │   └─ ← 
+    │   └─ ← 
+    └─ ← ()

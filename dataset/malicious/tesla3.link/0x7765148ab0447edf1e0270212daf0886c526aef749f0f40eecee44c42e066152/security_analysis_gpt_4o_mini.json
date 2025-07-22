@@ -1,0 +1,34 @@
+{
+  "risk_level": "safe",
+  "confidence_score": 85,
+  "custom_scoring_criteria": {
+    "behavior_patterns": {
+      "weight": 0.5,
+      "reasoning": "The transaction involves a single asset transfer with no complex call patterns or suspicious functions, indicating low risk."
+    },
+    "gas_efficiency": {
+      "weight": 0.3,
+      "reasoning": "Gas usage is minimal, but since there are no state changes or complex interactions, it does not raise concerns."
+    },
+    "ui_security_indicators": {
+      "weight": 0.2,
+      "reasoning": "The JavaScript code appears normal with no suspicious patterns, and the URLs are not flagged as malicious."
+    }
+  },
+  "explanation": "This transaction involves a transfer of 3 ETH from one address to another with no state changes or complex interactions. The UI analysis indicates that the JavaScript code is normal and does not exhibit phishing behavior.",
+  "recommendations": [
+    "Continue monitoring for any unusual activity related to this address.",
+    "Ensure that the UI is from a trusted source before initiating transactions.",
+    "Educate users on recognizing phishing attempts and verifying URLs."
+  ],
+  "category_analysis": {
+    "behavior_score": 90,
+    "context_score": 80,
+    "ui_score": 85
+  },
+  "analysis_metadata": {
+    "model": "gpt-4o-mini",
+    "analysis_time_seconds": 7.71,
+    "timestamp": "2025-07-23 03:34:32"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "transaction_info": {
+    "directory": "output/1/0x7765148ab0447edf1e0270212daf0886c526aef749f0f40eecee44c42e066152",
+    "analysis_timestamp": "2025-07-23 03:34:39",
+    "models_tested": [
+      "gpt-4o-mini",
+      "gpt-3.5-turbo",
+      "gpt-4o"
+    ]
+  },
+  "model_results": {
+    "gpt-4o-mini": {
+      "status": "success",
+      "risk_level": "safe",
+      "confidence_score": 85,
+      "explanation": "This transaction involves a transfer of 3 ETH from one address to another with no state changes or complex interactions. The UI analysis indicates that the JavaScript code is normal and does not exhibit phishing behavior.",
+      "custom_scoring_criteria": {
+        "behavior_patterns": {
+          "weight": 0.5,
+          "reasoning": "The transaction involves a single asset transfer with no complex call patterns or suspicious functions, indicating low risk."
+        },
+        "gas_efficiency": {
+          "weight": 0.3,
+          "reasoning": "Gas usage is minimal, but since there are no state changes or complex interactions, it does not raise concerns."
+        },
+        "ui_security_indicators": {
+          "weight": 0.2,
+          "reasoning": "The JavaScript code appears normal with no suspicious patterns, and the URLs are not flagged as malicious."
+        }
+      },
+      "recommendations": [
+        "Continue monitoring for any unusual activity related to this address.",
+        "Ensure that the UI is from a trusted source before initiating transactions.",
+        "Educate users on recognizing phishing attempts and verifying URLs."
+      ],
+      "category_analysis": {
+        "behavior_score": 90,
+        "context_score": 80,
+        "ui_score": 85
+      },
+      "analysis_time": 7.71
+    },
+    "gpt-3.5-turbo": {
+      "status": "success",
+      "risk_level": "safe",
+      "confidence_score": 95,
+      "explanation": "The transaction involves a transfer of 3 ETH from address 0x4DE4862C24A5b1827892EDe7251806A3A138c25a to address 0xFC06BFF6785075b3bB49B226B8c10B6b98025C80.",
+      "custom_scoring_criteria": {
+        "behavior_patterns_weight": 0.4,
+        "gas_usage_weight": 0.3,
+        "ui_security_weight": 0.3,
+        "reasoning": "Given the lack of suspicious behavior in the transaction and the high credibility of the UI, more weight is allocated to behavior patterns as the primary indicator of risk."
+      },
+      "recommendations": [
+        "Continue monitoring for any future transactions for consistency and security",
+        "Regularly review and update the UI code to ensure ongoing security",
+        "Educate users on safe practices when interacting with blockchain transactions"
+      ],
+      "category_analysis": {
+        "behavior_score": 90,
+        "context_score": 95,
+        "ui_score": 100
+      },
+      "analysis_time": 3.36
+    },
+    "gpt-4o": {
+      "status": "success",
+      "risk_level": "suspicious",
+      "confidence_score": 65,
+      "explanation": "This transaction involves the transfer of 3 Ether from one address to another. The JavaScript frontend used for this transaction includes elements that could potentially mislead users, such as hidden messages and external image links, which raises concerns about phishing.",
+      "custom_scoring_criteria": {
+        "behavior_patterns": 0.4,
+        "gas_efficiency": 0.2,
+        "ui_security_indicators": 0.4
+      },
+      "recommendations": [
+        "Verify the authenticity of the website and ensure it is a trusted source.",
+        "Use a hardware wallet to confirm transactions independently.",
+        "Educate users on recognizing phishing attempts and suspicious UI elements."
+      ],
+      "category_analysis": {
+        "behavior_score": 70,
+        "context_score": 50,
+        "ui_score": 60
+      },
+      "analysis_time": 3.89
+    }
+  },
+  "consensus_analysis": {
+    "risk_level_consensus": "suspicious",
+    "average_confidence": 81.67,
+    "confidence_range": "65-95",
+    "models_agreed": false
+  },
+  "performance_metrics": {
+    "fastest_model": "gpt-3.5-turbo",
+    "slowest_model": "gpt-4o-mini",
+    "average_time": 4.99,
+    "total_analysis_time": 14.96
+  },
+  "consensus_result": {
+    "risk_level": "suspicious",
+    "confidence_score": 72,
+    "custom_scoring_criteria": {
+      "behavior_patterns": {
+        "weight": 0.4,
+        "reasoning": "The transaction involves a simple asset transfer, but the potential for phishing due to misleading UI elements necessitates caution."
+      },
+      "gas_efficiency": {
+        "weight": 0.3,
+        "reasoning": "Gas usage is minimal, which is typical for straightforward transactions, but does not guarantee safety."
+      },
+      "ui_security_indicators": {
+        "weight": 0.3,
+        "reasoning": "The presence of hidden messages and external links in the JavaScript code raises significant concerns about potential phishing attempts."
+      }
+    },
+    "explanation": "The transaction is classified as suspicious due to the presence of potentially misleading UI elements that could indicate phishing attempts. While the transaction itself is straightforward, the analysis from multiple models highlights risks associated with the UI, warranting a cautious approach.",
+    "recommendations": [
+      "Verify the authenticity of the transaction through trusted channels.",
+      "Avoid interacting with any hidden messages or external links present in the UI.",
+      "Consider using additional security measures such as two-factor authentication."
+    ],
+    "category_analysis": {
+      "behavior_score": 70,
+      "context_score": 66.67,
+      "ui_score": 53.33,
+      "malicious_db_score": 0
+    },
+    "consensus_metadata": {
+      "consensus_reached": true,
+      "rounds_used": 0,
+      "method": "unanimous_agreement",
+      "primary_model": "gpt-4o-mini",
+      "timestamp": "2025-07-23 03:35:11"
+    }
+  }
+}

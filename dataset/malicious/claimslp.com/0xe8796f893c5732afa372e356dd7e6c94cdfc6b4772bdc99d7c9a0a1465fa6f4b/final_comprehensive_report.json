@@ -1,0 +1,38 @@
+{
+  "transaction_info": {
+    "tx_hash": "0xe8796f893c5732afa372e356dd7e6c94cdfc6b4772bdc99d7c9a0a1465fa6f4b",
+    "transaction_type": "Smart Contract Interaction",
+    "analysis_timestamp": "2025-07-23 03:42:54"
+  },
+  "security_assessment": {
+    "risk_level": "suspicious",
+    "confidence_score": 68,
+    "consensus_method": "unanimous_agreement"
+  },
+  "transaction_analysis": {
+    "explanation": "The transaction involves state changes in a smart contract without asset transfers or complex function calls. It raises concerns due to the presence of a flagged malicious address in the security database. The gas usage is moderately efficient, and there is no JavaScript code present, which slightly mitigates risk.",
+    "scoring_criteria": {
+      "behavior_patterns": {
+        "weight": 0.4,
+        "reasoning": "Behavior patterns are critical as they indicate the complexity and potential risks associated with the transaction."
+      },
+      "gas_efficiency": {
+        "weight": 0.2,
+        "reasoning": "Gas usage efficiency is important but less critical than behavior patterns."
+      },
+      "ui_js_security": {
+        "weight": 0.1,
+        "reasoning": "The absence of JavaScript code reduces the risk, but it is still a factor to consider in overall security."
+      },
+      "malicious_db_intelligence": {
+        "weight": 0.3,
+        "reasoning": "The presence of known malicious addresses in the database raises significant concerns."
+      }
+    }
+  },
+  "recommendations": [
+    "Conduct further investigation into the flagged address to assess potential risks.",
+    "Monitor the contract for unusual activity following this transaction.",
+    "Consider implementing additional security measures for contracts interacting with flagged addresses."
+  ]
+}

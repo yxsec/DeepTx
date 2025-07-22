@@ -1,0 +1,32 @@
+{
+  "trace_address": [],
+  "action": {
+    "from": "0x07a2f2035dc8742c581f999354e9ad936e0a29ac",
+    "to": "0x87350147a24099bf1e7e677576f01c1415857c75",
+    "value": "0x0",
+    "gas": "0x268a",
+    "input": "0x095ea7b300000000000000000000000000000000666634567890123456789012345600000000000000000000000000000000000000000000000000000000000000000000",
+    "callType": "call",
+    "resolvedFunction": {
+      "name": "approve",
+      "signature": "approve(address,uint256)",
+      "inputs": [
+        "address",
+        "uint256"
+      ]
+    },
+    "decodedInputs": [
+      "0x0000000066663456789012345678901234560000",
+      "0"
+    ]
+  },
+  "result": {
+    "gasUsed": "0x25bc",
+    "output": "0x",
+    "decodedOutputs": []
+  },
+  "error": null,
+  "subtraces": [],
+  "logs": [],
+  "diff": []
+}

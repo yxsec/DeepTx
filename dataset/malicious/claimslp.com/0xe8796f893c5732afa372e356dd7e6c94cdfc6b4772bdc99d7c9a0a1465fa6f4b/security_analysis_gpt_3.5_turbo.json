@@ -1,0 +1,27 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 75,
+  "custom_scoring_criteria": {
+    "behavior_patterns_weight": 0.3,
+    "gas_efficiency_weight": 0.2,
+    "ui_security_weight": 0.1,
+    "database_threat_intelligence_weight": 0.4
+  },
+  "explanation": "The transaction involves changes in state for two storage slots within the same contract. Gas usage is moderately efficient with two calls. No JavaScript code is present. One address in the security database is flagged as malicious.",
+  "recommendations": [
+    "Further investigate the purpose of the state changes within the contract",
+    "Monitor for any additional transactions involving the flagged malicious address",
+    "Consider enhancing gas efficiency for future transactions"
+  ],
+  "category_analysis": {
+    "behavior_score": 60,
+    "context_score": 70,
+    "ui_score": 0,
+    "malicious_db_score": 100
+  },
+  "analysis_metadata": {
+    "model": "gpt-3.5-turbo",
+    "analysis_time_seconds": 2.87,
+    "timestamp": "2025-07-23 03:42:48"
+  }
+}

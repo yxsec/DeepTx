@@ -1,0 +1,253 @@
+
+// Function Unresolved_1913f161 not found in 1ef34b91afc368174f579067d1db94325cdc7946
+
+// Function mint not found in 4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8
+
+// Function scaledTotalSupply not found in 4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8
+
+// Function handleAction not found in 8164cc65827dcfe994ab23944cbc90e0aa80bfcb
+
+// Function deposit not found in 87870bca3f3fd6335c3f4ce8392d69350b4fa4e2
+
+// Function deposit not found in 947f0054faed3481ff4e76ca35f12fbe36cc665b
+
+// Function mint not found in 97f5b96c7dac8547251330b63760951a4fab448d
+
+// Function from 97f5b96c7dac8547251330b63760951a4fab448d - scaledTotalSupply in lib_aave-v3-origin-private_src_contracts_protocol_tokenization_base_ScaledBalanceTokenBase.sol
+function scaledTotalSupply() public view virtual override returns (uint256) {
+    return super.totalSupply();
+  }
+
+  /// @inheritdoc IScaledBalanceToken
+  function getPreviousIndex(address user) external view virtual override returns (uint256) {
+    return _userState[user].additionalData;
+  }
+
+  /**
+   * @notice Implements the basic logic to mint a scaled balance token.
+   * @param caller The address performing the mint
+   * @param onBehalfOf The address of the user that will receive the scaled tokens
+   * @param amount The amount of tokens getting minted
+   * @param index The next liquidity index of the reserve
+   * @return `true` if the the previous balance of the user was 0
+   */
+  function _mintScaled(
+    address caller,
+    address onBehalfOf,
+    uint256 amount,
+    uint256 index
+  ) internal returns (bool) {
+    uint256 amountScaled = amount.rayDiv(index);
+    require(amountScaled != 0, Errors.InvalidMintAmount());
+
+    uint256 scaledBalance = super.balanceOf(onBehalfOf);
+    uint256 balanceIncrease = scaledBalance.rayMul(index) -
+      scaledBalance.rayMul(_userState[onBehalfOf].additionalData);
+
+    _userState[onBehalfOf].additionalData = index.toUint128();
+
+    _mint(onBehalfOf, amountScaled.toUint120());
+
+    uint256 amountToMint = amount + balanceIncrease;
+    emit Transfer(address(0), onBehalfOf, amountToMint);
+    emit Mint(caller, onBehalfOf, amountToMint, balanceIncrease, index);
+
+    return (scaledBalance == 0);
+  }
+
+  /**
+   * @notice Implements the basic logic to burn a scaled balance token.
+   * @dev In some instances, a burn transaction will emit a mint event
+   * if the amount to burn is less than the interest that the user accrued
+   * @param user The user which debt is burnt
+   * @param target The address that will receive the underlying, if any
+   * @param amount The amount getting burned
+   * @param index The variable debt index of the reserve
+   * @return `true` if the the new balance of the user is 0
+   */
+  function _burnScaled(
+    address user,
+    address target,
+    uint256 amount,
+    uint256 index
+  ) internal returns (bool) {
+    uint256 amountScaled = amount.rayDiv(index);
+    require(amountScaled != 0, Errors.InvalidBurnAmount());
+
+    uint256 scaledBalance = super.balanceOf(user);
+    uint256 balanceIncrease = scaledBalance.rayMul(index) -
+      scaledBalance.rayMul(_userState[user].additionalData);
+
+    _userState[user].additionalData = index.toUint128();
+
+    _burn(user, amountScaled.toUint120());
+
+    if (balanceIncrease > amount) {
+      uint256 amountToMint = balanceIncrease - amount;
+      emit Transfer(address(0), user, amountToMint);
+      emit Mint(user, user, amountToMint, balanceIncrease, index);
+    } else {
+      uint256 amountToBurn = amount - balanceIncrease;
+      emit Transfer(user, address(0), amountToBurn);
+      emit Burn(user, target, amountToBurn, balanceIncrease, index);
+    }
+    return scaledBalance - amountScaled == 0;
+  }
+}
+
+// Function calculateInterestRates not found in 9ec6f08190dea04a54f8afc53db96134e5e3fdfb
+
+// Function from b58ed8ec66e43de3fecd27e351485e7efe006f38 - scaledTotalSupply in lib_aave-v3-origin-private_src_contracts_protocol_tokenization_base_ScaledBalanceTokenBase.sol
+function scaledTotalSupply() public view virtual override returns (uint256) {
+    return super.totalSupply();
+  }
+
+  /// @inheritdoc IScaledBalanceToken
+  function getPreviousIndex(address user) external view virtual override returns (uint256) {
+    return _userState[user].additionalData;
+  }
+
+  /**
+   * @notice Implements the basic logic to mint a scaled balance token.
+   * @param caller The address performing the mint
+   * @param onBehalfOf The address of the user that will receive the scaled tokens
+   * @param amount The amount of tokens getting minted
+   * @param index The next liquidity index of the reserve
+   * @return `true` if the the previous balance of the user was 0
+   */
+  function _mintScaled(
+    address caller,
+    address onBehalfOf,
+    uint256 amount,
+    uint256 index
+  ) internal returns (bool) {
+    uint256 amountScaled = amount.rayDiv(index);
+    require(amountScaled != 0, Errors.InvalidMintAmount());
+
+    uint256 scaledBalance = super.balanceOf(onBehalfOf);
+    uint256 balanceIncrease = scaledBalance.rayMul(index) -
+      scaledBalance.rayMul(_userState[onBehalfOf].additionalData);
+
+    _userState[onBehalfOf].additionalData = index.toUint128();
+
+    _mint(onBehalfOf, amountScaled.toUint120());
+
+    uint256 amountToMint = amount + balanceIncrease;
+    emit Transfer(address(0), onBehalfOf, amountToMint);
+    emit Mint(caller, onBehalfOf, amountToMint, balanceIncrease, index);
+
+    return (scaledBalance == 0);
+  }
+
+  /**
+   * @notice Implements the basic logic to burn a scaled balance token.
+   * @dev In some instances, a burn transaction will emit a mint event
+   * if the amount to burn is less than the interest that the user accrued
+   * @param user The user which debt is burnt
+   * @param target The address that will receive the underlying, if any
+   * @param amount The amount getting burned
+   * @param index The variable debt index of the reserve
+   * @return `true` if the the new balance of the user is 0
+   */
+  function _burnScaled(
+    address user,
+    address target,
+    uint256 amount,
+    uint256 index
+  ) internal returns (bool) {
+    uint256 amountScaled = amount.rayDiv(index);
+    require(amountScaled != 0, Errors.InvalidBurnAmount());
+
+    uint256 scaledBalance = super.balanceOf(user);
+    uint256 balanceIncrease = scaledBalance.rayMul(index) -
+      scaledBalance.rayMul(_userState[user].additionalData);
+
+    _userState[user].additionalData = index.toUint128();
+
+    _burn(user, amountScaled.toUint120());
+
+    if (balanceIncrease > amount) {
+      uint256 amountToMint = balanceIncrease - amount;
+      emit Transfer(address(0), user, amountToMint);
+      emit Mint(user, user, amountToMint, balanceIncrease, index);
+    } else {
+      uint256 amountToBurn = amount - balanceIncrease;
+      emit Transfer(user, address(0), amountToBurn);
+      emit Burn(user, target, amountToBurn, balanceIncrease, index);
+    }
+    return scaledBalance - amountScaled == 0;
+  }
+}
+
+// Function from c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 - deposit in c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.sol
+function deposit() public payable {
+        balanceOf[msg.sender] += msg.value;
+        Deposit(msg.sender, msg.value);
+    }
+    function withdraw(uint wad) public {
+        require(balanceOf[msg.sender] >= wad);
+        balanceOf[msg.sender] -= wad;
+        msg.sender.transfer(wad);
+        Withdrawal(msg.sender, wad);
+    }
+
+    function totalSupply() public view returns (uint) {
+        return this.balance;
+    }
+
+    function approve(address guy, uint wad) public returns (bool) {
+        allowance[msg.sender][guy] = wad;
+        Approval(msg.sender, guy, wad);
+        return true;
+    }
+
+    function transfer(address dst, uint wad) public returns (bool) {
+        return transferFrom(msg.sender, dst, wad);
+    }
+
+    function transferFrom(address src, address dst, uint wad)
+        public
+        returns (bool)
+    {
+        require(balanceOf[src] >= wad);
+
+        if (src != msg.sender && allowance[src][msg.sender] != uint(-1)) {
+            require(allowance[src][msg.sender] >= wad);
+            allowance[src][msg.sender] -= wad;
+        }
+
+        balanceOf[src] -= wad;
+        balanceOf[dst] += wad;
+
+        Transfer(src, dst, wad);
+
+        return true;
+    }
+}
+
+// Function from c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 - transferFrom in c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.sol
+function transferFrom(address src, address dst, uint wad)
+        public
+        returns (bool)
+    {
+        require(balanceOf[src] >= wad);
+
+        if (src != msg.sender && allowance[src][msg.sender] != uint(-1)) {
+            require(allowance[src][msg.sender] >= wad);
+            allowance[src][msg.sender] -= wad;
+        }
+
+        balanceOf[src] -= wad;
+        balanceOf[dst] += wad;
+
+        Transfer(src, dst, wad);
+
+        return true;
+    }
+}
+
+// Function depositETH not found in d322a49006fc828f9b5b37ab215f99b4e5cab19c
+
+// Function handleAction not found in e7b67f44ea304dd7f6d215b13686637ff64cd2b2
+
+// Function scaledTotalSupply not found in ea51d7853eefb32b6ee06b1c12e6dcca88be0ffe

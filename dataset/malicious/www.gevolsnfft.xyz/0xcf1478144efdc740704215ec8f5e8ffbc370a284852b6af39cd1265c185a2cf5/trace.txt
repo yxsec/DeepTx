@@ -1,0 +1,4 @@
+  [22000] heimdall::inspect(0xcf1478144efdc740704215ec8f5e8ffbc370a284852b6af39cd1265c185a2cf5)
+    ├─ [1000] 0xc75269b342c1b7f4cbb82e80a7986878ac0f545b::fallback() [call] [value: 1.3524858124442225 ether]
+    │   └─ ← 
+    └─ ← ()

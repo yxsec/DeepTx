@@ -1,0 +1,28 @@
+{
+  "risk_level": "safe",
+  "confidence_score": 95,
+  "custom_scoring_criteria": {
+    "behavior_patterns_weight": 0.3,
+    "gas_efficiency_weight": 0.2,
+    "ui_security_weight": 0.3,
+    "database_threat_intelligence_weight": 0.2,
+    "reasoning": "Given the absence of suspicious behavior, the weight is distributed evenly across behavior patterns, gas efficiency, and UI security. Database threat intelligence is included but weighted slightly lower due to the lack of malicious indicators."
+  },
+  "explanation": "The transaction involves a state change in the contract related to approval management for assets. The gas usage is relatively efficient, and the JavaScript code in the UI appears normal. No evidence of malicious behavior or phishing risks was found.",
+  "recommendations": [
+    "Continue monitoring for any changes in behavior patterns or gas usage that may indicate potential risks.",
+    "Regularly review and update the UI code to ensure ongoing security.",
+    "Stay vigilant for any emerging threats or vulnerabilities in the blockchain ecosystem."
+  ],
+  "category_analysis": {
+    "behavior_score": 90,
+    "context_score": 85,
+    "ui_score": 95,
+    "malicious_db_score": 100
+  },
+  "analysis_metadata": {
+    "model": "gpt-3.5-turbo",
+    "analysis_time_seconds": 4.2,
+    "timestamp": "2025-07-23 03:47:58"
+  }
+}

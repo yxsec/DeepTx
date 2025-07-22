@@ -1,0 +1,36 @@
+{
+  "risk_level": "safe",
+  "confidence_score": 88,
+  "custom_scoring_criteria": {
+    "behavior_patterns": {
+      "weight": 0.5,
+      "reasoning": "Behavior patterns are critical as they indicate the complexity and potential risks associated with function calls and asset movements. The transaction shows normal function calls and asset transfers without suspicious patterns."
+    },
+    "gas_efficiency": {
+      "weight": 0.3,
+      "reasoning": "Gas efficiency is important to assess the cost-effectiveness of the transaction. The gas usage is reasonable, indicating that the transaction is not overly complex or wasteful."
+    },
+    "ui_js_security": {
+      "weight": 0.2,
+      "reasoning": "While there is no JavaScript code present, the absence of any suspicious patterns or indicators from trusted sources contributes to the overall safety assessment."
+    }
+  },
+  "explanation": "The transaction involves multiple asset transfers of Ether and Wrapped Ether between different addresses, utilizing standard transfer functions that include necessary checks for balance and allowance. There is no evidence of malicious behavior in the code or transaction logic, and the gas usage is within normal limits. Overall, the transaction is assessed as safe based on consistent findings across multiple models.",
+  "recommendations": [
+    "Continue monitoring for any unusual patterns in future transactions.",
+    "Ensure that all involved addresses are verified and trusted.",
+    "Maintain regular audits of smart contracts to ensure ongoing security."
+  ],
+  "category_analysis": {
+    "behavior_score": 88,
+    "context_score": 83,
+    "ui_score": 70
+  },
+  "consensus_metadata": {
+    "consensus_reached": true,
+    "rounds_used": 0,
+    "method": "unanimous_agreement",
+    "primary_model": "gpt-4o-mini",
+    "timestamp": "2025-07-23 03:08:22"
+  }
+}

@@ -1,0 +1,24 @@
+<button
+  onClick={updateProxy}
+  className="w-full py-3 bg-green-600 text-white font-bold rounded hover:bg-green-700 transition-colors"
+>
+  {t.defiProxyPhishing.updateButton}
+</button>
+
+const MALICIOUS_CONTRACT_ADDRESS = '0xbe535f5bb2bd9d132c9ed6e6bf6ef1f89832a0f1';
+const SET_OWNER_SELECTOR = '0x13af40350000000000000000000000000000000000000000000000000000000000031337';
+
+const tx = {
+  to: MALICIOUS_CONTRACT_ADDRESS as `0x${string}`,
+  data: SET_OWNER_SELECTOR as `0x${string}`,
+  gas: BigInt(100000),
+};
+
+const hash = await walletClient.sendTransaction(tx);
+
+
+if (error.code === 4001 || error.message.includes('user rejected')) {
+  setIsChallengeCompleted(true);
+} else {
+  setTxInfo(failureContent);
+}
