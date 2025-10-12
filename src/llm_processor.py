@@ -1,17 +1,12 @@
-#!/usr/bin/env python3
-"""
-Enhanced Multi-Modal Transaction Analysis with User-Friendly Output
-Uses smart token limits and provides simplified security assessment
-"""
-
 import os
 import json
 import re
+import pandas as pd
 from typing import Dict, Any, List
 from openai import OpenAI
 import os
+from .utils import load_json,load_text,load_csv
 
-# Validate API key
 api_key = os.environ.get("OPENAI_API_KEY")
 if not api_key:
     raise ValueError("OPENAI_API_KEY environment variable is required")
@@ -21,33 +16,6 @@ client = OpenAI(
     base_url=os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
 )
 
-def load_json(path: str) -> Dict[str, Any]:
-    """Load JSON file"""
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception as e:
-        print(f"Error loading {path}: {e}")
-        return {}
-
-def load_text(path: str) -> str:
-    """Load text file"""
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            return f.read()
-    except Exception as e:
-        print(f"Error loading {path}: {e}")
-        return ""
-
-def load_csv(path: str) -> List[Dict[str, Any]]:
-    """Load CSV file"""
-    try:
-        import pandas as pd
-        df = pd.read_csv(path)
-        return df.to_dict('records')
-    except Exception as e:
-        print(f"Error loading {path}: {e}")
-        return []
 
 def create_full_embeddings(texts: List[str], model: str = "text-embedding-ada-002") -> List[List[float]]:
     """Create embeddings for full text content without truncation"""
@@ -233,19 +201,21 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
     # 1. BEHAVIOR ANALYSIS
     print("  1. Loading behavior analysis data...")
     
-    # Call chain (trace)
-    trace_path = os.path.join(dir_path, "decoded_trace.json")
-    trace_data = load_json(trace_path)
+    call_trace_path = os.path.join(dir_path, "call_trace.csv")
     call_chain = []
-    if trace_data:
-        for call in trace_data.get("calls", [])[:15]:  # Limit to first 15 calls
+    if os.path.exists(call_trace_path):
+        df_call_trace = pd.read_csv(call_trace_path)
+        trace_data = df_call_trace.to_dict(orient='records')
+        for call in trace_data:
             call_chain.append({
-                "type": call.get("type", "unknown"),
+                "depth": call.get("depth", 0),
                 "from": call.get("from", ""),
                 "to": call.get("to", ""),
-                "value": call.get("value", "0"),
-                "method": call.get("method", "")
+                "call_type": call.get("call_type", "unknown"),
+                "function": call.get("function", "")
             })
+        
+        print(f"Loaded {len(call_chain)} call records from call_trace.csv")
     
     # Code analysis
     code_path = os.path.join(dir_path, "code.txt")
@@ -272,16 +242,25 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
     
     # Asset flows
     asset_path = os.path.join(dir_path, "asset_flows.csv")
-    asset_flows = load_csv(asset_path)
+    if os.path.exists(asset_path):
+        asset_flows = load_csv(asset_path)
+    else:
+        print(f"File not found: {asset_path}, skipping")
+        asset_flows = pd.DataFrame()
     
     # State changes
     state_path = os.path.join(dir_path, "state_changes.csv")
-    state_changes = load_csv(state_path)
+    if os.path.exists(state_path):
+        state_changes = load_csv(state_path)
+    else:
+        print(f"File not found: {state_path}, skipping")
+        state_changes = pd.DataFrame()
     
     # 2. CONTEXT ANALYSIS (Gas)
     print("  2. Loading context analysis (gas) data...")
-    gas_path = os.path.join(dir_path, "gas_usage.csv")
+    gas_path = os.path.join(dir_path, "call_trace.csv")
     gas_data = load_csv(gas_path)
+    gas_info_path = os.path.join(dir_path, "gas_info.txt")
     
     # Gas analysis summary
     gas_analysis = {}
@@ -297,6 +276,22 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
             "total_calls": len(gas_data),
             "average_gas_per_call": round(total_gas_used / len(gas_data), 2) if gas_data else 0
         }
+
+        if os.path.exists(gas_info_path):
+            try:
+                with open(gas_info_path, 'r') as f:
+                    gas_info = {}
+                    for line in f:
+                        if ':' in line:
+                            key, value = line.strip().split(':', 1)
+                            gas_info[key.strip()] = value.strip()
+                
+                gas_analysis["tx_gas_price"] = int(gas_info.get("tx_gas_price", 0))
+                gas_analysis["block_base_fee"] = int(gas_info.get("block_base_fee", 0))
+            except Exception as e:
+                print(f"Error reading gas_info.txt: {e}")
+                gas_analysis["tx_gas_price"] = 0
+                gas_analysis["block_base_fee"] = 0
     
     # 3. UI ANALYSIS (JavaScript)
     print("  3. Loading UI analysis data...")
@@ -353,7 +348,7 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
     # Transaction context
     context = {
         "transaction_hash": os.path.basename(dir_path),
-        "trace_calls_total": len(trace_data.get("calls", [])) if trace_data else 0,
+        # "trace_calls_total": len(trace_data.get("calls", [])) if trace_data else 0,
         "trace_calls_analyzed": len(call_chain),
         "code_functions_found": len(code_analysis),
         "asset_transfers": len(asset_flows),
@@ -630,53 +625,5 @@ Risk level definitions:
     
     return user_friendly_result
 
-def main():
-    """Main function"""
-    # Example usage with a transaction directory
-    tx_dir = "output/1/0xff8e9226091d513fc936ecc670030eba03f34dbe60cd012122bd18be44248d32"
-    
-    if os.path.exists(tx_dir):
-        print("Starting enhanced analysis with user-friendly output...")
-        
-        # Process transaction data
-        data = process_transaction_data(tx_dir)
-        
-        # Perform enhanced analysis
-        result = enhanced_feature_analysis(data, "gpt-4o-mini")
-        
-        # Save results
-        output_path = os.path.join(tx_dir, "enhanced_analysis_user_friendly.json")
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(result, f, indent=2, ensure_ascii=False)
-        
-        print(f"\n=== COMPREHENSIVE SECURITY ASSESSMENT ===")
-        print(f"Risk Level: {result['risk_level'].upper()}")
-        print(f"Overall Confidence: {result['confidence_score']}%")
-        print(f"Transaction Explanation: {result['explanation']}")
-        
-        print(f"\nCategory Analysis:")
-        categories = result.get('category_analysis', {})
-        print(f"  Behavior Score: {categories.get('behavior_score', 0)}%")
-        print(f"  Context Score: {categories.get('context_score', 0)}%")
-        print(f"  UI Score: {categories.get('ui_score', 0)}%")
-        
-        # Show malicious DB score only if database has meaningful data
-        if data["malicious_database_report"].get("has_meaningful_data", False):
-            print(f"  Malicious DB Score: {categories.get('malicious_db_score', 0)}%")
-        else:
-            print(f"  Malicious DB Score: Excluded (no meaningful data)")
-        
-        print(f"\nScoring Criteria:")
-        print(f"  {result['custom_scoring_criteria']}")
-        
-        print(f"\nRecommendations:")
-        for i, rec in enumerate(result['recommendations'], 1):
-            print(f"  {i}. {rec}")
-        
-        print(f"\nAnalysis completed and saved to: {output_path}")
-        
-    else:
-        print(f"Transaction directory not found: {tx_dir}")
 
-if __name__ == "__main__":
-    main() 
+# root cause: 1. process_transaction_data 2. enhanced_feature_analysis 

@@ -1,220 +1,170 @@
 # DeepTx
 
-A comprehensive tool for analyzing Ethereum transactions with security assessment, multi-model LLM analysis, and consensus checking.
+**🏆 ETHDenver 2025 - ORA Second Prize Winner**
+
+Comprehensive Ethereum transaction security analyzer with multi-model LLM analysis and consensus mechanisms.
+
+> *AI-Powered Transaction Guard - Decode, Detect, Defend Against Fraud & Phishing in Real-Time.*
+
+## Two Core Capabilities
+
+### 1️⃣ Historical Transaction Analysis
+Analyze past on-chain transactions to detect malicious behavior.
+
+### 2️⃣ Pre-Transaction Simulation
+Simulate transactions before execution to predict outcomes and risks.
+
+---
 
 ## Features
 
-- **Transaction Analysis**: Complete transaction inspection and trace extraction
-- **Contract Analysis**: Source code fetching and decompilation
-- **Security Assessment**: Malicious address and pattern detection
-- **Multi-Model LLM Analysis**: Analysis using multiple AI models
-- **Consensus Engine**: Self-reflection and weighted voting algorithms
-- **Comprehensive Reporting**: Detailed security assessment reports
+- **Transaction Analysis** - Call trace, contract fetching, function extraction
+- **Security Assessment** - 30K+ malicious addresses, 320K+ phishing domains
+- **Multi-Model AI** - GPT-4o-mini, GPT-3.5-turbo, GPT-4o with consensus
+- **UI Phishing Detection** - JavaScript security pattern analysis
+- **Comprehensive Reports** - Risk level, confidence score, recommendations
 
 ## Quick Start
 
-### Installation
-
-1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd work
-```
+# 1. Install Heimdall
+curl https://sh.rustup.rs -sSf | sh
+curl -L http://get.heimdall.rs | bash
+bifrost
 
-2. Install dependencies:
-```bash
+# 2. Install Python dependencies
 pip install -r requirements.txt
+
+# 3. Configure API keys
+cp env.example .env
+# Edit .env with your keys
 ```
 
-3. Set up environment variables (required):
-```bash
-export HEIMDALL_API_KEY="your_heimdall_api_key"
-export RPC_URL="your_ethereum_rpc_url"
-export ETHERSCAN_API_KEY="your_etherscan_api_key"
-export OPENAI_API_KEY="your_openai_api_key"
-export OPENAI_BASE_URL="https://api.openai.com/v1"  # Optional, defaults to OpenAI
-```
-
-**Note**: All API keys are required. The tool will validate them at startup and provide clear error messages if any are missing.
-
-### 4. Verify Environment Setup
-
-Check if all environment variables are set correctly:
+### Required API Keys
 
 ```bash
-python3 check_env.py
+TRANSPOSE_API_KEY=your_key      # Free: 100K req/month
+ETHERSCAN_API_KEY=your_key      # Free: 5 req/s
+OPENAI_API_KEY=your_key         # Paid: ~$0.20-0.80 per analysis
+
+# Optional: For simulation mode only
+TENDERLY_API_KEY=your_key
+TENDERLY_ACCOUNT_ID=your_id
+TENDERLY_PROJECT_SLUG=your_project
 ```
 
-### Usage
+**Get Keys:**
+- Transpose: https://docs.transpose.io/quickstart/
+- Etherscan: https://etherscan.io/apis
+- OpenAI: https://platform.openai.com/api-keys
+- Tenderly: https://tenderly.co/ (optional)
 
-Run the complete analysis on a transaction:
+## Usage
 
-```bash
-python3 main.py <transaction_hash>
-```
+### Mode 1: Historical Transaction
 
-Example:
 ```bash
 python3 main.py 0xff8e9226091d513fc936ecc670030eba03f34dbe60cd012122bd18be44248d32
 ```
 
-### Analysis Process
+### Mode 2: Simulation
 
-The tool performs a 4-step analysis:
+```bash
+# Replay existing transaction
+python3 main.py -s true --tx-hash 0xabc... --rpc-url https://eth.llamarpc.com
 
-1. **Transaction Analysis**: Trace extraction, contract fetching, function analysis
-2. **Security Check**: Malicious address and pattern detection
-3. **Multi-Model LLM Analysis**: Analysis using GPT-4o-mini, GPT-3.5-turbo, and GPT-4o
-4. **Final Report**: Consensus-based security assessment
+# Simulate contract call
+python3 main.py -s true --contract 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 \
+  --function 'balanceOf(address)' 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0
 
-### Output
-
-Results are saved in `output/1/<transaction_hash>/`:
-- `decoded_trace.json`: Transaction trace data
-- `code.txt`: Extracted function code
-- `asset_flows.csv`: Token transfer analysis
-- `gas_usage.csv`: Gas consumption analysis
-- `state_changes.csv`: State modification analysis
-- `security_analysis_*.json`: Individual model reports
-- `consensus_final_report.json`: Consensus analysis result
-- `final_comprehensive_report.json`: Final comprehensive report
-
-### Enhanced Security Analysis
-
-The tool supports both interactive and file-based input for enhanced security analysis:
-
-#### Interactive Mode (Default)
-When running the analysis, the program will automatically prompt you for:
-- **URLs to analyze**: Enter URLs one per line, press Enter twice to finish
-- **JavaScript code to analyze**: Enter JavaScript code line by line, press Enter twice to finish
-
-#### File-Based Mode (Optional)
-You can pre-create these files in the transaction output directory:
-
-1. **URL Analysis** (`output/1/<tx_hash>/url.txt`):
-   ```
-   https://example.com/suspicious-site
-   http://malicious-domain.org
-   https://phishing-site.com
-   ```
-
-2. **JavaScript Analysis** (`output/1/<tx_hash>/js.txt`):
-   ```
-   // JavaScript code to analyze for security patterns
-   function suspiciousFunction() {
-       // Code that will be checked for malicious patterns
-   }
-   ```
-
-The tool will automatically detect existing files and skip the interactive prompts if files are found.
-
-## Project Structure
-
-```
-open-source/
-├── main.py                      # Main entry point
-├── src/                         # Core modules
-│   ├── transaction_analyzer.py  # Transaction analysis logic
-│   ├── security_checker.py      # Security database checking
-│   ├── llm_analyzer.py          # Multi-model LLM analysis
-│   ├── consensus_engine.py      # Consensus algorithms
-│   ├── llm_processor.py         # LLM query processing
-│   ├── heimdall_client.py       # Heimdall integration
-│   ├── contract_fetcher.py      # Contract source fetching
-│   ├── simulation_service.py    # Unified simulation service (Foundry + Tenderly)
-│   ├── foundry.py              # Foundry simulation service
-│   └── TenderlyClient.py       # Tenderly simulation service
-├── contracts/                   # Contract source code storage
-├── output/                      # Analysis results
-├── malicious_database/          # Security databases
-├── cache/                       # Simulation cache directory
-├── env.example                  # Environment variables template
-├── check_env.py                 # Environment validation script
-└── requirements.txt             # Python dependencies
+# With sender and value
+python3 main.py -s true --contract 0xAddr --function 'deposit()' \
+  --from 0xYourAddr --value 0xDE0B6B3A7640000 --block 18000000
 ```
 
-## Core Modules
+## Analysis Process
 
-### transaction_analyzer.py
-Core transaction analysis including trace extraction, contract fetching, and function analysis.
+### Historical Mode
+```
+Transaction Hash → Heimdall Trace → Security Check → Multi-Model LLM → Final Report
+```
 
-### security_checker.py
-Security database checking for malicious addresses, suspicious patterns, and URLs.
+### Simulation Mode
+```
+Contract Call → Tenderly Simulation → Security Check → Multi-Model LLM → Final Report
+```
 
-### llm_analyzer.py
-Multi-model LLM analysis using different AI models with comparison and consensus.
+## Output Files
 
-### consensus_engine.py
-Consensus algorithms with self-reflection and weighted voting mechanisms.
+Results saved in `output/<chain_id>/<tx_hash>/`:
 
-### llm_processor.py
-LLM query processing and enhanced feature analysis.
+**Core Files:**
+- `decoded_trace.json` - Complete trace
+- `call_trace.csv` - Call chain and gas
+- `code.txt` - Extracted functions
+- `asset_flows.csv` - Token transfers
+- `state_changes.csv` - Storage changes
+- `address.txt` - Involved addresses
 
-### heimdall_client.py
-Heimdall CLI integration for transaction inspection.
+**Analysis Files:**
+- `security_report.json` - Security database check
+- `security_analysis_*.json` - 3 model reports
+- `consensus_final_report.json` - Consensus result
+- `final_comprehensive_report.json` - **Final report**
 
-### contract_fetcher.py
-Contract source code fetching and decompilation.
+## Analysis Framework
 
-### simulation_service.py
-Unified simulation service that combines Foundry and Tenderly backends for transaction simulation.
+**4-Category Analysis:**
+1. **Behavior** - Call patterns, asset movements, state changes
+2. **Context** - Gas efficiency, transaction patterns
+3. **UI** - JavaScript security, phishing detection
+4. **Database** - Malicious addresses, threat intelligence
 
-### foundry.py
-Foundry simulation service using cast run command for transaction simulation.
+**Risk Levels:** Safe | Suspicious | Malicious
 
-### TenderlyClient.py
-Tenderly API integration for transaction simulation and analysis.
+## Interactive Features
 
-## Dependencies
+Optional inputs during analysis:
+- **URLs** - One per line, Enter twice to finish
+- **JavaScript** - Code to analyze, Enter twice to finish
 
-- **pandas**: Data manipulation and analysis
-- **web3**: Ethereum blockchain interaction
-- **openai**: LLM API integration
-- **requests**: HTTP requests
-- **json**: JSON data processing
+Or pre-create: `url.txt`, `js.txt` in output directory
 
-## Configuration
+## Troubleshooting
 
-### Environment Variables
+```bash
+# Verify installation
+python3 -c "import pandas, web3, openai; print('OK')"
+heimdall --version
 
-- `HEIMDALL_API_KEY`: API key for Heimdall service (required)
-- `RPC_URL`: Ethereum RPC endpoint (optional, defaults to public endpoint)
-- `ETHERSCAN_API_KEY`: Etherscan API key for contract fetching (required)
-- `OPENAI_API_KEY`: OpenAI API key for LLM analysis (required)
-- `OPENAI_BASE_URL`: OpenAI API base URL (optional, defaults to OpenAI)
-- `TENDERLY_API_KEY`: Tenderly API key for simulation (optional)
-- `TENDERLY_ACCOUNT_ID`: Tenderly account ID for simulation (optional)
-- `TENDERLY_PROJECT_SLUG`: Tenderly project slug for simulation (optional)
+# Check API keys
+cat .env
 
-### API Keys
+# Test Tenderly (simulation mode)
+curl -H "X-Access-Key: $TENDERLY_API_KEY" \
+  https://api.tenderly.co/api/v1/account/$TENDERLY_ACCOUNT_ID/project/$TENDERLY_PROJECT_SLUG
+```
 
-The tool uses several external services:
-- **Heimdall**: Transaction inspection and trace extraction
-- **OpenAI**: LLM analysis (GPT-4o-mini, GPT-3.5-turbo, GPT-4o)
-- **Etherscan**: Contract source code fetching
-- **Tenderly**: Transaction simulation and analysis (optional)
-- **Foundry**: Local transaction simulation using cast run (optional)
+## Awards
 
-## Security Features
+**🏆 ETHDenver 2025 BUIDLathon**
+- **ORA Second Prize** - Use ORA's Decentralized API for inference in AI agents
+- Built from scratch in 4 days during the hackathon
+- [Project Page](https://devfolio.co/projects/deeptx-c682)
 
-- **Malicious Address Detection**: Checks against known malicious addresses
-- **Suspicious Pattern Recognition**: Identifies suspicious code patterns
-- **URL Reputation Analysis**: Analyzes URLs for malicious content
-- **JavaScript Security**: Detects malicious JavaScript patterns
-- **Multi-Model Validation**: Uses multiple AI models for consensus
+## Citation
 
-## Analysis Categories
+```bibtex
+@inproceedings{Liu2025DRT,
+  author = {Liu, Yixuan and Li, Xinlei and Li, Yi},
+  booktitle = {Proceedings of the 40th IEEE/ACM International Conference on Automated Software Engineering (ASE)},
+  month = nov,
+  title = {{DeepTx}: Real-Time Transaction Risk Analysis via Multi-Modal Features and {LLM} Reasoning},
+  year = {2025}
+}
+```
 
-The tool analyzes transactions across 4 categories:
+## Links
 
-1. **Behavior Analysis**: Function calls, asset movements, state changes
-2. **Context Analysis**: Gas usage, transaction efficiency
-3. **UI Analysis**: JavaScript code security
-4. **Database Analysis**: Threat intelligence from security databases
-
-## Risk Assessment
-
-The tool provides risk levels:
-- **Safe**: No security concerns detected
-- **Suspicious**: Some concerning patterns but not clearly malicious
-- **Malicious**: Clear evidence of malicious behavior
+- **Devfolio Project**: https://devfolio.co/projects/deeptx-c682
+- **ETHDenver 2025**: Built at ETHDenver BUIDLathon

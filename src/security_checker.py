@@ -1,14 +1,7 @@
-#!/usr/bin/env python3
-"""
-Malicious database query and fraud pattern detection script
-Analyzes transaction output data in output/1/[tx_hash]/ directory
-"""
-
 import os
 import json
 import re
-import pandas as pd
-from typing import List, Dict, Set, Optional
+from typing import List, Dict, Set
 from datetime import datetime
 
 class MaliciousChecker:
@@ -18,7 +11,7 @@ class MaliciousChecker:
         self.malicious_domains: Set[str] = set()
         self.load_databases()
         
-        # Fraud pattern rules - add specific detection rules here
+        # ?Fraud pattern rules - add specific detection rules here
         self.fraud_patterns = {
             # 'pattern_category': [r'regex_pattern1', r'regex_pattern2'],
             # 'reentrancy': [...],
@@ -115,11 +108,11 @@ class MaliciousChecker:
         return detected
 
 
-def analyze_transaction_output(tx_hash: str):
+def analyze_transaction_output(tx_hash: str, tx_dir:str):
     """Analyze transaction output data"""
     
     # Set paths
-    output_dir = f"output/1/{tx_hash.lower()}"
+    output_dir = tx_dir
     
     if not os.path.exists(output_dir):
         print(f"Output directory not found: {output_dir}")
@@ -227,91 +220,8 @@ def analyze_transaction_output(tx_hash: str):
         'js_patterns': js_results
     }
     
-    # Print results
-    print_security_report(report)
-    
     # Save report
     report_file = os.path.join(output_dir, "security_report.json")
     with open(report_file, 'w', encoding='utf-8') as f:
         json.dump(report, f, indent=2, ensure_ascii=False)
     print(f"Security report saved to: {report_file}")
-
-
-def print_security_report(report: Dict):
-    """Print security analysis report"""
-    print(f"\n" + "="*50)
-    print(f"SECURITY ANALYSIS REPORT")
-    print(f"="*50)
-    print(f"Transaction: {report['transaction_hash']}")
-    print(f"Time: {report['timestamp']}")
-    
-    # Display disclaimer
-    print(f"\nDISCLAIMER:")
-    print(f"No detection does not guarantee safety.")
-    print(f"Tool limitation: known database + limited rules only.")
-    print(f"Combine with other tools and manual analysis.")
-    
-    summary = report['summary']
-    print(f"\nSUMMARY:")
-    print(f"  Addresses: {summary['total_addresses']}")
-    print(f"  Malicious: {summary['malicious_addresses']}")
-    print(f"  Code Issues: {summary['code_issues']}")
-    print(f"  Suspicious URLs: {summary['suspicious_urls']}")
-    print(f"  JS Issues: {summary['js_issues']}")
-    
-    # Malicious addresses
-    if report['malicious_addresses']:
-        print(f"\nMALICIOUS ADDRESSES:")
-        for addr in report['malicious_addresses']:
-            print(f"  {addr}")
-    else:
-        print(f"\nNo malicious addresses detected")
-    
-    # Code patterns
-    if report['code_patterns']:
-        print(f"\nSUSPICIOUS CODE PATTERNS:")
-        for category, matches in report['code_patterns'].items():
-            print(f"  {category.upper()}: {len(matches)} matches")
-            for match in matches:
-                print(f"    {match}")
-    else:
-        print(f"\nNo suspicious code patterns detected")
-    
-    # URL check results
-    if report['url_check']:
-        malicious_urls = [url for url, is_mal in report['url_check'].items() if is_mal]
-        if malicious_urls:
-            print(f"\nMALICIOUS URLs:")
-            for url in malicious_urls:
-                print(f"  {url}")
-        else:
-            print(f"\nNo malicious URLs detected")
-    
-    # JavaScript check results
-    if report['js_patterns']:
-        print(f"\nSUSPICIOUS JAVASCRIPT PATTERNS:")
-        for category, matches in report['js_patterns'].items():
-            print(f"  {category.upper()}: {len(matches)} matches")
-            for match in matches:
-                print(f"    {match}")
-    
-    print(f"="*50)
-
-
-if __name__ == "__main__":
-    import sys
-    
-    # Usage example
-    if len(sys.argv) != 2:
-        print("Usage:")
-        print("  python test_query.py <tx_hash>")
-        print("\nExample:")
-        print("  python test_query.py 0xff8e9226091d513fc936ecc670030eba03f34dbe60cd012122bd18be44248d32")
-        print("\nOptional files (place in output/1/[tx_hash]/ directory):")
-        print("  url.txt  - One URL per line for domain checking")
-        print("  js.txt   - JavaScript code for pattern analysis")
-        sys.exit(1)
-    
-    tx_hash = sys.argv[1]
-    
-    analyze_transaction_output(tx_hash) 

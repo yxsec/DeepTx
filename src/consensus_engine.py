@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-"""
-Consensus Checker with Self-Reflection and Weighted Voting
-==========================================================
-
-This module implements the consensus refinement process for multi-model security analysis.
-It includes self-reflection mechanisms and weighted voting as fallback.
-"""
-
 import json
 import time
 from typing import List, Dict, Any, Tuple
@@ -14,10 +5,6 @@ from openai import OpenAI
 import os
 
 class ConsensusChecker:
-    """
-    Consensus checker that implements self-reflection and weighted voting.
-    """
-    
     def __init__(self, primary_model: str = "gpt-4o-mini"):
         """
         Initialize the consensus checker.
@@ -359,32 +346,4 @@ def run_consensus_analysis(model_outputs: List[Dict[str, Any]], primary_model: s
     checker = ConsensusChecker(primary_model)
     return checker.run_consensus_check(model_outputs)
 
-if __name__ == "__main__":
-    # Example usage
-    sample_outputs = [
-        {
-            "risk_level": "safe",
-            "confidence_score": 85,
-            "explanation": "Standard token transfer",
-            "custom_scoring_criteria": "Behavior: 40%, Gas: 30%, UI: 20%, DB: 10%",
-            "category_analysis": {"behavior_score": 85, "context_score": 90, "ui_score": 80}
-        },
-        {
-            "risk_level": "suspicious", 
-            "confidence_score": 70,
-            "explanation": "Unusual gas usage pattern",
-            "custom_scoring_criteria": "Behavior: 50%, Gas: 35%, UI: 15%",
-            "category_analysis": {"behavior_score": 75, "context_score": 60, "ui_score": 85}
-        },
-        {
-            "risk_level": "safe",
-            "confidence_score": 90,
-            "explanation": "Normal transaction behavior",
-            "custom_scoring_criteria": "Behavior: 45%, Gas: 30%, UI: 25%",
-            "category_analysis": {"behavior_score": 90, "context_score": 85, "ui_score": 95}
-        }
-    ]
-    
-    result = run_consensus_analysis(sample_outputs)
-    print("Consensus Result:")
-    print(json.dumps(result, indent=2)) 
+# root cause: run_consensus_analysis

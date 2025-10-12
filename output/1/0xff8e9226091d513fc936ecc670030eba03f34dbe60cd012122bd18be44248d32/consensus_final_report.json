@@ -1,0 +1,36 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 68,
+  "custom_scoring_criteria": {
+    "behavior_patterns": {
+      "weight": 0.55,
+      "reasoning": "The transaction exhibits complex behavior patterns with multiple asset transfers and state changes, indicating potential for misuse, though no clear malicious intent is identified."
+    },
+    "gas_efficiency": {
+      "weight": 0.25,
+      "reasoning": "Gas usage data is incomplete, raising concerns about efficiency and potential gas-related attacks."
+    },
+    "ui_js_security": {
+      "weight": 0.2,
+      "reasoning": "No JavaScript code was detected, which is a positive indicator, but the absence of UI analysis limits overall confidence."
+    }
+  },
+  "explanation": "The transaction is classified as suspicious due to its complexity involving multiple asset transfers and state changes. While there are no clear indicators of malicious intent, the lack of gas usage data and UI analysis raises concerns about potential vulnerabilities.",
+  "recommendations": [
+    "Conduct a thorough review of the transaction's call chain to identify any potential vulnerabilities.",
+    "Implement monitoring for unusual patterns in asset transfers to detect potential misuse.",
+    "Enhance gas usage tracking to better assess the efficiency and security of transactions."
+  ],
+  "category_analysis": {
+    "behavior_score": 73,
+    "context_score": 60,
+    "ui_score": 43
+  },
+  "consensus_metadata": {
+    "consensus_reached": true,
+    "rounds_used": 0,
+    "method": "unanimous_agreement",
+    "primary_model": "gpt-4o-mini",
+    "timestamp": "2025-10-12 19:08:26"
+  }
+}

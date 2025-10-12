@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-"""
-Multi-Model Security Analysis Script
-====================================
-
-This script runs security analysis on a transaction using three different models
-and generates separate reports for each model in the transaction directory.
-"""
-
 import os
 import json
 import time
@@ -15,16 +6,6 @@ from .llm_processor import process_transaction_data, enhanced_feature_analysis
 from .consensus_engine import run_consensus_analysis
 
 def run_multi_model_analysis(tx_dir: str, models: List[str] = None) -> Dict[str, Any]:
-    """
-    Run security analysis using multiple models on the same transaction.
-    
-    Args:
-        tx_dir: Path to transaction directory
-        models: List of model names to use (default: gpt-4o-mini, gpt-3.5-turbo, gpt-4o)
-    
-    Returns:
-        Dictionary containing results from all models
-    """
     if models is None:
         models = ["gpt-4o-mini", "gpt-3.5-turbo", "gpt-4o"]
     
@@ -118,16 +99,6 @@ def run_multi_model_analysis(tx_dir: str, models: List[str] = None) -> Dict[str,
     return results
 
 def generate_comparison_report(results: Dict[str, Any], tx_dir: str) -> Dict[str, Any]:
-    """
-    Generate a comparison report of results from different models.
-    
-    Args:
-        results: Dictionary containing results from all models
-        tx_dir: Transaction directory path
-    
-    Returns:
-        Comparison report dictionary
-    """
     comparison = {
         "transaction_info": {
             "directory": tx_dir,
@@ -189,15 +160,6 @@ def generate_comparison_report(results: Dict[str, Any], tx_dir: str) -> Dict[str
     return comparison
 
 def get_consensus_risk_level(risk_levels: List[str]) -> str:
-    """
-    Determine consensus risk level from multiple model results.
-    
-    Args:
-        risk_levels: List of risk levels from different models
-    
-    Returns:
-        Consensus risk level
-    """
     if not risk_levels:
         return "unknown"
     
@@ -223,87 +185,4 @@ def get_consensus_risk_level(risk_levels: List[str]) -> str:
     
     return most_common
 
-def display_comparison_summary(comparison: Dict[str, Any]):
-    """
-    Display a summary of the comparison results.
-    
-    Args:
-        comparison: Comparison report dictionary
-    """
-    print(f"\n=== MODEL COMPARISON SUMMARY ===")
-    print(f"Transaction: {comparison['transaction_info']['directory']}")
-    print(f"Models tested: {', '.join(comparison['transaction_info']['models_tested'])}")
-    
-    print(f"\nIndividual Results:")
-    for model, result in comparison["model_results"].items():
-        if result["status"] == "success":
-            print(f"  {model}: {result['risk_level'].upper()} ({result['confidence_score']}%) - {result['analysis_time']}s")
-            print(f"    Explanation: {result['explanation']}")
-            print(f"    Scoring Criteria: {result['custom_scoring_criteria']}")
-            print(f"    Recommendations: {', '.join(result['recommendations'][:2])}...")
-        else:
-            print(f"  {model}: ERROR - {result['error']}")
-    
-    if "consensus_analysis" in comparison and comparison["consensus_analysis"]:
-        consensus = comparison["consensus_analysis"]
-        print(f"\nConsensus Analysis:")
-        print(f"  Consensus Risk Level: {consensus['risk_level_consensus'].upper()}")
-        print(f"  Average Confidence: {consensus['average_confidence']}%")
-        print(f"  Confidence Range: {consensus['confidence_range']}")
-        print(f"  Models Agreed: {'Yes' if consensus['models_agreed'] else 'No'}")
-    
-    if "performance_metrics" in comparison and comparison["performance_metrics"]:
-        perf = comparison["performance_metrics"]
-        print(f"\nPerformance Metrics:")
-        print(f"  Fastest Model: {perf['fastest_model']}")
-        print(f"  Slowest Model: {perf['slowest_model']}")
-        print(f"  Average Time: {perf['average_time']}s")
-        print(f"  Total Analysis Time: {perf['total_analysis_time']}s")
-    
-    # Display consensus result if available
-    if "consensus_result" in comparison:
-        consensus = comparison["consensus_result"]
-        print(f"\nConsensus Final Result:")
-        print(f"  Risk Level: {consensus.get('risk_level', 'unknown').upper()}")
-        print(f"  Confidence: {consensus.get('confidence_score', 0)}%")
-        print(f"  Method: {consensus.get('consensus_metadata', {}).get('method', 'unknown')}")
-        print(f"  Rounds Used: {consensus.get('consensus_metadata', {}).get('rounds_used', 0)}")
-        if consensus.get('consensus_metadata', {}).get('method') == 'weighted_voting':
-            voting_scores = consensus.get('consensus_metadata', {}).get('voting_scores', {})
-            print(f"  Voting Scores: {voting_scores}")
-
-def main():
-    """Main function for multi-model analysis."""
-    # Example usage with a transaction directory
-    tx_dir = "output/1/0xff8e9226091d513fc936ecc670030eba03f34dbe60cd012122bd18be44248d32"
-    
-    # Define models to test
-    models = [
-        "gpt-4o-mini",      # OpenAI's latest model
-        "gpt-3.5-turbo",    # OpenAI's faster model
-        "gpt-4o"    # Anthropic's fast model
-    ]
-    
-    # Run multi-model analysis
-    results = run_multi_model_analysis(tx_dir, models)
-    
-    if results:
-        # Load and display comparison report
-        comparison_path = os.path.join(tx_dir, "model_comparison_report.json")
-        if os.path.exists(comparison_path):
-            with open(comparison_path, 'r', encoding='utf-8') as f:
-                comparison = json.load(f)
-            display_comparison_summary(comparison)
-        
-        print(f"\nAll reports saved to: {tx_dir}")
-        print("Files generated:")
-        for model in models:
-            report_file = f"security_analysis_{model.replace('-', '_')}.json"
-            print(f"  - {report_file}")
-        print("  - model_comparison_report.json")
-        print("  - consensus_final_report.json")
-    else:
-        print("No analysis results generated.")
-
-if __name__ == "__main__":
-    main() 
+#root cause: run_multi_model_analysis

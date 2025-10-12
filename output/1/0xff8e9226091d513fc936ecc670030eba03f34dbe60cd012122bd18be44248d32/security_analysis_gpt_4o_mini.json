@@ -1,0 +1,34 @@
+{
+  "risk_level": "suspicious",
+  "confidence_score": 65,
+  "custom_scoring_criteria": {
+    "behavior_patterns": {
+      "weight": 0.6,
+      "reasoning": "The transaction has a complex call chain with multiple approvals and asset transfers, indicating potential for misuse, but lacks clear malicious patterns."
+    },
+    "gas_efficiency": {
+      "weight": 0.2,
+      "reasoning": "Gas usage data is not available, which raises concerns about efficiency and potential gas-related attacks."
+    },
+    "ui_js_security": {
+      "weight": 0.2,
+      "reasoning": "No JavaScript code was detected, which is a positive indicator, but the absence of UI analysis limits the overall confidence."
+    }
+  },
+  "explanation": "This transaction involves multiple asset transfers and state changes, primarily focusing on approving token transfers. The complexity of the call chain suggests a sophisticated operation, but there are no clear indicators of malicious intent.",
+  "recommendations": [
+    "Monitor the transaction for any unusual follow-up activities.",
+    "Conduct a deeper analysis of the involved contracts for potential vulnerabilities.",
+    "Consider implementing additional security measures for high-value transactions."
+  ],
+  "category_analysis": {
+    "behavior_score": 70,
+    "context_score": 50,
+    "ui_score": 80
+  },
+  "analysis_metadata": {
+    "model": "gpt-4o-mini",
+    "analysis_time_seconds": 4.78,
+    "timestamp": "2025-10-12 19:08:02"
+  }
+}

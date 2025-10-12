@@ -9,8 +9,22 @@ import os
 import sys
 import json
 import time
-import subprocess
+import pandas as pd
+import requests
 from typing import Dict, Any, List
+from dotenv import load_dotenv, find_dotenv
+import argparse
+
+
+load_dotenv(find_dotenv(filename=".env", usecwd=True), override=False)
+
+def _parse_bool_flag(s: str) -> bool:
+    t = str(s).strip().lower()
+    if t in {"1", "true", "yes", "y", "on"}:
+        return True
+    if t in {"0", "false", "no", "n", "off"}:
+        return False
+    raise argparse.ArgumentTypeError(f"Invalid boolean value for --simulation: {s}")
 
 def check_dependencies():
     """Check if required dependencies are installed"""
@@ -49,11 +63,12 @@ def check_dependencies():
 # Check dependencies first
 check_dependencies()
 
-# Import necessary modules from src package
 from src.transaction_analyzer import run_transaction_analysis as run_transaction_analysis_from_main
+from src.transaction_analyzer import extract_called_functions, fetch_contracts, extract_function_code 
 from src.security_checker import analyze_transaction_output
 from src.llm_analyzer import run_multi_model_analysis
 from src.consensus_engine import ConsensusChecker
+from src.simulation import simulation
 
 
 def print_step_header(step_num: int, total_steps: int, title: str):
@@ -70,27 +85,27 @@ def print_substep(substep: str, completed: bool = False):
         print(f"  - {substep}")
 
 
-def run_transaction_analysis(tx_hash: str) -> bool:
+def run_transaction_analysis(tx_hash: str, tx_dir: str, chain_id: str) -> bool:
     """Run transaction analysis"""
     print_step_header(1, 4, "TRANSACTION ANALYSIS")
     
     try:
-        print_substep("Transaction inspection and trace extraction...", False)
+        print_substep("Transaction inspection...", False)
+        print_substep("Call trace extraction and gas usage analysis...", False)
         print_substep("Contract source code fetching and decompilation...", False)
-        print_substep("Function call analysis and code extraction...", False)
+        print_substep("Code extraction...", False)
         print_substep("Asset flow tracking and token transfer analysis...", False)
-        print_substep("Gas usage analysis and efficiency calculation...", False)
         print_substep("State changes tracking and storage analysis...", False)
         
         # Execute transaction analysis
-        result = run_transaction_analysis_from_main(tx_hash)
+        result = run_transaction_analysis_from_main(tx_hash, tx_dir, chain_id)
         
         if result:
-            print_substep("Transaction inspection and trace extraction...", True)
+            print_substep("Transaction inspection...", True)
+            print_substep("Call trace extraction and gas usage analysis...", True)
             print_substep("Contract source code fetching and decompilation...", True)
-            print_substep("Function call analysis and code extraction...", True)
+            print_substep("Code extraction...", True)
             print_substep("Asset flow tracking and token transfer analysis...", True)
-            print_substep("Gas usage analysis and efficiency calculation...", True)
             print_substep("State changes tracking and storage analysis...", True)
             print("\n✓ Transaction analysis completed successfully")
             return True
@@ -103,7 +118,7 @@ def run_transaction_analysis(tx_hash: str) -> bool:
         return False
 
 
-def run_security_check(tx_hash: str) -> bool:
+def run_security_check(tx_hash: str, tx_dir: str) -> bool:
     """Run security database check"""
     print_step_header(2, 4, "SECURITY DATABASE CHECK")
     
@@ -112,7 +127,6 @@ def run_security_check(tx_hash: str) -> bool:
         print_substep("Suspicious code pattern identification...", False)
         
         # Check for optional files and offer interactive input
-        tx_dir = f"output/1/{tx_hash.lower()}"
         urls_file = os.path.join(tx_dir, "url.txt")
         js_file = os.path.join(tx_dir, "js.txt")
         
@@ -165,7 +179,7 @@ def run_security_check(tx_hash: str) -> bool:
             print_substep("JavaScript code security pattern detection...", False)
         
         # Execute security check
-        analyze_transaction_output(tx_hash)
+        analyze_transaction_output(tx_hash, tx_dir)
         
         print_substep("Malicious address database checking...", True)
         print_substep("Suspicious code pattern identification...", True)
@@ -189,11 +203,9 @@ def run_security_check(tx_hash: str) -> bool:
         return False
 
 
-def run_llm_analysis(tx_hash: str) -> Dict[str, Any]:
+def run_llm_analysis(tx_hash: str, tx_dir: str) -> Dict[str, Any]:
     """Run multi-model LLM analysis"""
     print_step_header(3, 4, "MULTI-MODEL LLM ANALYSIS")
-    
-    tx_dir = f"output/1/{tx_hash.lower()}"
     
     if not os.path.exists(tx_dir):
         print(f"✗ Transaction directory not found: {tx_dir}")
@@ -228,21 +240,61 @@ def run_llm_analysis(tx_hash: str) -> Dict[str, Any]:
         return {}
 
 
-def analyze_transaction_type(tx_hash: str) -> str:
-    """Analyze transaction type"""
+def analyze_transaction_type(tx_dir: str) -> str:
+    """Analyze transaction type with detailed contract creation detection"""
     try:
-        # This can be enhanced to determine type based on transaction data
-        # For now, return generic type
-        return "Smart Contract Interaction"
-    except:
+        call_trace_path = os.path.join(tx_dir, "call_trace.csv")
+        df_call_trace = pd.read_csv(call_trace_path)
+        
+        if df_call_trace.empty:
+            return "User Transfer"
+    
+        first_row = df_call_trace.iloc[0]
+        is_contract_creation = False
+        
+        if pd.isna(first_row.get('to')) or first_row.get('to') in ['', '0x', '0x0', None]:
+            is_contract_creation = True
+        
+        if 'call_type' in first_row and pd.notna(first_row['call_type']):
+            if any(keyword in str(first_row['call_type']).lower() for keyword in ['create', 'delegate', 'init']):
+                is_contract_creation = True
+        
+        if 'input' in first_row and pd.notna(first_row['input']):
+            if len(str(first_row['input'])) > 2000:  #usual
+                is_contract_creation = True
+        
+        # if not is_contract_creation:
+        #     empty_to = df_call_trace['to'].isna().any() or (df_call_trace['to'] == '').any()
+            
+        #     if 'call_type' in df_call_trace.columns:
+        #         create_calls = df_call_trace['call_type'].str.contains(
+        #             'create|delegatecall|callcode', case=False, na=False
+        #         ).any()
+        #         is_contract_creation = empty_to or create_calls
+        
+        if is_contract_creation:
+            return "Contract Creation"
+        
+        has_contract_calls = any(df_call_trace['depth'] > 0)
+        has_function_calls = any(df_call_trace['function'].notna() & (df_call_trace['function'] != ""))
+        
+        if has_contract_calls or has_function_calls:
+            return "Smart Contract Interaction"
+        else:
+            return "User Transfer"
+            
+    except Exception as e:
+        print(f"Error analyzing transaction type: {e}")
         return "Unknown"
+    #     # For now, return generic type
+    #     return "Smart Contract Interaction"
+    # except:
+    #     return "Unknown"
 
 
-def generate_final_report(tx_hash: str, llm_results: Dict[str, Any]) -> Dict[str, Any]:
+def generate_final_report(tx_hash: str, tx_dir: str, llm_results: Dict[str, Any]) -> Dict[str, Any]:
     """Generate final comprehensive report"""
     print_step_header(4, 4, "FINAL REPORT GENERATION")
-    
-    tx_dir = f"output/1/{tx_hash.lower()}"
     
     try:
         print_substep("Loading consensus results and model comparisons...", False)
@@ -258,10 +310,15 @@ def generate_final_report(tx_hash: str, llm_results: Dict[str, Any]) -> Dict[str
         print_substep("Analyzing transaction type and classification...", False)
         
         # Determine transaction type
-        tx_type = analyze_transaction_type(tx_hash)
+        tx_type = analyze_transaction_type(tx_dir)
         
         print_substep("Analyzing transaction type and classification...", True)
         print_substep("Synthesizing security assessment and recommendations...", False)
+
+        if tx_type == "Contract Creation":
+            explanation = "Contract creation transaction - deploying new smart contract to the blockchain"
+        else:
+            explanation = consensus_result.get("explanation", "")
         
         # Generate final report
         final_report = {
@@ -276,7 +333,7 @@ def generate_final_report(tx_hash: str, llm_results: Dict[str, Any]) -> Dict[str
                 "consensus_method": consensus_result.get("consensus_metadata", {}).get("method", "unknown")
             },
             "transaction_analysis": {
-                "explanation": consensus_result.get("explanation", ""),
+                "explanation": explanation,
                 "scoring_criteria": consensus_result.get("custom_scoring_criteria", "")
             },
             "recommendations": consensus_result.get("recommendations", [])
@@ -302,6 +359,7 @@ def generate_final_report(tx_hash: str, llm_results: Dict[str, Any]) -> Dict[str
         print(f"Risk Level: {final_report['security_assessment']['risk_level']}")
         print(f"Confidence Score: {final_report['security_assessment']['confidence_score']}")
         print(f"Consensus Method: {final_report['security_assessment']['consensus_method']}")
+        print(f"Transaction Description: {final_report['transaction_analysis']['explanation']}")
         
         if final_report['recommendations']:
             print("\nKey Recommendations:")
@@ -313,9 +371,91 @@ def generate_final_report(tx_hash: str, llm_results: Dict[str, Any]) -> Dict[str
     except Exception as e:
         print(f"\n✗ Error generating final report: {e}")
         return {}
+    
+def get_chain_id(rpc_url: str) -> str:
+    payload = {
+        "jsonrpc": "2.0",
+        "method": "eth_chainId",
+        "params": [],
+        "id": 1
+    }
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(rpc_url, data=json.dumps(payload), headers=headers)
 
+    if response.status_code == 200:
+        result = response.json()
+        chain_id_hex = result["result"]
+        return str(int(chain_id_hex, 16))
+    else:
+        raise RuntimeError(f"Error fetching chain_id: {response.status_code} {response.text}")
 
-def main():
+def simulation_report():
+    print("\nSIMULATION")
+    print("=" * 60)
+    try:
+        tx_dir = simulation()  
+    except Exception as e:
+        print(f"\n✗ Simulation execution failed: {e}")
+        sys.exit(1)
+
+    base_output = "output"
+    if not os.path.exists(base_output):
+        print("No simulation output directory found.")
+        sys.exit(1)
+
+    tx_hash = os.path.basename(tx_dir)
+
+    chain_id_str = os.path.basename(os.path.dirname(tx_dir))
+    try:
+        chain_id = int(chain_id_str)
+    except Exception:
+        chain_id = chain_id_str
+
+    # === Step 1: Load involved addresses ===
+    address_file = os.path.join(tx_dir, "address.txt")
+    call_trace_path = os.path.join(tx_dir, "call_trace.csv")
+
+    involved = set()
+    if os.path.exists(address_file):
+        try:
+            with open(address_file, "r", encoding="utf-8") as f:
+                for line in f:
+                    addr = line.strip().lower()
+                    if addr.startswith("0x") and len(addr) == 42:
+                        involved.add(addr)
+        except Exception as e:
+            print(f"Failed to read address.txt: {e}")
+
+    # === Step 2: Fetch contracts ===
+    etherscan_api = os.environ.get("ETHERSCAN_API_KEY")
+
+    contract_names = fetch_contracts(involved_addresses=involved, tx_dir=tx_dir, chain_id=chain_id, etherscan_api=etherscan_api)
+
+    # === Step 3: Extract called functions ===
+    if not os.path.exists(call_trace_path):
+        print("call_trace.csv not found — skip function extraction")
+    else:
+        try:
+            df_call_trace = pd.read_csv(call_trace_path)
+            called_functions = extract_called_functions(df_call_trace)
+
+            output_code_path = os.path.join(tx_dir, "code.txt")
+            extract_function_code(
+                called_functions=called_functions,
+                contract_names=contract_names,
+                tx_dir=tx_dir,
+                output_code_path=output_code_path,
+            )
+            print(f"✓ code.txt generated at: {output_code_path}")
+        except Exception as e:
+            print(f"⚠ Error during function extraction: {e}")
+
+    run_post_analysis(tx_hash, tx_dir)
+
+    print(f"\nSimulation and Analysis completed successfully!")
+    print(f"Results saved in: {tx_dir}")
+
+def real():
     """Main function"""
     if len(sys.argv) != 2:
         print("Usage: python3 main.py <transaction_hash>")
@@ -335,33 +475,54 @@ def main():
     print("="*60)
     print(f"Analyzing transaction: {tx_hash}")
     print(f"Start time: {time.strftime('%Y-%m-%d %H:%M:%S')}")
-    
+
+    rpc_url = os.environ.get("RPC_URL", "https://ethereum.therpc.io")
+    chain_id = get_chain_id(rpc_url)
+    tx_dir = os.path.join("output", chain_id, tx_hash.lower())
+
     # Step 1: Transaction analysis
-    if not run_transaction_analysis(tx_hash):
+    if not run_transaction_analysis(tx_hash, tx_dir, chain_id):
         print("\n✗ Analysis failed at transaction analysis step")
         sys.exit(1)
-    
-    # Step 2: Security database check
-    if not run_security_check(tx_hash):
-        print("\n✗ Analysis failed at security check step")
-        sys.exit(1)
-    
-    # Step 3: Multi-model LLM analysis
-    llm_results = run_llm_analysis(tx_hash)
-    if not llm_results:
-        print("\n✗ Analysis failed at LLM analysis step")
-        sys.exit(1)
-    
-    # Step 4: Generate final report
-    final_report = generate_final_report(tx_hash, llm_results)
-    if not final_report:
-        print("\n✗ Analysis failed at final report generation step")
-        sys.exit(1)
+    # Steps 2-4: Post-analysis (security check, LLM analysis, final report)
+    run_post_analysis(tx_hash, tx_dir)
+
     
     print(f"\nAnalysis completed successfully!")
     print(f"End time: {time.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Results saved in: output/1/{tx_hash.lower()}/")
 
+def run_post_analysis(tx_id: str, tx_dir: str) -> dict:
+    """
+      1) Security DB check
+      2) Multi-model LLM analysis
+      3) Final comprehensive report
+    if success return final_report(dict), else sys.exit(1).
+    """
+    # Step 2: Security database check
+    if not run_security_check(tx_id, tx_dir):
+        print("\n✗ Analysis failed at security check step")
+        sys.exit(1)
+
+    # Step 3: Multi-model LLM analysis
+    llm_results = run_llm_analysis(tx_id, tx_dir)
+    if not llm_results:
+        print("\n✗ Analysis failed at LLM analysis step")
+        sys.exit(1)
+
+    # Step 4: Generate final report
+    final_report = generate_final_report(tx_id, tx_dir, llm_results)
+    if not final_report:
+        print("\n✗ Analysis failed at final report generation step")
+        sys.exit(1)
+
+    return final_report
 
 if __name__ == "__main__":
-    main() 
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument( "-s", "--simulation", type=_parse_bool_flag, default=False, help="1/true: run simulation() — simulate execution then analyze; 0/false: run main() — analyze a real on-chain transaction." )
+    known, remaining = parser.parse_known_args()
+    if known.simulation:
+        simulation_report()
+    else:
+        real() 
