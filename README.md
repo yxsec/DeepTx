@@ -2,7 +2,7 @@
 
 **🏆 ETHDenver 2025 - ORA Second Prize Winner**
 
-Comprehensive Ethereum transaction security analyzer with multi-model LLM analysis and consensus mechanisms.
+Comprehensive EVM-based blockchain transaction analyzer with multi-model LLM analysis and consensus mechanisms.
 
 > *AI-Powered Transaction Guard - Decode, Detect, Defend Against Fraud & Phishing in Real-Time.*
 
