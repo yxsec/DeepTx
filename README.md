@@ -150,11 +150,16 @@ curl -H "X-Access-Key: $TENDERLY_API_KEY" \
   https://api.tenderly.co/api/v1/account/$TENDERLY_ACCOUNT_ID/project/$TENDERLY_PROJECT_SLUG
 ```
 
-## Awards
+## Awards & Publications
 
 **🏆 ETHDenver 2025 BUIDLathon**
 - **ORA Second Prize** 
 - [Project Page](https://devfolio.co/projects/deeptx-c682)
+
+**📄 ASE 2025 Tool Demonstration Track**
+- **DeepTx: Real-Time Transaction Risk Analysis via Multi-Modal Features and LLM Reasoning**
+- [Conference Paper](https://conf.researchr.org/details/ase-2025/ase-2025-tool-demonstration-track/14/DeepTx-Real-Time-Transaction-Risk-Analysis-via-Multi-Modal-Features-and-LLM-Reasonin)
+- Demo Video: [YouTube](https://youtu.be/4OfK9KCEXUM)
 
 ## Citation
 
@@ -171,4 +176,5 @@ curl -H "X-Access-Key: $TENDERLY_API_KEY" \
 ## Links
 
 - **Devfolio Project**: https://devfolio.co/projects/deeptx-c682
-- **ETHDenver 2025**: Built at ETHDenver BUIDLathon
+- **ASE 2025 Conference**: https://conf.researchr.org/details/ase-2025/ase-2025-tool-demonstration-track/14/DeepTx-Real-Time-Transaction-Risk-Analysis-via-Multi-Modal-Features-and-LLM-Reasonin
+- **Demo Video**: https://youtu.be/4OfK9KCEXUM
