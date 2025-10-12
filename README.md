@@ -134,7 +134,6 @@ Or pre-create: `url.txt`, `js.txt` in output directory
 
 ```bash
 # Verify installation
-python3 -c "import pandas, web3, openai; print('OK')"
 heimdall --version
 
 # Check API keys
@@ -148,8 +147,7 @@ curl -H "X-Access-Key: $TENDERLY_API_KEY" \
 ## Awards
 
 **🏆 ETHDenver 2025 BUIDLathon**
-- **ORA Second Prize** - Use ORA's Decentralized API for inference in AI agents
-- Built from scratch in 4 days during the hackathon
+- **ORA Second Prize** 
 - [Project Page](https://devfolio.co/projects/deeptx-c682)
 
 ## Citation
