@@ -6,6 +6,12 @@ Comprehensive EVM-based blockchain transaction analyzer with multi-model LLM ana
 
 > *AI-Powered Transaction Guard - Decode, Detect, Defend Against Fraud & Phishing in Real-Time.*
 
+## Architecture
+
+![DeepTx Security Analysis Flow](docs/architecture.png)
+
+*Comprehensive security analysis flow from user action to final risk assessment*
+
 ## Two Core Capabilities
 
 ### 1️⃣ Historical Transaction Analysis
