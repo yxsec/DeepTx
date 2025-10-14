@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import re
 import pandas as pd
@@ -27,6 +28,19 @@ def create_full_embeddings(texts: List[str], model: str = "text-embedding-ada-00
     except Exception as e:
         print(f"Error creating embeddings: {e}")
         return []
+
+def is_simulation_mode():
+    argv = sys.argv
+    for flag in ("--simulation", "-s"):
+        if flag in argv:
+            idx = argv.index(flag)
+            if idx + 1 < len(argv):
+                val = argv[idx + 1].strip().lower()
+                if val in {"1", "true", "yes", "y", "on"}:
+                    return True
+            else:
+                return False 
+    return False
 
 def extract_full_code_content(code_snippets: List[Dict[str, Any]]) -> str:
     """Extract complete code content from all snippets"""
@@ -256,41 +270,46 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
         state_changes = pd.DataFrame()
     
     # 2. CONTEXT ANALYSIS (Gas)
-    print("  2. Loading context analysis (gas) data...")
-    gas_path = os.path.join(dir_path, "call_trace.csv")
-    gas_data = load_csv(gas_path)
-    gas_info_path = os.path.join(dir_path, "gas_info.txt")
+    if is_simulation_mode():
+        print("  2. Skipping gas analysis in simulation mode.")
+        # Gas analysis summary
+        gas_analysis = {}
+    else:
+        print("  2. Loading context analysis (gas) data...")
+        gas_path = os.path.join(dir_path, "call_trace.csv")
+        gas_data = load_csv(gas_path)
+        gas_info_path = os.path.join(dir_path, "gas_info.txt")
     
-    # Gas analysis summary
-    gas_analysis = {}
-    if gas_data:
-        total_gas_used = sum(float(record.get("gas_used", 0)) for record in gas_data)
-        total_gas_allocated = sum(float(record.get("gas_allocated", 0)) for record in gas_data)
-        gas_efficiency = (total_gas_used / total_gas_allocated * 100) if total_gas_allocated > 0 else 0
-        
-        gas_analysis = {
-            "total_gas_used": total_gas_used,
-            "total_gas_allocated": total_gas_allocated,
-            "gas_efficiency_percent": round(gas_efficiency, 2),
-            "total_calls": len(gas_data),
-            "average_gas_per_call": round(total_gas_used / len(gas_data), 2) if gas_data else 0
-        }
+        # Gas analysis summary
+        gas_analysis = {}
+        if gas_data:
+            total_gas_used = sum(float(record.get("gas_used", 0)) for record in gas_data)
+            total_gas_allocated = sum(float(record.get("gas_allocated", 0)) for record in gas_data)
+            gas_efficiency = (total_gas_used / total_gas_allocated * 100) if total_gas_allocated > 0 else 0
+            
+            gas_analysis = {
+                "total_gas_used": total_gas_used,
+                "total_gas_allocated": total_gas_allocated,
+                "gas_efficiency_percent": round(gas_efficiency, 2),
+                "total_calls": len(gas_data),
+                "average_gas_per_call": round(total_gas_used / len(gas_data), 2) if gas_data else 0
+            }
 
-        if os.path.exists(gas_info_path):
-            try:
-                with open(gas_info_path, 'r') as f:
-                    gas_info = {}
-                    for line in f:
-                        if ':' in line:
-                            key, value = line.strip().split(':', 1)
-                            gas_info[key.strip()] = value.strip()
-                
-                gas_analysis["tx_gas_price"] = int(gas_info.get("tx_gas_price", 0))
-                gas_analysis["block_base_fee"] = int(gas_info.get("block_base_fee", 0))
-            except Exception as e:
-                print(f"Error reading gas_info.txt: {e}")
-                gas_analysis["tx_gas_price"] = 0
-                gas_analysis["block_base_fee"] = 0
+            if os.path.exists(gas_info_path):
+                try:
+                    with open(gas_info_path, 'r') as f:
+                        gas_info = {}
+                        for line in f:
+                            if ':' in line:
+                                key, value = line.strip().split(':', 1)
+                                gas_info[key.strip()] = value.strip()
+                    
+                    gas_analysis["tx_gas_price"] = int(gas_info.get("tx_gas_price", 0))
+                    gas_analysis["block_base_fee"] = int(gas_info.get("block_base_fee", 0))
+                except Exception as e:
+                    print(f"Error reading gas_info.txt: {e}")
+                    gas_analysis["tx_gas_price"] = 0
+                    gas_analysis["block_base_fee"] = 0
     
     # 3. UI ANALYSIS (JavaScript)
     print("  3. Loading UI analysis data...")
