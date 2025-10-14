@@ -3,9 +3,13 @@ import sys
 import json
 from openai import OpenAI
 
+api_key = os.environ.get("OPENAI_API_KEY")
+if not api_key:
+    raise ValueError("OPENAI_API_KEY environment variable is required")
+
 client = OpenAI(
-    api_key="",
-    base_url="https://api.openai.com/v1"   
+    api_key=api_key,
+    base_url=os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
 )
 
 def ui_reconstruction(trace_text: str, html_code: str, js_code: str) -> list:

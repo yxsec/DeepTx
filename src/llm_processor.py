@@ -4,8 +4,7 @@ import re
 import pandas as pd
 from typing import Dict, Any, List
 from openai import OpenAI
-import os
-from .utils import load_json,load_text,load_csv
+from .utils import load_json, load_text, load_csv
 
 api_key = os.environ.get("OPENAI_API_KEY")
 if not api_key:
