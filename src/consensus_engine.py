@@ -333,16 +333,6 @@ Response format:
         return prompt
 
 def run_consensus_analysis(model_outputs: List[Dict[str, Any]], primary_model: str = "gpt-4o-mini") -> Dict[str, Any]:
-    """
-    Run consensus analysis on multiple model outputs.
-    
-    Args:
-        model_outputs: List of model outputs
-        primary_model: Model to use for summarization and reflection
-        
-    Returns:
-        Final consensus decision
-    """
     checker = ConsensusChecker(primary_model)
     return checker.run_consensus_check(model_outputs)
 

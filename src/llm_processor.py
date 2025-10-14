@@ -558,8 +558,7 @@ Risk level definitions:
                     {"role": "system", "content": "You are a blockchain security expert. Provide detailed analysis in JSON format."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.1,
-                max_tokens=2000
+                temperature=0.1
             )
             
             result = response.choices[0].message.content
