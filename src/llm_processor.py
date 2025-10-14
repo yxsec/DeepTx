@@ -422,34 +422,7 @@ def enhanced_feature_analysis(data: Dict[str, Any], model_name: str) -> Dict[str
     if data["malicious_database_report"].get("has_meaningful_data", False):
         malicious_db_score_field = ', "malicious_db_score": 0-100'
     
-    # Prepare database note
-    db_note = ""
-    if data["malicious_database_report"].get("has_meaningful_data", False):
-        db_note = f"Database contains {data['malicious_database_report'].get('indicators_summary', {}).get('malicious_addresses_count', 0)} malicious addresses, {data['malicious_database_report'].get('indicators_summary', {}).get('code_patterns_count', 0)} code patterns, {data['malicious_database_report'].get('indicators_summary', {}).get('url_check_count', 0)} URL checks, and {data['malicious_database_report'].get('indicators_summary', {}).get('js_patterns_count', 0)} JS patterns."
-    else:
-        db_note = "Database is empty - no malicious indicators found."
-    
-    # Prepare database category
-    db_category = ""
-    if data["malicious_database_report"].get("has_meaningful_data", False):
-        db_category = f"4. Database threat intelligence ({data['malicious_database_report'].get('indicators_summary', {}).get('malicious_addresses_count', 0)} addresses, {data['malicious_database_report'].get('indicators_summary', {}).get('code_patterns_count', 0)} patterns)"
-    
-    # Prepare malicious patterns line
-    malicious_patterns = ""
-    if data["malicious_database_report"].get("has_meaningful_data", False):
-        malicious_patterns = "- Known malicious addresses or patterns"
-    
-    # Prepare database note for scoring
-    db_scoring_note = ""
-    if data["malicious_database_report"].get("has_meaningful_data", False):
-        db_scoring_note = "Note: Database threat intelligence has meaningful data and should be included in scoring with appropriate weight."
-    else:
-        db_scoring_note = "Note: Database threat intelligence has no meaningful data and should be excluded from scoring (weight = 0). Redistribute weights among the other 3 categories."
-    
-    # Prepare malicious_db_score field
-    malicious_db_score_field = ""
-    if data["malicious_database_report"].get("has_meaningful_data", False):
-        malicious_db_score_field = ', "malicious_db_score": 0-100'
+    # Prepare UI phishing detection note
     ui_present = data.get("ui_analysis", {}).get("js_code_present", False)
     ui_phishing_note = ""
     if ui_present:
