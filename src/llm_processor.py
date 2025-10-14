@@ -595,6 +595,3 @@ Risk level definitions:
     }
     
     return user_friendly_result
-
-
-# root cause: 1. process_transaction_data 2. enhanced_feature_analysis 

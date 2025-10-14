@@ -335,5 +335,3 @@ Response format:
 def run_consensus_analysis(model_outputs: List[Dict[str, Any]], primary_model: str = "gpt-4o-mini") -> Dict[str, Any]:
     checker = ConsensusChecker(primary_model)
     return checker.run_consensus_check(model_outputs)
-
-# root cause: run_consensus_analysis

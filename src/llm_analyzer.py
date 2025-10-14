@@ -184,5 +184,3 @@ def get_consensus_risk_level(risk_levels: List[str]) -> str:
             return level
     
     return most_common
-
-#root cause: run_multi_model_analysis

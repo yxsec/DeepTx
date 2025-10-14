@@ -151,5 +151,3 @@ class ContractDecompilerTool:
             result = decompile_bytecode(bytecode_file, name=contract_address, rpc_url=RPC_URL, output=output_dir)
             print(result)
             return None
-
-# root cause: ContractDecompilerTool(ContractFetcher())

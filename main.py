@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-"""
-Unified Ethereum Transaction Analysis Tool
-Comprehensive tool that integrates transaction analysis, security database checking, 
-multi-model LLM analysis and consensus checking
-"""
-
 import os
 import sys
 import json
@@ -260,17 +253,8 @@ def analyze_transaction_type(tx_dir: str) -> str:
                 is_contract_creation = True
         
         if 'input' in first_row and pd.notna(first_row['input']):
-            if len(str(first_row['input'])) > 2000:  #usual
+            if len(str(first_row['input'])) > 2000:
                 is_contract_creation = True
-        
-        # if not is_contract_creation:
-        #     empty_to = df_call_trace['to'].isna().any() or (df_call_trace['to'] == '').any()
-            
-        #     if 'call_type' in df_call_trace.columns:
-        #         create_calls = df_call_trace['call_type'].str.contains(
-        #             'create|delegatecall|callcode', case=False, na=False
-        #         ).any()
-        #         is_contract_creation = empty_to or create_calls
         
         if is_contract_creation:
             return "Contract Creation"
@@ -286,10 +270,6 @@ def analyze_transaction_type(tx_dir: str) -> str:
     except Exception as e:
         print(f"Error analyzing transaction type: {e}")
         return "Unknown"
-    #     # For now, return generic type
-    #     return "Smart Contract Interaction"
-    # except:
-    #     return "Unknown"
 
 
 def generate_final_report(tx_hash: str, tx_dir: str, llm_results: Dict[str, Any]) -> Dict[str, Any]:

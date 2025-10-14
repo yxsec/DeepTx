@@ -356,7 +356,7 @@ def run_transaction_analysis(tx_hash, tx_dir, chain_id):
 
     if state_rows:
         df_state = pd.DataFrame(state_rows)
-        df_state.to_csv(STATE_CHANGES_PATH, index=False) #?
+        df_state.to_csv(STATE_CHANGES_PATH, index=False)
 
     print(f"Analysis complete. Generated files:")
     print(f"  - decoded_trace.json: Transaction trace")
@@ -365,5 +365,3 @@ def run_transaction_analysis(tx_hash, tx_dir, chain_id):
     print(f"  - state_changes.csv: State changes ({len(state_rows)} changes)")
     
     return True
-
-# root cuase: 1.run_transaction_analysis 2. ask_for_optional_files 3. security_checker.analyze_transaction_output 
