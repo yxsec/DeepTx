@@ -393,13 +393,48 @@ def enhanced_feature_analysis(data: Dict[str, Any], model_name: str) -> Dict[str
         embedding_info = {"error": "Failed to create embeddings"}
     
     # Create 4-category analysis prompt
+    behavior_block = f"""Call Chain Analysis:
+        {json.dumps(data["behavior_analysis"]["call_chain"][:5], indent=2)}
+
+        Code Analysis:
+        {json.dumps(data["behavior_analysis"]["code_analysis"][:3], indent=2)}
+
+        Asset Flows:
+        {json.dumps(data["behavior_analysis"]["asset_flows"][:3], indent=2)}
+
+        State Changes:
+        {json.dumps(data["behavior_analysis"]["state_changes"][:3], indent=2)}
+        """
+    ui_block = f"""JavaScript Analysis:
+        {json.dumps(data["ui_analysis"], indent=2)}
+        """
     # Prepare database note
     db_note = ""
     if data["malicious_database_report"].get("has_meaningful_data", False):
         db_note = f"Database contains {data['malicious_database_report'].get('indicators_summary', {}).get('malicious_addresses_count', 0)} malicious addresses, {data['malicious_database_report'].get('indicators_summary', {}).get('code_patterns_count', 0)} code patterns, {data['malicious_database_report'].get('indicators_summary', {}).get('url_check_count', 0)} URL checks, and {data['malicious_database_report'].get('indicators_summary', {}).get('js_patterns_count', 0)} JS patterns."
     else:
         db_note = "Database is empty - no malicious indicators found."
-    
+    db_block = f"""Security Database Check:
+        {json.dumps(data["malicious_database_report"], indent=2)}
+
+        Note: {db_note}"""
+    # Combine sections
+    sections = []
+    sections.append(("behavior_analysis", behavior_block))
+    sections.append(("ui_analysis", ui_block))
+    sections.append(("malicious_database_report", db_block))
+    # Judge if need to include context analysis 
+    has_context = bool(data.get("context_analysis"))
+    if has_context:
+        context_block = f"""Gas Usage Analysis:
+            {json.dumps(data["context_analysis"], indent=2)}
+            """
+        sections.append(("context_analysis", context_block))
+    # Automatically number sections
+    numbered_sections = "\n\n".join(
+        f"<{i}_{name}>\n{body}</{i}_{name}>"
+        for i, (name, body) in enumerate(sections, start=1)
+    )
     # Prepare database category
     db_category = ""
     if data["malicious_database_report"].get("has_meaningful_data", False):
@@ -447,36 +482,7 @@ You are a blockchain security expert. Analyze this transaction using 4 categorie
 {json.dumps(data["context"], indent=2)}
 </transaction_context>
 
-<1_behavior_analysis>
-Call Chain Analysis:
-{json.dumps(data["behavior_analysis"]["call_chain"][:5], indent=2)}
-
-Code Analysis:
-{json.dumps(data["behavior_analysis"]["code_analysis"][:3], indent=2)}
-
-Asset Flows:
-{json.dumps(data["behavior_analysis"]["asset_flows"][:3], indent=2)}
-
-State Changes:
-{json.dumps(data["behavior_analysis"]["state_changes"][:3], indent=2)}
-</1_behavior_analysis>
-
-<2_context_analysis>
-Gas Usage Analysis:
-{json.dumps(data["context_analysis"], indent=2)}
-</2_context_analysis>
-
-<3_ui_analysis>
-JavaScript Analysis:
-{json.dumps(data["ui_analysis"], indent=2)}
-</3_ui_analysis>
-
-<4_malicious_database_report>
-Security Database Check:
-{json.dumps(data["malicious_database_report"], indent=2)}
-
-Note: {db_note}
-</4_malicious_database_report>
+{numbered_sections}
 
 <custom_scoring_criteria>
 Create your own scoring criteria with custom weights that sum to 1.0 based on the actual data available:
