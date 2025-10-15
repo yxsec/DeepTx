@@ -206,9 +206,6 @@ def run_llm_analysis(tx_hash: str, tx_dir: str) -> Dict[str, Any]:
     
     try:
         print_substep("Data preprocessing and token limit management...", False)
-        print_substep("GPT-4o-mini model analysis...", False)
-        print_substep("GPT-3.5-turbo model analysis...", False)
-        print_substep("GPT-4o model analysis...", False)
         print_substep("Consensus algorithm with self-reflection...", False)
         print_substep("Weighted voting and final decision...", False)
         
@@ -217,9 +214,6 @@ def run_llm_analysis(tx_hash: str, tx_dir: str) -> Dict[str, Any]:
         
         if results:
             print_substep("Data preprocessing and token limit management...", True)
-            print_substep("GPT-4o-mini model analysis...", True)
-            print_substep("GPT-3.5-turbo model analysis...", True)
-            print_substep("GPT-4o model analysis...", True)
             print_substep("Consensus algorithm with self-reflection...", True)
             print_substep("Weighted voting and final decision...", True)
             print("\n✓ Multi-model analysis completed")

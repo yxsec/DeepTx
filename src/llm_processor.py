@@ -50,150 +50,6 @@ def estimate_tokens(text: str) -> int:
     """Rough token estimation (1 token ≈ 4 characters)"""
     return len(text) // 4
 
-def create_full_input_embeddings(data: Dict[str, Any]) -> Dict[str, Any]:
-    """Create embeddings using 4-category analysis with smart token limits"""
-    embedding_data = {}
-    texts_to_embed = []
-    text_labels = []
-    
-    # Token limits for different content types
-    MAX_BEHAVIOR_TOKENS = 4000  # ~16KB
-    MAX_CONTEXT_TOKENS = 1500   # ~6KB
-    MAX_UI_TOKENS = 1000        # ~4KB
-    MAX_MALICIOUS_TOKENS = 500  # ~2KB
-    TOTAL_MAX_TOKENS = 7000     # ~28KB total
-    
-    current_total_tokens = 0
-    
-    # 1. BEHAVIOR ANALYSIS
-    print("  Processing behavior analysis for embedding...")
-    behavior_data = data.get("behavior_analysis", {})
-    
-    # Call chain
-    call_chain = behavior_data.get("call_chain", [])
-    if call_chain:
-        call_text = json.dumps(call_chain, indent=2)
-        call_tokens = estimate_tokens(call_text)
-        if call_tokens <= MAX_BEHAVIOR_TOKENS // 2 and (current_total_tokens + call_tokens) <= TOTAL_MAX_TOKENS:
-            texts_to_embed.append(call_text)
-            text_labels.append("behavior_call_chain")
-            current_total_tokens += call_tokens
-            print(f"    ✓ Adding call chain: {len(call_text)} characters ({call_tokens} tokens)")
-        else:
-            print(f"    ⚠ Call chain too large ({call_tokens} tokens), skipping")
-    
-    # Code analysis
-    code_analysis = behavior_data.get("code_analysis", [])
-    if code_analysis:
-        code_text = json.dumps(code_analysis, indent=2)
-        code_tokens = estimate_tokens(code_text)
-        if code_tokens <= MAX_BEHAVIOR_TOKENS // 2 and (current_total_tokens + code_tokens) <= TOTAL_MAX_TOKENS:
-            texts_to_embed.append(code_text)
-            text_labels.append("behavior_code_analysis")
-            current_total_tokens += code_tokens
-            print(f"    ✓ Adding code analysis: {len(code_text)} characters ({code_tokens} tokens)")
-        else:
-            print(f"    ⚠ Code analysis too large ({code_tokens} tokens), skipping")
-    
-    # Asset flows
-    asset_flows = behavior_data.get("asset_flows", [])
-    if asset_flows:
-        asset_text = json.dumps(asset_flows, indent=2)
-        asset_tokens = estimate_tokens(asset_text)
-        if asset_tokens <= MAX_BEHAVIOR_TOKENS // 4 and (current_total_tokens + asset_tokens) <= TOTAL_MAX_TOKENS:
-            texts_to_embed.append(asset_text)
-            text_labels.append("behavior_asset_flows")
-            current_total_tokens += asset_tokens
-            print(f"    ✓ Adding asset flows: {len(asset_text)} characters ({asset_tokens} tokens)")
-        else:
-            print(f"    ⚠ Asset flows too large ({asset_tokens} tokens), skipping")
-    
-    # 2. CONTEXT ANALYSIS (Gas)
-    print("  Processing context analysis for embedding...")
-    context_data = data.get("context_analysis", {})
-    if context_data:
-        context_text = json.dumps(context_data, indent=2)
-        context_tokens = estimate_tokens(context_text)
-        if context_tokens <= MAX_CONTEXT_TOKENS and (current_total_tokens + context_tokens) <= TOTAL_MAX_TOKENS:
-            texts_to_embed.append(context_text)
-            text_labels.append("context_gas_analysis")
-            current_total_tokens += context_tokens
-            print(f"    ✓ Adding gas analysis: {len(context_text)} characters ({context_tokens} tokens)")
-        else:
-            print(f"    ⚠ Gas analysis too large ({context_tokens} tokens), skipping")
-    
-    # 3. UI ANALYSIS (JavaScript)
-    print("  Processing UI analysis for embedding...")
-    ui_data = data.get("ui_analysis", {})
-    if ui_data.get("js_code_present", False):
-        js_sample = ui_data.get("js_sample", "")
-        if js_sample:
-            js_tokens = estimate_tokens(js_sample)
-            if js_tokens <= MAX_UI_TOKENS and (current_total_tokens + js_tokens) <= TOTAL_MAX_TOKENS:
-                texts_to_embed.append(js_sample)
-                text_labels.append("ui_javascript_analysis")
-                current_total_tokens += js_tokens
-                print(f"    ✓ Adding JavaScript analysis: {len(js_sample)} characters ({js_tokens} tokens)")
-            else:
-                print(f"    ⚠ JavaScript too large ({js_tokens} tokens), skipping")
-    
-    # 4. MALICIOUS DATABASE REPORT (only if has meaningful data)
-    print("  Processing malicious database report for embedding...")
-    malicious_data = data.get("malicious_database_report", {})
-    if malicious_data and malicious_data.get("has_meaningful_data", False):
-        malicious_text = json.dumps(malicious_data, indent=2)
-        malicious_tokens = estimate_tokens(malicious_text)
-        if malicious_tokens <= MAX_MALICIOUS_TOKENS and (current_total_tokens + malicious_tokens) <= TOTAL_MAX_TOKENS:
-            texts_to_embed.append(malicious_text)
-            text_labels.append("malicious_database_report")
-            current_total_tokens += malicious_tokens
-            print(f"    ✓ Adding malicious database report: {len(malicious_text)} characters ({malicious_tokens} tokens)")
-        else:
-            print(f"    ⚠ Malicious database report too large ({malicious_tokens} tokens), skipping")
-    else:
-        print(f"    ⚠ Malicious database has no meaningful data, skipping")
-    
-    # Create embeddings for all content
-    if texts_to_embed:
-        print(f"  Creating embeddings for {len(texts_to_embed)} content pieces (total: {current_total_tokens} tokens)...")
-        embeddings = create_full_embeddings(texts_to_embed)
-        
-        if embeddings:
-            # Organize embeddings by type
-            for label, embedding in zip(text_labels, embeddings):
-                embedding_data[label] = {
-                    "vector": embedding,
-                    "dimension": len(embedding),
-                    "text_length": len(texts_to_embed[text_labels.index(label)]),
-                    "content_type": label
-                }
-            
-            # Summary statistics
-            total_chars = sum(len(text) for text in texts_to_embed)
-            embedding_data["summary"] = {
-                "total_embeddings": len(embeddings),
-                "total_characters": total_chars,
-                "total_tokens": current_total_tokens,
-                "content_types": text_labels,
-                "embedding_model": "text-embedding-ada-002",
-                "smart_limits_applied": True,
-                "limits": {
-                    "max_behavior_tokens": MAX_BEHAVIOR_TOKENS,
-                    "max_context_tokens": MAX_CONTEXT_TOKENS,
-                    "max_ui_tokens": MAX_UI_TOKENS,
-                    "max_malicious_tokens": MAX_MALICIOUS_TOKENS,
-                    "total_max_tokens": TOTAL_MAX_TOKENS
-                }
-            }
-            
-            print(f"  ✓ Created {len(embeddings)} embeddings from {total_chars:,} total characters ({current_total_tokens} tokens)")
-        else:
-            print("  ✗ Failed to create embeddings")
-    else:
-        print("  No content available for embedding")
-    
-    return embedding_data
-
 def process_transaction_data(dir_path: str) -> Dict[str, Any]:
     """Process all transaction data from output directory with 4 categories"""
     print(f"Processing transaction data from: {dir_path}")
@@ -263,8 +119,7 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
     gas_info_path = os.path.join(dir_path, "gas_info.txt")
 
     # Gas analysis summary
-    gas_analysis = {}
-    if gas_data:
+    if any((r.get("gas_used")) not in (None, "") for r in gas_data):
         total_gas_used = sum(float(record.get("gas_used", 0)) for record in gas_data)
         total_gas_allocated = sum(float(record.get("gas_allocated", 0)) for record in gas_data)
         gas_efficiency = (total_gas_used / total_gas_allocated * 100) if total_gas_allocated > 0 else 0
@@ -292,6 +147,9 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
                 print(f"Error reading gas_info.txt: {e}")
                 gas_analysis["tx_gas_price"] = 0
                 gas_analysis["block_base_fee"] = 0
+    else:
+        gas_analysis = {}
+        print("  ⚠ No valid gas data found in call_trace.csv")
 
     # 3. UI ANALYSIS (JavaScript)
     print("  3. Loading UI analysis data...")
@@ -376,48 +234,26 @@ def enhanced_feature_analysis(data: Dict[str, Any], model_name: str) -> Dict[str
     
     print("=== SMART EMBEDDING STRATEGY ===")
     
-    # Create embeddings with full content
-    embedding_data = create_full_input_embeddings(data)
-    
-    # Prepare embedding info for prompt
-    if embedding_data and "summary" in embedding_data:
-        summary = embedding_data["summary"]
-        embedding_info = {
-            "vectors_generated": summary["total_embeddings"],
-            "total_characters": summary["total_characters"],
-            "content_types": summary["content_types"],
-            "embedding_model": summary["embedding_model"],
-            "strategy": "Smart limits applied"
-        }
-    else:
-        embedding_info = {"error": "Failed to create embeddings"}
-    
     # Create 4-category analysis prompt
     behavior_block = f"""Call Chain Analysis:
-        {json.dumps(data["behavior_analysis"]["call_chain"][:5], indent=2)}
+{json.dumps(data["behavior_analysis"]["call_chain"][:5], indent=2)}
 
-        Code Analysis:
-        {json.dumps(data["behavior_analysis"]["code_analysis"][:3], indent=2)}
+Code Analysis:
+{json.dumps(data["behavior_analysis"]["code_analysis"][:3], indent=2)}
 
-        Asset Flows:
-        {json.dumps(data["behavior_analysis"]["asset_flows"][:3], indent=2)}
+Asset Flows:
+{json.dumps(data["behavior_analysis"]["asset_flows"][:3], indent=2)}
 
-        State Changes:
-        {json.dumps(data["behavior_analysis"]["state_changes"][:3], indent=2)}
-        """
+State Changes:
+{json.dumps(data["behavior_analysis"]["state_changes"][:3], indent=2)}
+"""
     ui_block = f"""JavaScript Analysis:
-        {json.dumps(data["ui_analysis"], indent=2)}
-        """
-    # Prepare database note
-    db_note = ""
-    if data["malicious_database_report"].get("has_meaningful_data", False):
-        db_note = f"Database contains {data['malicious_database_report'].get('indicators_summary', {}).get('malicious_addresses_count', 0)} malicious addresses, {data['malicious_database_report'].get('indicators_summary', {}).get('code_patterns_count', 0)} code patterns, {data['malicious_database_report'].get('indicators_summary', {}).get('url_check_count', 0)} URL checks, and {data['malicious_database_report'].get('indicators_summary', {}).get('js_patterns_count', 0)} JS patterns."
-    else:
-        db_note = "Database is empty - no malicious indicators found."
+{json.dumps(data["ui_analysis"], indent=2)}
+"""
+    # Prepare database
     db_block = f"""Security Database Check:
-        {json.dumps(data["malicious_database_report"], indent=2)}
-
-        Note: {db_note}"""
+{json.dumps(data["malicious_database_report"], indent=2)}
+"""
     # Combine sections
     sections = []
     sections.append(("behavior_analysis", behavior_block))
@@ -427,8 +263,8 @@ def enhanced_feature_analysis(data: Dict[str, Any], model_name: str) -> Dict[str
     has_context = bool(data.get("context_analysis"))
     if has_context:
         context_block = f"""Gas Usage Analysis:
-            {json.dumps(data["context_analysis"], indent=2)}
-            """
+{json.dumps(data["context_analysis"], indent=2)}
+"""
         sections.append(("context_analysis", context_block))
     # Automatically number sections
     numbered_sections = "\n\n".join(
@@ -486,7 +322,6 @@ You are a blockchain security expert. Analyze this transaction using 4 categorie
 
 <custom_scoring_criteria>
 Create your own scoring criteria with custom weights that sum to 1.0 based on the actual data available:
-
 1. Behavior patterns (call complexity, suspicious functions, asset movements)
 2. Gas efficiency and usage patterns  
 3. UI/JavaScript security indicators
@@ -524,7 +359,7 @@ Risk level definitions:
 - "malicious": Clear evidence of malicious behavior in one or more categories
 </output_format>
 </comprehensive_security_analysis>"""
-
+ 
     # Send to LLM with retry logic
     max_retries = 3
     for attempt in range(max_retries):
