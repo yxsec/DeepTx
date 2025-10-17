@@ -363,13 +363,6 @@ Risk level definitions:
     
     result = response.choices[0].message.content
     
-    # Clean up response (remove markdown if present)
-    if "```json" in result:
-        result = result.split("```json")[1].split("```")[0].strip()
-    elif "```" in result:
-        result = result.split("```")[1].strip()
-    
-    # Parse JSON
     analysis_result = json.loads(result)
     
     return analysis_result, has_context, has_malicious_db
