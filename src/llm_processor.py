@@ -68,7 +68,10 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
                 "from": call.get("from", ""),
                 "to": call.get("to", ""),
                 "call_type": call.get("call_type", "unknown"),
-                "function": call.get("function", "")
+                "function": call.get("function", ""),
+                "gas_allocated": call.get("gas_allocated", ""),
+                "gas_used": call.get("gas_used", ""),
+                "gas_remaining": call.get("gas_remaining", "")
             })
         
         print(f"Loaded {len(call_chain)} call records from call_trace.csv")
@@ -234,16 +237,16 @@ def enhanced_feature_analysis(data: Dict[str, Any], model_name: str):
     
     # Create 4-category analysis prompt
     behavior_block = f"""Call Chain Analysis:
-{json.dumps(data["behavior_analysis"]["call_chain"][:5], indent=2)}
+{json.dumps(data["behavior_analysis"]["call_chain"], indent=2)}
 
 Code Analysis:
-{json.dumps(data["behavior_analysis"]["code_analysis"][:3], indent=2)}
+{json.dumps(data["behavior_analysis"]["code_analysis"], indent=2)}
 
 Asset Flows:
-{json.dumps(data["behavior_analysis"]["asset_flows"][:3], indent=2)}
+{json.dumps(data["behavior_analysis"]["asset_flows"], indent=2)}
 
 State Changes:
-{json.dumps(data["behavior_analysis"]["state_changes"][:3], indent=2)}
+{json.dumps(data["behavior_analysis"]["state_changes"], indent=2)}
 """
     ui_block = f"""JavaScript Analysis:
 {json.dumps(data["ui_analysis"], indent=2)}

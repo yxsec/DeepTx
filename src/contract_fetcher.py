@@ -110,7 +110,7 @@ class ContractDecompilerTool:
                 return None
 
         info = self.fetcher.fetch_contract_source("0x" + contract_address)
-        if info.get("proxy") == "0" and info.get("source_code") and contract_address != "43506849d7c04f9138d1a2050bbf3a0c054402dd":
+        if info.get("proxy") == "0" and info.get("source_code") or contract_address == "43506849d7c04f9138d1a2050bbf3a0c054402dd":
             source_code = info["source_code"]
             if source_code.startswith("{{") and source_code.endswith("}}"):
                 # Multi-file JSON format, remove outer braces
