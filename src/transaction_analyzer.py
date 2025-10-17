@@ -136,10 +136,10 @@ def run_transaction_analysis(tx_hash, tx_dir, chain_id):
     tx = w3.eth.get_transaction(tx_hash)
     tx_gas_price = tx.gasPrice
     block_base_fee = None
-    if chain_id == 1 and int(tx.blockNumber) > 12965000:
+    if int(chain_id) == 1 and int(tx.blockNumber) > 12965000:
         block = w3.eth.get_block(tx.blockNumber)       
         block_base_fee = getattr(block, "baseFeePerGas")
-    
+        
     with open(GAS_INFO_PATH, "w", encoding="utf-8") as f:
         f.write(f"tx_gas_price: {tx_gas_price}\n")
         if block_base_fee is not None:

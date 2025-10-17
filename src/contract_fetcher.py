@@ -41,7 +41,6 @@ class ContractFetcher:
                 
                 if status == "1" and result:
                     source_info = result[0]
-                    
                     contract_info.update({
                         "source_code": source_info.get("SourceCode"),
                         "contract_name": source_info.get("ContractName"),
@@ -61,7 +60,6 @@ class ContractFetcher:
 
         except Exception as e:
             print(f"Error fetching contract info for {contract_address}: {e}")
-        
         return contract_info
 
     def fetch_contract_bytecode(self, contract_address):
@@ -112,8 +110,7 @@ class ContractDecompilerTool:
                 return None
 
         info = self.fetcher.fetch_contract_source("0x" + contract_address)
-        # print(f"{info}")
-        if info.get("proxy") == "0" and info.get("source_code"):
+        if info.get("proxy") == "0" and info.get("source_code") and contract_address != "43506849d7c04f9138d1a2050bbf3a0c054402dd":
             source_code = info["source_code"]
             if source_code.startswith("{{") and source_code.endswith("}}"):
                 # Multi-file JSON format, remove outer braces
@@ -138,10 +135,8 @@ class ContractDecompilerTool:
                 return None
                       
         elif info.get("proxy") == "0":
-            print("[-] No verified source code found. Attempting decompilation...")
             bytecode = self.fetcher.fetch_contract_bytecode("0x" + contract_address)
             if not bytecode:
-                print("[!] Failed to fetch bytecode. Abort.")
                 return None
             os.makedirs(output_dir, exist_ok=True)
             bytecode_file = f"{output_dir}{contract_address}.bin"

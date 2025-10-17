@@ -135,12 +135,12 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
         if os.path.exists(gas_info_path):
             try:
                 with open(gas_info_path, 'r') as f:
+                    print(f)
                     gas_info = {}
                     for line in f:
                         if ':' in line:
                             key, value = line.strip().split(':', 1)
                             gas_info[key.strip()] = value.strip()
-                
                 gas_analysis["tx_gas_price"] = int(gas_info.get("tx_gas_price", 0))
                 if gas_info.get("block_base_fee") != 0:
                     gas_analysis["block_base_fee"] = int(gas_info.get("block_base_fee", 0))
