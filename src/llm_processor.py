@@ -135,7 +135,6 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
         if os.path.exists(gas_info_path):
             try:
                 with open(gas_info_path, 'r') as f:
-                    print(f)
                     gas_info = {}
                     for line in f:
                         if ':' in line:
