@@ -3,33 +3,64 @@ import sys
 import json
 from openai import OpenAI
 
+# ---- Config ----
 api_key = os.environ.get("OPENAI_API_KEY")
 if not api_key:
     raise ValueError("OPENAI_API_KEY environment variable is required")
 
-client = OpenAI(
-    api_key=api_key,
-    base_url=os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
-)
+MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini-2024-08-06")
+BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
+
+client = OpenAI(api_key=api_key, base_url=BASE_URL)
+
+# ---- JSON Schema for response_format ----
+# We want a top-level JSON array of objects with strict fields.
+UI_ELEMENTS_SCHEMA = {
+    "name": "ui_elements_array",
+    "strict": True,
+    "schema": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "selector": {
+                    "type": "string",
+                    "description": "CSS selector, id/class, or the variable name when element_type is 'variable'."
+                },
+                "element_type": {
+                    "type": "string",
+                    "enum": ["link", "button", "input", "script", "variable"],
+                    "description": "Type of the extracted UI element or variable."
+                },
+                "code_snippet": {
+                    "type": "string",
+                    "description": "Deobfuscated, human-readable HTML/JS snippet of the element or variable definition."
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "Why this item matters for phishing detection or user guidance in context of the trace."
+                }
+            },
+            "required": ["selector", "element_type", "code_snippet", "reason"]
+        }
+    }
+}
 
 def ui_reconstruction(trace_text: str, html_code: str, js_code: str) -> list:
     """
     Extract UI elements and any JS variables referencing trace addresses.
+    The model response is constrained by response_schema to a strict JSON array.
     """
     system_prompt = (
         "Role: You are a blockchain UI extractor.\n"
         "Task: Given a transaction call trace, and the corresponding HTML and/or JavaScript code "
-        "for a transaction confirmation UI, identify UI elements relevant to phishing detection or user guidance.  \n"
+        "for a transaction confirmation UI, identify UI elements relevant to phishing detection or user guidance.\n"
         "Additionally, if JavaScript code defines variables or constants that reference any of the addresses "
-        "present in the trace, include them as separate entries in the report.\n"
+        "present in the trace, include them as separate entries in the report (use element_type = 'variable').\n"
         "If multiple elements or variables apply, include each as a separate object.\n"
         "When returning HTML or JavaScript in 'code_snippet', provide detailed, deobfuscated, human-readable code.\n"
-        "Expected Output: A JSON array of objects, each with these fields:\n"
-        "  - selector: CSS selector or element id/class, or variable name when element_type is 'variable'\n"
-        "  - element_type: one of [\"link\", \"button\", \"input\", \"script\", \"variable\"]\n"
-        "  - code_snippet: detailed HTML or deobfuscated JS snippet\n"
-        "  - reason: why this element or variable is relevant in context of the trace\n"
-        "Do not include any extra text outside the JSON."
+        "Output MUST be a JSON array matching the provided response schema. No extra text."
     )
 
     parts = [f"Trace:\n{trace_text}"]
@@ -39,19 +70,30 @@ def ui_reconstruction(trace_text: str, html_code: str, js_code: str) -> list:
         parts.append(f"JavaScript:\n{js_code}")
     user_prompt = "\n\n".join(parts)
 
+    # Use response_format with a JSON schema to strictly enforce structure.
     resp = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=MODEL,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user",   "content": user_prompt}
-        ]
+        ],
+        response_format={
+            "type": "json_schema",
+            "json_schema": UI_ELEMENTS_SCHEMA
+        },
+        temperature=0
     )
 
+    content = resp.choices[0].message.content
     try:
-        elements = json.loads(resp.choices[0].message.content.strip())
+        # When response_format enforces schema, content is valid JSON matching the schema.
+        elements = json.loads(content)
+        if isinstance(elements, list):
+            return elements
+        # Fallback: if model wraps it unexpectedly
+        return []
     except json.JSONDecodeError:
-        elements = []
-    return elements
+        return []
 
 def analyze_ui_directory(dir_path: str) -> list:
     """
@@ -67,14 +109,21 @@ def analyze_ui_directory(dir_path: str) -> list:
 
     html_parts = []
     js_parts = []
-    for fname in os.listdir(dir_path):
-        path = os.path.join(dir_path, fname)
-        if fname.lower().endswith(".html"):
-            with open(path, "r", encoding="utf-8") as f:
-                html_parts.append(f.read())
-        elif fname.lower().endswith(".js"):
-            with open(path, "r", encoding="utf-8") as f:
-                js_parts.append(f.read())
+    try:
+        for fname in os.listdir(dir_path):
+            path = os.path.join(dir_path, fname)
+            if not os.path.isfile(path):
+                continue
+            low = fname.lower()
+            if low.endswith(".html"):
+                with open(path, "r", encoding="utf-8") as f:
+                    html_parts.append(f.read())
+            elif low.endswith(".js"):
+                with open(path, "r", encoding="utf-8") as f:
+                    js_parts.append(f.read())
+    except Exception as e:
+        print(f"Error reading directory: {e}", file=sys.stderr)
+        sys.exit(1)
 
     if not html_parts:
         print("Info: no .html files found, will proceed with JS only", file=sys.stderr)
