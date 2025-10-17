@@ -78,27 +78,7 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
     
     # Code analysis
     code_path = os.path.join(dir_path, "code.txt")
-    code_text = load_text(code_path)
-    code_analysis = []
-    if code_text:
-        # Extract security-relevant functions
-        security_patterns = [
-            r'function\s+\w*transfer\w*\s*\([^)]*\)[^{]*\{[^}]*\}',
-            r'function\s+\w*approve\w*\s*\([^)]*\)[^{]*\{[^}]*\}',
-            r'function\s+\w*call\w*\s*\([^)]*\)[^{]*\{[^}]*\}',
-            r'function\s+\w*require\w*\s*\([^)]*\)[^{]*\{[^}]*\}',
-            r'function\s+\w*assert\w*\s*\([^)]*\)[^{]*\{[^}]*\}'
-        ]
-        
-        for pattern in security_patterns:
-            matches = re.findall(pattern, code_text, re.IGNORECASE | re.DOTALL)
-            for match in matches[:3]:  # Limit to 3 matches per pattern
-                code_analysis.append({
-                    "code": match,
-                    "signature": match.split('{')[0].strip(),
-                    "type": "security_function"
-                })
-    
+    code_analysis = load_text(code_path)
     # Asset flows
     asset_flows = []
     asset_path = os.path.join(dir_path, "asset_flows.csv")
@@ -236,18 +216,31 @@ def enhanced_feature_analysis(data: Dict[str, Any], model_name: str):
     print("=== SMART EMBEDDING STRATEGY ===")
     
     # Create 4-category analysis prompt
-    behavior_block = f"""Call Chain Analysis:
-{json.dumps(data["behavior_analysis"]["call_chain"], indent=2)}
+    ba = data.get("behavior_analysis", {})
+    sections = [
+    ("Call Chain Analysis", ba.get("call_chain")),
+    ("Code Analysis",       ba.get("code_analysis")),
+    ("Asset Flows",         ba.get("asset_flows")),
+    ("State Changes",       ba.get("state_changes")),
+    ]
+    parts = []
+    for title, v in sections:
+        if v is None:
+            continue
+        if isinstance(v, str):
+            v = v.strip()
+            if not v: 
+                continue
+            s = v
+        elif isinstance(v, (list, dict)):
+            if not v:
+                continue
+            s = json.dumps(v, indent=2, ensure_ascii=False)
+        else:
+            s = json.dumps(v, indent=2, ensure_ascii=False)
+        parts.append(f"{title}:\n{s}")
+    behavior_block = "\n\n".join(parts)
 
-Code Analysis:
-{json.dumps(data["behavior_analysis"]["code_analysis"], indent=2)}
-
-Asset Flows:
-{json.dumps(data["behavior_analysis"]["asset_flows"], indent=2)}
-
-State Changes:
-{json.dumps(data["behavior_analysis"]["state_changes"], indent=2)}
-"""
     ui_block = f"""JavaScript Analysis:
 {json.dumps(data["ui_analysis"], indent=2)}
 """
