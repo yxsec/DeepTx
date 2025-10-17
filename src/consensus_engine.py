@@ -3,9 +3,10 @@ import time
 from typing import List, Dict, Any, Tuple
 from openai import OpenAI
 import os
+from .prompt_schema import build_security_schema
 
 class ConsensusChecker:
-    def __init__(self, primary_model: str = "gpt-4o-mini"):
+    def __init__(self, has_context, has_malicious_db, primary_model: str = "gpt-4o-mini"):
         """
         Initialize the consensus checker.
         
@@ -13,6 +14,8 @@ class ConsensusChecker:
             primary_model: Model to use for summarization and self-reflection
         """
         self.primary_model = primary_model
+        self.has_context = has_context
+        self.has_malicious_db = has_malicious_db
         
         # Validate API key
         api_key = os.environ.get("OPENAI_API_KEY")
@@ -71,7 +74,7 @@ class ConsensusChecker:
         """
         # Prepare summary prompt
         summary_prompt = self._create_summary_prompt(outputs)
-        
+        schema = build_security_schema(self.has_context, self.has_malicious_db)
         try:
             response = self.client.chat.completions.create(
                 model=self.primary_model,
@@ -80,17 +83,18 @@ class ConsensusChecker:
                     {"role": "user", "content": summary_prompt}
                 ],
                 temperature=0.1,
-                max_tokens=2000
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "summary_security_assessment",
+                        "schema": schema,
+                        "strict": True,  
+                    }
+                },
             )
             
             result = response.choices[0].message.content
-            
-            # Parse JSON response
-            if "```json" in result:
-                result = result.split("```json")[1].split("```")[0].strip()
-            elif "```" in result:
-                result = result.split("```")[1].strip()
-            
+        
             final_report = json.loads(result)
             
             # Add consensus metadata
@@ -121,7 +125,7 @@ class ConsensusChecker:
             Reflected/revised output
         """
         reflection_prompt = self._create_reflection_prompt(own_output, counter_outputs)
-        
+        schema = build_security_schema(self.has_context, self.has_malicious_db)
         try:
             response = self.client.chat.completions.create(
                 model=self.primary_model,
@@ -130,7 +134,14 @@ class ConsensusChecker:
                     {"role": "user", "content": reflection_prompt}
                 ],
                 temperature=0.1,
-                max_tokens=2000
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "self_reflected_security_analysis",
+                        "schema": schema,
+                        "strict": True,  
+                    }
+                },
             )
             
             result = response.choices[0].message.content
@@ -269,21 +280,7 @@ Create a unified report that:
 3. Provides a consensus risk level and confidence score
 4. Merges explanations and recommendations
 5. Averages category scores appropriately
-
-Provide the response in valid JSON format:
-{
-  "risk_level": "safe|suspicious|malicious",
-  "confidence_score": 0-100,
-  "custom_scoring_criteria": "Unified scoring criteria",
-  "explanation": "Unified explanation",
-  "recommendations": ["Unified recommendations"],
-  "category_analysis": {
-    "behavior_score": 0-100,
-    "context_score": 0-100,
-    "ui_score": 0-100,
-    "malicious_db_score": 0-100 (if applicable)
-  }
-}"""
+"""
         
         return prompt
     
@@ -314,24 +311,14 @@ Consider the following:
 4. Are there additional security considerations you should include?
 
 Provide a revised analysis in the same JSON format, incorporating insights from other models while maintaining your core reasoning. Only change your assessment if you find compelling evidence from other perspectives.
-
-Response format:
-{
-  "risk_level": "safe|suspicious|malicious",
-  "confidence_score": 0-100,
+Among response: 
   "custom_scoring_criteria": "Revised scoring criteria",
   "explanation": "Revised explanation",
   "recommendations": ["Revised recommendations"],
-  "category_analysis": {
-    "behavior_score": 0-100,
-    "context_score": 0-100,
-    "ui_score": 0-100,
-    "malicious_db_score": 0-100 (if applicable)
-  }
-}"""
+"""
         
         return prompt
 
-def run_consensus_analysis(model_outputs: List[Dict[str, Any]], primary_model: str = "gpt-4o-mini") -> Dict[str, Any]:
-    checker = ConsensusChecker(primary_model)
+def run_consensus_analysis(model_outputs: List[Dict[str, Any]], has_context: bool, has_malicious_db: bool, primary_model: str = "gpt-4o-mini") -> Dict[str, Any]:
+    checker = ConsensusChecker(has_context, has_malicious_db, primary_model)
     return checker.run_consensus_check(model_outputs)

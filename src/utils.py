@@ -198,6 +198,3 @@ def extract_asset_changes(result: dict) -> List[Dict]:
             })
     
     return transfers
-
-
-

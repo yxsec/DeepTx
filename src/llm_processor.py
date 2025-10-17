@@ -1,11 +1,11 @@
 import os
-import sys
 import json
 import re
 import pandas as pd
 from typing import Dict, Any, List
 from openai import OpenAI
 from .utils import load_json, load_text, load_csv
+from .prompt_schema import build_security_schema
 
 api_key = os.environ.get("OPENAI_API_KEY")
 if not api_key:
@@ -97,20 +97,20 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
                 })
     
     # Asset flows
+    asset_flows = []
     asset_path = os.path.join(dir_path, "asset_flows.csv")
     if os.path.exists(asset_path):
         asset_flows = load_csv(asset_path)
     else:
-        print(f"File not found: {asset_path}, skipping")
-        asset_flows = pd.DataFrame()
+        print(f"No asset flows, skipping")   
     
     # State changes
+    state_changes = []
     state_path = os.path.join(dir_path, "state_changes.csv")
     if os.path.exists(state_path):
         state_changes = load_csv(state_path)
     else:
-        print(f"File not found: {state_path}, skipping")
-        state_changes = pd.DataFrame()
+        print(f"No state changes, skipping")
     
     # 2. CONTEXT ANALYSIS (Gas) 
     print("  2. Loading context analysis (gas) data...")
@@ -119,7 +119,7 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
     gas_info_path = os.path.join(dir_path, "gas_info.txt")
 
     # Gas analysis summary
-    if any((r.get("gas_used")) not in (None, "") for r in gas_data):
+    if any((r.get("gas_used")) not in (None, "", 0) for r in gas_data):
         total_gas_used = sum(float(record.get("gas_used", 0)) for record in gas_data)
         total_gas_allocated = sum(float(record.get("gas_allocated", 0)) for record in gas_data)
         gas_efficiency = (total_gas_used / total_gas_allocated * 100) if total_gas_allocated > 0 else 0
@@ -142,14 +142,13 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
                             gas_info[key.strip()] = value.strip()
                 
                 gas_analysis["tx_gas_price"] = int(gas_info.get("tx_gas_price", 0))
-                gas_analysis["block_base_fee"] = int(gas_info.get("block_base_fee", 0))
+                if gas_info.get("block_base_fee") != 0:
+                    gas_analysis["block_base_fee"] = int(gas_info.get("block_base_fee", 0))
             except Exception as e:
-                print(f"Error reading gas_info.txt: {e}")
-                gas_analysis["tx_gas_price"] = 0
-                gas_analysis["block_base_fee"] = 0
+                print(f"Simulation don't analyze gas information.")  
+                gas_analysis = {}
     else:
         gas_analysis = {}
-        print("  ⚠ No valid gas data found in call_trace.csv")
 
     # 3. UI ANALYSIS (JavaScript)
     print("  3. Loading UI analysis data...")
@@ -229,7 +228,7 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
         "raw_trace": json.dumps(trace_data, indent=2) if trace_data else ""
     }
 
-def enhanced_feature_analysis(data: Dict[str, Any], model_name: str) -> Dict[str, Any]:
+def enhanced_feature_analysis(data: Dict[str, Any], model_name: str):
     """Enhanced LLM analysis with user-friendly output"""
     
     print("=== SMART EMBEDDING STRATEGY ===")
@@ -288,11 +287,6 @@ State Changes:
     else:
         db_scoring_note = "Note: Database threat intelligence has no meaningful data and should be excluded from scoring (weight = 0). Redistribute weights among the other 3 categories."
     
-    # Prepare malicious_db_score field
-    malicious_db_score_field = ""
-    if data["malicious_database_report"].get("has_meaningful_data", False):
-        malicious_db_score_field = ', "malicious_db_score": 0-100'
-    
     # Prepare UI phishing detection note
     ui_present = data.get("ui_analysis", {}).get("js_code_present", False)
     ui_phishing_note = ""
@@ -338,102 +332,44 @@ Consider factors like:
 {db_scoring_note}
 </custom_scoring_criteria>
 
-<output_format>
-Provide a JSON response with exactly these fields:
-{{
-  "risk_level": "safe|suspicious|malicious",
-  "confidence_score": 0-100,
-  "custom_scoring_criteria": "Your detailed scoring criteria with custom weights that sum to 1.0. Include weight for each category and reasoning for weight distribution.",
-  "explanation": "Explain what this transaction does in 2-3 sentences",
-  "recommendations": ["Action item 1", "Action item 2", "Action item 3"],
-  "category_analysis": {{
-    "behavior_score": 0-100,
-    "context_score": 0-100,
-    "ui_score": 0-100{malicious_db_score_field}
-  }}
-}}
-
 Risk level definitions:
 - "safe": No security concerns detected across all categories
 - "suspicious": Some concerning patterns but not clearly malicious
 - "malicious": Clear evidence of malicious behavior in one or more categories
-</output_format>
 </comprehensive_security_analysis>"""
  
-    # Send to LLM with retry logic
-    max_retries = 3
-    for attempt in range(max_retries):
-        try:
-            print(f"  Sending analysis request (attempt {attempt + 1}/{max_retries})...")
-            
-            response = client.chat.completions.create(
-                model=model_name,
-                messages=[
-                    {"role": "system", "content": "You are a blockchain security expert. Provide detailed analysis in JSON format."},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.1
-            )
-            
-            result = response.choices[0].message.content
-            
-            # Clean up response (remove markdown if present)
-            if "```json" in result:
-                result = result.split("```json")[1].split("```")[0].strip()
-            elif "```" in result:
-                result = result.split("```")[1].strip()
-            
-            # Parse JSON
-            analysis_result = json.loads(result)
-            
-            # Validate required fields for 4-category analysis
-            required_fields = ["risk_level", "confidence_score", "custom_scoring_criteria", "explanation", "recommendations", "category_analysis"]
-            if all(field in analysis_result for field in required_fields):
-                # Validate risk_level
-                valid_risk_levels = ["safe", "suspicious", "malicious"]
-                if analysis_result["risk_level"] in valid_risk_levels:
-                    # Validate confidence_score
-                    if 0 <= analysis_result["confidence_score"] <= 100:
-                        # Validate category_analysis
-                        category_analysis = analysis_result.get("category_analysis", {})
-                        category_fields = ["behavior_score", "context_score", "ui_score"]
-                        
-                        # Add malicious_db_score only if database has meaningful data
-                        if data["malicious_database_report"].get("has_meaningful_data", False):
-                            category_fields.append("malicious_db_score")
-                        else:
-                            # Remove malicious_db_score if it exists but database has no meaningful data
-                            if "malicious_db_score" in category_analysis:
-                                del category_analysis["malicious_db_score"]
-                        
-                        if all(field in category_analysis for field in category_fields):
-                            if all(0 <= category_analysis[field] <= 100 for field in category_fields):
-                                print("  ✓ Valid 4-category analysis result received")
-                                break
-                            else:
-                                print(f"  ⚠ Invalid category scores, retrying...")
-                        else:
-                            print(f"  ⚠ Missing category analysis fields, retrying...")
-                    else:
-                        print(f"  ⚠ Invalid confidence score, retrying...")
-                else:
-                    print(f"  ⚠ Invalid risk level, retrying...")
-            else:
-                print(f"  ⚠ Missing required fields, retrying...")
-                
-        except Exception as e:
-            print(f"  ✗ Error on attempt {attempt + 1}: {e}")
-            if attempt == max_retries - 1:
-                analysis_result = {"error": f"Failed after {max_retries} attempts: {str(e)}"}
+
+    print(prompt)
+    # Send to LLM 
+    print(f"  Sending analysis request ...")
+    has_malicious_db = bool(data.get("malicious_database_report").get("has_meaningful_data", False))
+    schema = build_security_schema(has_context, has_malicious_db)
+    response = client.chat.completions.create(
+        model=model_name,
+        messages=[
+            {"role": "system", "content": "You are a blockchain security expert. Provide detailed analysis in JSON format."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.1,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "security_assessment",
+                "schema": schema,
+                "strict": True,  
+            }
+        },
+    )
     
-    # Create user-friendly output with 4-category analysis
-    user_friendly_result = {
-        "risk_level": analysis_result.get("risk_level", "unknown"),
-        "confidence_score": analysis_result.get("confidence_score", 0),
-        "custom_scoring_criteria": analysis_result.get("custom_scoring_criteria", ""),
-        "explanation": analysis_result.get("explanation", ""),
-        "recommendations": analysis_result.get("recommendations", []),
-        "category_analysis": analysis_result.get("category_analysis", {})
-    }
+    result = response.choices[0].message.content
     
-    return user_friendly_result
+    # Clean up response (remove markdown if present)
+    if "```json" in result:
+        result = result.split("```json")[1].split("```")[0].strip()
+    elif "```" in result:
+        result = result.split("```")[1].strip()
+    
+    # Parse JSON
+    analysis_result = json.loads(result)
+    
+    return analysis_result, has_context, has_malicious_db

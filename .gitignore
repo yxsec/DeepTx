@@ -36,3 +36,10 @@ output/
 *.swp
 *.swo
 .idea/ 
+
+
+1.json
+
+test.txt
+
+run_consensus_output.txt

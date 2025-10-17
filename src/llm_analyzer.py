@@ -7,7 +7,7 @@ from .consensus_engine import run_consensus_analysis
 
 def run_multi_model_analysis(tx_dir: str, models: List[str] = None) -> Dict[str, Any]:
     if models is None:
-        models = ["gpt-4o-mini", "gpt-3.5-turbo", "gpt-4o"]
+        models = ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4o"]
     
     print(f"Starting multi-model analysis for transaction: {tx_dir}")
     print(f"Models to test: {', '.join(models)}")
@@ -30,7 +30,7 @@ def run_multi_model_analysis(tx_dir: str, models: List[str] = None) -> Dict[str,
         try:
             # Run analysis
             start_time = time.time()
-            result = enhanced_feature_analysis(data, model)
+            result, has_context, has_malicious_db = enhanced_feature_analysis(data, model)
             end_time = time.time()
             
             # Add timing information
@@ -79,7 +79,7 @@ def run_multi_model_analysis(tx_dir: str, models: List[str] = None) -> Dict[str,
             successful_outputs.append(result)
     
     if len(successful_outputs) >= 2:
-        consensus_result = run_consensus_analysis(successful_outputs, "gpt-4o-mini")
+        consensus_result = run_consensus_analysis(successful_outputs, has_context, has_malicious_db, "gpt-4o-mini")
         
         # Save consensus report
         consensus_path = os.path.join(tx_dir, "consensus_final_report.json")
