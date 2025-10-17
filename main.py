@@ -445,7 +445,7 @@ def real():
     
     tx_hash = sys.argv[1]
     
-    print("UNIFIED ETHEREUM TRANSACTION ANALYSIS")
+    print("DeepTx V0.1")
     print("="*60)
     print(f"Analyzing transaction: {tx_hash}")
     print(f"Start time: {time.strftime('%Y-%m-%d %H:%M:%S')}")
