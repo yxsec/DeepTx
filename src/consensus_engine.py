@@ -248,16 +248,13 @@ Other Models' Analyses:
         prompt += """
 
 Consider the following:
-1. Do the other models raise valid points you may have missed?
-2. Are there aspects of the transaction you should reconsider?
-3. Should you adjust your confidence level based on other perspectives?
-4. Are there additional security considerations you should include?
+1. Impartial review: consider whether the peers raise new, material evidence (facts, logic, or constraints) you missed.
+2. Preserve when sound: if your original reasoning and scores remain consistent and well-supported, reaffirm them as-is.
+3. Adjust only when warranted: change risk level, scores, or recommendations only if peers provide stronger reasoning or you identify genuine gaps, contradictions, or errors.
+4. Evidence quality over plurality: do not make changes just because multiple peers disagree; change only if their arguments are compelling and specific.
+5. No invention: do not fabricate data beyond the provided inputs.
 
-Provide a revised analysis in the same JSON format, incorporating insights from other models while maintaining your core reasoning. Only change your assessment if you find compelling evidence from other perspectives.
-Among response: 
-  "custom_scoring_criteria": "Revised scoring criteria",
-  "explanation": "Revised explanation",
-  "recommendations": ["Revised recommendations"],
+Provide a revised analysis in the same JSON format.
 """
         
         return prompt

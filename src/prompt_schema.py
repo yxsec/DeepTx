@@ -1,12 +1,31 @@
+import copy
 def build_security_schema(has_context: bool, has_malicious_db: bool):
+    weight_reasoning_obj = {
+        "type": "object",
+        "properties": {
+            "weight": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+            "reasoning": {"type": "string", "minLength": 1}
+        },
+        "required": ["weight", "reasoning"],
+        "additionalProperties": False
+    }
     schema = {
         "type": "object",
         "properties": {
             "risk_level": {"type": "string", "enum": ["safe", "suspicious", "malicious"]},
             "confidence_score": {"type": "integer", "minimum": 0, "maximum": 100},
             "custom_scoring_criteria": {
-                "type": "string",
-                "description": "Detail the scoring criteria; weights sum to 1.0 and reasoning."
+                "type": "object",
+                "description": "Detailed scoring criteria with custom weights that sum to 1.0. Include weight for each category and reasoning for weight distribution.",
+                "properties": {
+                    "behavior_patterns": copy.deepcopy(weight_reasoning_obj),
+                    "ui_javascript_security_indicators": copy.deepcopy(weight_reasoning_obj),
+                },
+                "required": [
+                    "behavior_patterns",
+                    "ui_javascript_security_indicators"
+                ],
+                "additionalProperties": False
             },
             "explanation": {"type": "string"},
             "recommendations": {
@@ -37,6 +56,11 @@ def build_security_schema(has_context: bool, has_malicious_db: bool):
 
     # context_score dynamic inclusion
     if has_context:
+        schema["properties"]["custom_scoring_criteria"]["properties"]["gas_efficiency_and_usage_patterns"] = (
+            copy.deepcopy(weight_reasoning_obj)
+        )
+        schema["properties"]["custom_scoring_criteria"]["required"].append("gas_efficiency_and_usage_patterns")
+
         schema["properties"]["category_analysis"]["properties"]["context_score"] = {
             "type": "integer", "minimum": 0, "maximum": 100
         }
@@ -44,6 +68,11 @@ def build_security_schema(has_context: bool, has_malicious_db: bool):
 
     # malicious_db_score dynamic inclusion
     if has_malicious_db:
+        schema["properties"]["custom_scoring_criteria"]["properties"]["database_threat_intelligence"] = (
+            copy.deepcopy(weight_reasoning_obj)
+        )
+        schema["properties"]["custom_scoring_criteria"]["required"].append("database_threat_intelligence")
+
         schema["properties"]["category_analysis"]["properties"]["malicious_db_score"] = {
             "type": "integer", "minimum": 0, "maximum": 100
         }

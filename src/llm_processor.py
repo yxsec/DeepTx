@@ -92,16 +92,20 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
         df_call_trace = pd.read_csv(call_trace_path)
         trace_data = df_call_trace.to_dict(orient='records')
         for call in trace_data:
-            call_chain.append({
+            entry = {
                 "depth": call.get("depth", 0),
                 "from": call.get("from", ""),
                 "to": call.get("to", ""),
                 "call_type": call.get("call_type", "unknown"),
-                "function": call.get("function", ""),
-                "gas_allocated": call.get("gas_allocated", ""),
-                "gas_used": call.get("gas_used", ""),
-                "gas_remaining": call.get("gas_remaining", "")
-            })
+                "function": call.get("function", "")
+            }
+            if call.get("gas_used") not in (None, "", 0):
+                entry.update({
+                    "gas_allocated": call.get("gas_allocated", ""),
+                    "gas_used": call.get("gas_used", ""),
+                    "gas_remaining": call.get("gas_remaining", "")
+                })
+            call_chain.append(entry)
         
         print(f"Loaded {len(call_chain)} call records from call_trace.csv")
     
@@ -171,7 +175,7 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
             ui_analysis = {
                 "js_code_present": True,
                 "js_code_length": len(js_text),
-                "js_sample": js_text[:500] if len(js_text) > 500 else js_text
+                "js_sample": js_text
             }
     else:
         ui_analysis = {"js_code_present": False}
