@@ -2,7 +2,7 @@ import os
 import json
 import time
 from typing import List, Dict, Any
-from .llm_processor import process_transaction_data, enhanced_feature_analysis
+from src import llm_processor
 from .consensus_engine import run_consensus_analysis
 
 def run_multi_model_analysis(tx_dir: str, models: List[str] = None) -> Dict[str, Any]:
@@ -19,7 +19,7 @@ def run_multi_model_analysis(tx_dir: str, models: List[str] = None) -> Dict[str,
     
     # Process transaction data once (shared across all models)
     print("\n1. Loading and processing transaction data...")
-    data = process_transaction_data(tx_dir)
+    data = llm_processor.process_transaction_data(tx_dir)
     
     results = {}
     
@@ -30,7 +30,7 @@ def run_multi_model_analysis(tx_dir: str, models: List[str] = None) -> Dict[str,
         try:
             # Run analysis
             start_time = time.time()
-            result, has_context, has_malicious_db = enhanced_feature_analysis(data, model)
+            result, has_context, has_malicious_db = llm_processor.enhanced_feature_analysis(data, model)
             end_time = time.time()
             
             # Add timing information

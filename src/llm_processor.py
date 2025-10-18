@@ -1,6 +1,5 @@
 import os
 import json
-import re
 import pandas as pd
 from typing import Dict, Any, List
 from openai import OpenAI
@@ -16,6 +15,36 @@ client = OpenAI(
     base_url=os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
 )
 
+PREV_RESPONSE_ID = {}
+
+def call_with_chain(model_name: str, system_msg: str, prompt: str, schema: dict, temperature: float = 0.1):
+    payload = {
+        "model": model_name,
+        "input": [
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": prompt},
+        ],       
+        "temperature": temperature,
+        "store": True,
+        "text": {
+            "format": {
+                "type": "json_schema",
+                "name": "security_assessment", 
+                "strict": True,
+                "schema": schema
+            }
+        },  
+    }
+
+    prev_id = PREV_RESPONSE_ID.get(model_name)
+    if prev_id:
+        payload["previous_response_id"] = prev_id
+
+    response = client.responses.create(**payload)
+    PREV_RESPONSE_ID[model_name] = response.id
+    text = getattr(response, "output_text")
+
+    return json.loads(text)
 
 def create_full_embeddings(texts: List[str], model: str = "text-embedding-ada-002") -> List[List[float]]:
     """Create embeddings for full text content without truncation"""
@@ -332,32 +361,12 @@ Risk level definitions:
 - "suspicious": Some concerning patterns but not clearly malicious
 - "malicious": Clear evidence of malicious behavior in one or more categories
 </comprehensive_security_analysis>"""
- 
 
-    print(prompt)
     # Send to LLM 
     print(f"  Sending analysis request ...")
+    system_msg = "You are a blockchain security expert. Provide detailed analysis in JSON format."
     has_malicious_db = bool(data.get("malicious_database_report").get("has_meaningful_data", False))
     schema = build_security_schema(has_context, has_malicious_db)
-    response = client.chat.completions.create(
-        model=model_name,
-        messages=[
-            {"role": "system", "content": "You are a blockchain security expert. Provide detailed analysis in JSON format."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.1,
-        response_format={
-            "type": "json_schema",
-            "json_schema": {
-                "name": "security_assessment",
-                "schema": schema,
-                "strict": True,  
-            }
-        },
-    )
-    
-    result = response.choices[0].message.content
-    
-    analysis_result = json.loads(result)
+    analysis_result = call_with_chain(model_name, system_msg, prompt, schema)
     
     return analysis_result, has_context, has_malicious_db

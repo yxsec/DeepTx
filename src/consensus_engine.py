@@ -1,9 +1,9 @@
 import json
 import time
+import sys
 from typing import List, Dict, Any, Tuple
-from openai import OpenAI
-import os
 from .prompt_schema import build_security_schema
+from src import llm_processor
 
 class ConsensusChecker:
     def __init__(self, has_context, has_malicious_db, primary_model: str = "gpt-4o-mini"):
@@ -16,16 +16,6 @@ class ConsensusChecker:
         self.primary_model = primary_model
         self.has_context = has_context
         self.has_malicious_db = has_malicious_db
-        
-        # Validate API key
-        api_key = os.environ.get("OPENAI_API_KEY")
-        if not api_key:
-            raise ValueError("OPENAI_API_KEY environment variable is required")
-        
-        self.client = OpenAI(
-            api_key=api_key,
-            base_url=os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
-        )
         self.max_rounds = 3
         
     def extract_risk_and_confidence(self, output: Dict[str, Any]) -> Tuple[str, float]:
@@ -73,30 +63,11 @@ class ConsensusChecker:
             Synthesized final report
         """
         # Prepare summary prompt
+        system_msg = "You are a blockchain security expert. Synthesize a unified security assessment from multiple model outputs."
         summary_prompt = self._create_summary_prompt(outputs)
         schema = build_security_schema(self.has_context, self.has_malicious_db)
         try:
-            response = self.client.chat.completions.create(
-                model=self.primary_model,
-                messages=[
-                    {"role": "system", "content": "You are a blockchain security expert. Synthesize a unified security assessment from multiple model outputs."},
-                    {"role": "user", "content": summary_prompt}
-                ],
-                temperature=0.1,
-                response_format={
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "summary_security_assessment",
-                        "schema": schema,
-                        "strict": True,  
-                    }
-                },
-            )
-            
-            result = response.choices[0].message.content
-        
-            final_report = json.loads(result)
-            
+            final_report = llm_processor.call_with_chain(self.primary_model, system_msg, summary_prompt, schema)           
             # Add consensus metadata
             final_report["consensus_metadata"] = {
                 "consensus_reached": True,
@@ -124,40 +95,12 @@ class ConsensusChecker:
         Returns:
             Reflected/revised output
         """
+        model = (own_output.get("analysis_metadata") or {}).get("model", self.primary_model)
+        system_msg = "You are a blockchain security expert. Reflect on your analysis by considering other perspectives."
         reflection_prompt = self._create_reflection_prompt(own_output, counter_outputs)
         schema = build_security_schema(self.has_context, self.has_malicious_db)
-        try:
-            response = self.client.chat.completions.create(
-                model=self.primary_model,
-                messages=[
-                    {"role": "system", "content": "You are a blockchain security expert. Reflect on your analysis by considering other perspectives."},
-                    {"role": "user", "content": reflection_prompt}
-                ],
-                temperature=0.1,
-                response_format={
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "self_reflected_security_analysis",
-                        "schema": schema,
-                        "strict": True,  
-                    }
-                },
-            )
-            
-            result = response.choices[0].message.content
-            
-            # Parse JSON response
-            if "```json" in result:
-                result = result.split("```json")[1].split("```")[0].strip()
-            elif "```" in result:
-                result = result.split("```")[1].strip()
-            
-            reflected_output = json.loads(result)
-            
-            # Preserve original metadata if present
-            if "analysis_metadata" in own_output:
-                reflected_output["analysis_metadata"] = own_output["analysis_metadata"]
-                reflected_output["analysis_metadata"]["self_reflected"] = True
+        try:           
+            reflected_output = llm_processor.call_with_chain(model, system_msg, reflection_prompt, schema)
             
             return reflected_output
             
