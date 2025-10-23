@@ -1,7 +1,5 @@
 # DeepTx
 
-**🏆 ETHDenver 2025 - ORA Second Prize Winner**
-
 Comprehensive EVM-based blockchain transaction analyzer with multi-model LLM analysis and consensus mechanisms.
 
 > *AI-Powered Transaction Guard - Decode, Detect, Defend Against Fraud & Phishing in Real-Time.*
@@ -152,10 +150,6 @@ curl -H "X-Access-Key: $TENDERLY_API_KEY" \
 
 ## Awards & Publications
 
-**🏆 ETHDenver 2025 BUIDLathon**
-- **ORA Second Prize** 
-- [Project Page](https://devfolio.co/projects/deeptx-c682)
-
 **📄 ASE 2025 Tool Demonstration Track**
 - **DeepTx: Real-Time Transaction Risk Analysis via Multi-Modal Features and LLM Reasoning**
 - [Conference Paper](https://conf.researchr.org/details/ase-2025/ase-2025-tool-demonstration-track/14/DeepTx-Real-Time-Transaction-Risk-Analysis-via-Multi-Modal-Features-and-LLM-Reasonin)
@@ -172,6 +166,10 @@ curl -H "X-Access-Key: $TENDERLY_API_KEY" \
   year = {2025}
 }
 ```
+
+## Acknowledgments
+
+This project is an enhanced version of [PyDeepTx](https://github.com/SecurFi/PyDeepTx) by SecurFi. We acknowledge their foundational work and the ETHDenver 2025 ORA Second Prize achievement([Project Page](https://devfolio.co/projects/deeptx-c682)).
 
 ## Links
 
