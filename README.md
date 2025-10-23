@@ -172,7 +172,5 @@ curl -H "X-Access-Key: $TENDERLY_API_KEY" \
 This project is an enhanced version of [PyDeepTx](https://github.com/SecurFi/PyDeepTx) by SecurFi. We acknowledge their foundational work and the ETHDenver 2025 ORA Second Prize achievement([Project Page](https://devfolio.co/projects/deeptx-c682)).
 
 ## Links
-
-- **Devfolio Project**: https://devfolio.co/projects/deeptx-c682
 - **ASE 2025 Conference**: https://conf.researchr.org/details/ase-2025/ase-2025-tool-demonstration-track/14/DeepTx-Real-Time-Transaction-Risk-Analysis-via-Multi-Modal-Features-and-LLM-Reasonin
 - **Demo Video**: https://youtu.be/4OfK9KCEXUM
