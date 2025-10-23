@@ -51,7 +51,7 @@ cp env.example .env
 ```bash
 TRANSPOSE_API_KEY=your_key      # Free: 100K req/month
 ETHERSCAN_API_KEY=your_key      # Free: 5 req/s
-OPENAI_API_KEY=your_key         # Paid: ~$0.20-0.80 per analysis
+OPENAI_API_KEY=your_key         
 
 # Optional: For simulation mode only
 TENDERLY_API_KEY=your_key
