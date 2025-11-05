@@ -433,7 +433,7 @@ def real():
     """Main function"""
     if len(sys.argv) != 2:
         print("Usage: python3 main.py <transaction_hash>")
-        print("Example: python3 main.py 0xff8e9226091d513fc936ecc670030eba03f34dbe60cd012122bd18be44248d32")
+        print("Example: python3 main.py 0x3cc7f27c85d8031b413927bf4010a4f098a4ce788e045315dfe60b5b57722f99")
         print("\nInteractive Features:")
         print("  - Program will prompt for URLs and JavaScript code if not found")
         print("  - Enter URLs one per line, press Enter twice to finish")
