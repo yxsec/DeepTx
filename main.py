@@ -4,7 +4,7 @@ import json
 import time
 import pandas as pd
 import requests
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from dotenv import load_dotenv, find_dotenv
 import argparse
 
@@ -19,9 +19,9 @@ def _parse_bool_flag(s: str) -> bool:
         return False
     raise argparse.ArgumentTypeError(f"Invalid boolean value for --simulation: {s}")
 
-def check_dependencies():
+def check_dependencies() -> None:
     """Check if required dependencies are installed"""
-    missing_deps = []
+    missing_deps: List[str] = []
     
     try:
         import pandas
@@ -433,7 +433,7 @@ def real():
     """Main function"""
     if len(sys.argv) != 2:
         print("Usage: python3 main.py <transaction_hash>")
-        print("Example: python3 main.py 0xff8e9226091d513fc936ecc670030eba03f34dbe60cd012122bd18be44248d32")
+        print("Example: python3 main.py 0x3cc7f27c85d8031b413927bf4010a4f098a4ce788e045315dfe60b5b57722f99")
         print("\nInteractive Features:")
         print("  - Program will prompt for URLs and JavaScript code if not found")
         print("  - Enter URLs one per line, press Enter twice to finish")
@@ -464,7 +464,7 @@ def real():
     
     print(f"\nAnalysis completed successfully!")
     print(f"End time: {time.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Results saved in: output/1/{tx_hash.lower()}/")
+    print(f"Results saved in: {tx_dir}")
 
 def run_post_analysis(tx_id: str, tx_dir: str) -> dict:
     """

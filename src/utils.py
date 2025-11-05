@@ -1,5 +1,52 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Callable, TypeVar, Optional
 import json
+import time
+from functools import wraps
+
+T = TypeVar('T')
+
+def retry_with_exponential_backoff(
+    max_retries: int = 3,
+    initial_delay: float = 1.0,
+    exponential_base: float = 2.0,
+    exceptions: tuple = (Exception,)
+) -> Callable[[Callable[..., T]], Callable[..., T]]:
+    """
+    Retry decorator with exponential backoff for API calls.
+
+    Args:
+        max_retries: Maximum number of retry attempts
+        initial_delay: Initial delay in seconds
+        exponential_base: Multiplier for exponential backoff
+        exceptions: Tuple of exceptions to catch and retry
+
+    Returns:
+        Decorated function with retry logic
+    """
+    def decorator(func: Callable[..., T]) -> Callable[..., T]:
+        @wraps(func)
+        def wrapper(*args, **kwargs) -> T:
+            delay = initial_delay
+            last_exception = None
+
+            for attempt in range(max_retries + 1):
+                try:
+                    return func(*args, **kwargs)
+                except exceptions as e:
+                    last_exception = e
+                    if attempt < max_retries:
+                        print(f"  ⚠ API call failed (attempt {attempt + 1}/{max_retries + 1}): {e}")
+                        print(f"  ⏳ Retrying in {delay:.1f} seconds...")
+                        time.sleep(delay)
+                        delay *= exponential_base
+                    else:
+                        print(f"  ✗ API call failed after {max_retries + 1} attempts")
+
+            # If all retries failed, raise the last exception
+            raise last_exception
+
+        return wrapper
+    return decorator
 
 def load_json(path: str) -> Dict[str, Any]:
     try:

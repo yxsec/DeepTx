@@ -44,8 +44,31 @@ def extract_function_code(
 ) -> None:
 
     def _find_func_blocks(text: str, func: str):
-        pattern = rf"(function\s+{re.escape(func)}\s*\(.*?\)[\s\S]*?\{{[\s\S]*?\n\}})"
-        return re.findall(pattern, text, re.IGNORECASE)
+        # First, try to find function with body (not interface declaration)
+        # Match: function name(...) modifiers { body }
+        # Avoid matching interface declarations that end with semicolon
+        pattern = rf"function\s+{re.escape(func)}\s*\([^)]*\)[^;{{]*\{{"
+        
+        matches = []
+        for match in re.finditer(pattern, text, re.IGNORECASE):
+            start = match.start()
+            # Find the matching closing brace
+            brace_count = 0
+            body_start = match.end() - 1  # Position of opening brace
+            i = body_start
+            
+            while i < len(text):
+                if text[i] == '{':
+                    brace_count += 1
+                elif text[i] == '}':
+                    brace_count -= 1
+                    if brace_count == 0:
+                        # Found matching closing brace
+                        matches.append(text[start:i+1])
+                        break
+                i += 1
+        
+        return matches
 
     def _strip_comments(text: str) -> str:
         text = re.sub(r"/\*[\s\S]*?\*/", "", text)
