@@ -3,6 +3,7 @@ import requests
 import json
 import time
 from .heimdall_client import decompile_bytecode
+from .utils import retry_with_exponential_backoff
 
 ETHERSCAN_API_KEY = os.environ.get("ETHERSCAN_API_KEY")
 ETHERSCAN_API_URL = os.environ.get("ETHERSCAN_API_URL")
@@ -19,6 +20,14 @@ class ContractFetcher:
         self.chain_id = chain_id
         self.tx_dir = tx_dir
 
+    @retry_with_exponential_backoff(max_retries=3, initial_delay=1.0, exceptions=(requests.RequestException, requests.Timeout))
+    def _api_call_get_source(self, url: str) -> dict:
+        """Make API call to get contract source with retry logic."""
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()  # Raise exception for bad status codes
+        time.sleep(0.3)  # Rate limiting delay
+        return response.json()
+
     def fetch_contract_source(self, contract_address):
         url = (
             f"{self.api_url}?"
@@ -31,36 +40,29 @@ class ContractFetcher:
             "proxy": None
         }
         try:
-            response = requests.get(url, timeout=10)
-            time.sleep(1)
-            
-            if response.status_code == 200:
-                data = response.json()
-                status = data.get("status")
-                result = data.get("result", [])
-                
-                if status == "1" and result:
-                    source_info = result[0]
-                    contract_info.update({
-                        "source_code": source_info.get("SourceCode"),
-                        "contract_name": source_info.get("ContractName"),
-                        "proxy": source_info.get("Proxy")
-                    })
-                    
-                    if not contract_info["source_code"]:
-                        retry_response = requests.get(url, timeout=10)
-                        time.sleep(1)
-                        if retry_response.status_code == 200:
-                            retry_data = retry_response.json()
-                            retry_result = retry_data.get("result", [])
-                            if retry_result and retry_result[0].get("SourceCode"):
-                                contract_info["source_code"] = retry_result[0].get("SourceCode")
-                                contract_info["contract_name"] = retry_result[0].get("ContractName")
-                                contract_info["proxy"] = retry_result[0].get("Proxy")
+            data = self._api_call_get_source(url)
+            status = data.get("status")
+            result = data.get("result", [])
+
+            if status == "1" and result:
+                source_info = result[0]
+                contract_info.update({
+                    "source_code": source_info.get("SourceCode"),
+                    "contract_name": source_info.get("ContractName"),
+                    "proxy": source_info.get("Proxy")
+                })
 
         except Exception as e:
             print(f"Error fetching contract info for {contract_address}: {e}")
         return contract_info
+
+    @retry_with_exponential_backoff(max_retries=3, initial_delay=1.0, exceptions=(requests.RequestException, requests.Timeout))
+    def _api_call_get_bytecode(self, url: str) -> dict:
+        """Make API call to get contract bytecode with retry logic."""
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        time.sleep(0.3)  # Rate limiting delay
+        return response.json()
 
     def fetch_contract_bytecode(self, contract_address):
         url = (
@@ -69,13 +71,10 @@ class ContractFetcher:
             f"&address={contract_address}&tag=latest&apikey={self.api_key}"
         )
         try:
-            response = requests.get(url, timeout=10)
-            time.sleep(1)
-            if response.status_code == 200:
-                data = response.json()
-                bytecode = data.get("result")
-                if bytecode and bytecode != "0x":
-                    return bytecode
+            data = self._api_call_get_bytecode(url)
+            bytecode = data.get("result")
+            if bytecode and bytecode != "0x":
+                return bytecode
         except Exception as e:
             print(f"Error fetching bytecode for {contract_address}: {e}")
         return None

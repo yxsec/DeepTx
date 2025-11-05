@@ -4,7 +4,7 @@ import json
 import time
 import pandas as pd
 import requests
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from dotenv import load_dotenv, find_dotenv
 import argparse
 
@@ -19,9 +19,9 @@ def _parse_bool_flag(s: str) -> bool:
         return False
     raise argparse.ArgumentTypeError(f"Invalid boolean value for --simulation: {s}")
 
-def check_dependencies():
+def check_dependencies() -> None:
     """Check if required dependencies are installed"""
-    missing_deps = []
+    missing_deps: List[str] = []
     
     try:
         import pandas
@@ -464,7 +464,7 @@ def real():
     
     print(f"\nAnalysis completed successfully!")
     print(f"End time: {time.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Results saved in: output/1/{tx_hash.lower()}/")
+    print(f"Results saved in: {tx_dir}")
 
 def run_post_analysis(tx_id: str, tx_dir: str) -> dict:
     """

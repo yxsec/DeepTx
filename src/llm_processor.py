@@ -2,8 +2,8 @@ import os
 import json
 import pandas as pd
 from typing import Dict, Any, List
-from openai import OpenAI
-from .utils import load_json, load_text, load_csv
+from openai import OpenAI, OpenAIError
+from .utils import load_json, load_text, load_csv, retry_with_exponential_backoff
 from .prompt_schema import build_security_schema
 
 api_key = os.environ.get("OPENAI_API_KEY")
@@ -17,6 +17,7 @@ client = OpenAI(
 
 PREV_RESPONSE_ID = {}
 
+@retry_with_exponential_backoff(max_retries=3, initial_delay=2.0, exceptions=(OpenAIError, Exception))
 def call_with_chain(model_name: str, system_msg: str, prompt: str, schema: dict, temperature: float = 0.1):
     payload = {
         "model": model_name,

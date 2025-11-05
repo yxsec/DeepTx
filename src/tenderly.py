@@ -1,6 +1,7 @@
 import json
 import requests
 from web3 import Web3
+from .utils import retry_with_exponential_backoff
 
 class TenderlySimulator:
     def __init__(self, api_key, account_id, project_slug):
@@ -14,6 +15,7 @@ class TenderlySimulator:
         self.base_url = f"https://api.tenderly.co/api/v1/account/{account_id}/project/{project_slug}/simulate"
         self.headers = {"X-Access-Key": api_key, "Content-Type": "application/json"}
 
+    @retry_with_exponential_backoff(max_retries=3, initial_delay=2.0, exceptions=(requests.RequestException, Exception))
     def simulate_transaction(
         self,
         network_id: str,
@@ -48,18 +50,18 @@ class TenderlySimulator:
         }
 
         response = requests.post(
-            self.base_url, headers=self.headers, json=simulation_body
+            self.base_url, headers=self.headers, json=simulation_body, timeout=30
         )
-        
+
         if response.status_code != 200:
             error_msg = f"Tenderly API error: {response.status_code}"
             try:
                 error_data = response.json()
                 error_msg += f"\nDetails: {json.dumps(error_data, indent=2)}"
-            except:
+            except Exception as e:
                 error_msg += f"\nResponse: {response.text}"
             raise Exception(error_msg)
-        
+
         return response.json()
 
 
