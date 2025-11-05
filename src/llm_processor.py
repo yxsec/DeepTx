@@ -80,6 +80,192 @@ def estimate_tokens(text: str) -> int:
     """Rough token estimation (1 token ≈ 4 characters)"""
     return len(text) // 4
 
+def extract_function_frequency(call_chain: List[Dict]) -> Dict[str, int]:
+    """
+    Extract function call frequency from call chain.
+
+    Args:
+        call_chain: List of call records with 'function' field
+
+    Returns:
+        Dictionary mapping function name to call count
+    """
+    frequency = {}
+    for call in call_chain:
+        func = call.get('function', '')
+        if func and func.strip():
+            frequency[func] = frequency.get(func, 0) + 1
+    return frequency
+
+def select_top_functions_from_code(code: str, top_functions: List[str], max_functions: int = 20) -> str:
+    """
+    Extract only the specified top functions from code.
+
+    Args:
+        code: Full code string with function blocks
+        top_functions: List of function names to keep (ordered by priority)
+        max_functions: Maximum number of functions to keep
+
+    Returns:
+        Filtered code containing only top functions
+    """
+    if not code or not top_functions:
+        return ""
+
+    # Split by function blocks
+    function_blocks = code.split('\n\n< Function')
+
+    if len(function_blocks) <= 1:
+        # No clear function boundaries
+        return code
+
+    # Extract function name from block header
+    def get_function_name(block: str) -> str:
+        # Format: "< Function from address - function_name in file >"
+        lines = block.split('\n', 1)
+        if lines:
+            header = lines[0]
+            if ' - ' in header and ' in ' in header:
+                parts = header.split(' - ')
+                if len(parts) >= 2:
+                    func_part = parts[1].split(' in ')[0].strip()
+                    return func_part
+        return ""
+
+    # Keep the first block (usually preamble)
+    kept_blocks = [function_blocks[0]]
+    functions_added = 0
+
+    # Process remaining blocks
+    for block in function_blocks[1:]:
+        if functions_added >= max_functions:
+            break
+
+        block_with_marker = '\n\n< Function' + block
+        func_name = get_function_name(block)
+
+        # Check if this function is in top list
+        if func_name in top_functions:
+            kept_blocks.append(block_with_marker)
+            functions_added += 1
+
+    result = ''.join(kept_blocks)
+
+    if functions_added < len(top_functions):
+        omitted = len(top_functions) - functions_added
+        result += f"\n\n[Note: {omitted} other called functions omitted due to token limits]"
+
+    return result
+
+def smart_token_management(data: Dict[str, Any], max_total_tokens: int = 25000) -> Dict[str, Any]:
+    """
+    Smart token management: prioritize essential data, selectively include code.
+
+    Strategy:
+    1. Always include: call_chain, asset_flows, state_changes, gas, db_report
+    2. If tokens remaining: include top N most-called functions
+    3. If still not enough: skip code analysis entirely
+
+    Args:
+        data: Transaction data dictionary
+        max_total_tokens: Maximum total tokens allowed
+
+    Returns:
+        Optimized data dictionary
+    """
+    print(f"\n=== SMART TOKEN MANAGEMENT (Max: {max_total_tokens:,} tokens) ===")
+
+    optimized_data = data.copy()
+    ba = optimized_data.get("behavior_analysis", {}).copy()
+
+    # Calculate tokens for essential data (everything except code)
+    essential_tokens = sum([
+        estimate_tokens(json.dumps(ba.get("call_chain", []), indent=2)),
+        estimate_tokens(json.dumps(ba.get("asset_flows", []), indent=2)),
+        estimate_tokens(json.dumps(ba.get("state_changes", []), indent=2)),
+        estimate_tokens(json.dumps(optimized_data.get("context_analysis", {}), indent=2)),
+        estimate_tokens(json.dumps(optimized_data.get("ui_analysis", {}), indent=2)),
+        estimate_tokens(json.dumps(optimized_data.get("malicious_database_report", {}), indent=2)),
+    ])
+
+    # Reserve tokens for prompt instructions (~2000 tokens)
+    prompt_overhead = 2000
+    available_for_code = max_total_tokens - essential_tokens - prompt_overhead
+
+    print(f"  Essential data tokens: ~{essential_tokens:,}")
+    print(f"  Available for code: ~{available_for_code:,}")
+
+    # Handle code analysis based on available tokens
+    code = ba.get("code_analysis", "")
+    code_tokens = estimate_tokens(code) if code else 0
+
+    if code_tokens == 0:
+        print(f"  ✓ No code to analyze")
+        optimized_data["behavior_analysis"] = ba
+        return optimized_data
+
+    if code_tokens <= available_for_code:
+        # Enough tokens, keep all code
+        print(f"  ✓ Including all code: ~{code_tokens:,} tokens")
+        optimized_data["behavior_analysis"] = ba
+        return optimized_data
+
+    # Not enough tokens - use function frequency analysis
+    print(f"  ⚠ Code too large ({code_tokens:,} tokens), analyzing function frequency...")
+
+    call_chain = ba.get("call_chain", [])
+    if not call_chain:
+        # No call chain, can't determine function importance
+        print(f"  ⚠ No call chain available, skipping code analysis entirely")
+        ba["code_analysis"] = ""
+        ba["_code_skipped_reason"] = "insufficient_tokens_no_call_chain"
+        optimized_data["behavior_analysis"] = ba
+        return optimized_data
+
+    # Extract function frequency
+    func_frequency = extract_function_frequency(call_chain)
+    if not func_frequency:
+        print(f"  ⚠ No function calls detected, skipping code analysis")
+        ba["code_analysis"] = ""
+        ba["_code_skipped_reason"] = "no_function_calls"
+        optimized_data["behavior_analysis"] = ba
+        return optimized_data
+
+    # Sort by frequency (most called first)
+    sorted_functions = sorted(func_frequency.items(), key=lambda x: x[1], reverse=True)
+
+    print(f"  📊 Found {len(sorted_functions)} unique functions called")
+    print(f"  Top 5 most called: {[f'{func}({count}x)' for func, count in sorted_functions[:5]]}")
+
+    # Try to fit top N functions
+    max_functions_to_try = min(20, len(sorted_functions))
+
+    for num_functions in range(max_functions_to_try, 0, -1):
+        top_funcs = [func for func, _ in sorted_functions[:num_functions]]
+        filtered_code = select_top_functions_from_code(code, top_funcs, num_functions)
+        filtered_tokens = estimate_tokens(filtered_code)
+
+        if filtered_tokens <= available_for_code:
+            print(f"  ✓ Including top {num_functions} functions: ~{filtered_tokens:,} tokens")
+            ba["code_analysis"] = filtered_code
+            ba["_code_selection"] = {
+                "strategy": "top_n_by_frequency",
+                "functions_included": num_functions,
+                "total_functions": len(sorted_functions),
+                "top_functions": [{"name": func, "calls": count} for func, count in sorted_functions[:num_functions]]
+            }
+            optimized_data["behavior_analysis"] = ba
+            return optimized_data
+
+    # Even top function doesn't fit - skip code entirely
+    print(f"  ⚠ Unable to fit any functions within token budget")
+    print(f"  ℹ Proceeding WITHOUT code analysis (other data is complete)")
+    ba["code_analysis"] = ""
+    ba["_code_skipped_reason"] = "insufficient_tokens_even_for_top_function"
+    optimized_data["behavior_analysis"] = ba
+
+    return optimized_data
+
 def process_transaction_data(dir_path: str) -> Dict[str, Any]:
     """Process all transaction data from output directory with 4 categories"""
     print(f"Processing transaction data from: {dir_path}")
@@ -246,9 +432,32 @@ def process_transaction_data(dir_path: str) -> Dict[str, Any]:
 
 def enhanced_feature_analysis(data: Dict[str, Any], model_name: str):
     """Enhanced LLM analysis with user-friendly output"""
-    
+
     print("=== SMART EMBEDDING STRATEGY ===")
-    
+
+    # Apply smart token management
+    # Model-specific token limits (conservative to avoid API errors)
+    model_token_limits = {
+        "gpt-4o": 25000,          # GPT-4o with 128K context
+        "gpt-4o-mini": 20000,      # GPT-4o mini version
+        "gpt-4.1-mini": 20000,     # Similar to gpt-4o-mini
+        "gpt-3.5-turbo": 8000,     # Smaller context window
+    }
+
+    # Allow override via environment variable
+    env_max_tokens = os.environ.get("MAX_ANALYSIS_TOKENS")
+    if env_max_tokens:
+        try:
+            max_tokens = int(env_max_tokens)
+            print(f"  Using custom token limit: {max_tokens:,}")
+        except ValueError:
+            max_tokens = model_token_limits.get(model_name, 20000)
+    else:
+        max_tokens = model_token_limits.get(model_name, 20000)
+
+    # Apply token management strategy
+    data = smart_token_management(data, max_total_tokens=max_tokens)
+
     # Create 4-category analysis prompt
     ba = data.get("behavior_analysis", {})
     sections = [
